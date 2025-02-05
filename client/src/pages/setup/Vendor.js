@@ -4,17 +4,10 @@ import SectionBar from "../../components/SectionBar";
 import { useSelector } from "react-redux";
 import InputField from "../../components/InputField";
 
-
-
-
 const BrandName = () => {
   const { modes } = useSelector((state)=>state.mode);
 
   const [vendor, setVendor] = useState("");
-
-
-    
-
     return (
         <div className="w-full flex  text-white px-4">
             {/* <PhoneMenu/> */}
