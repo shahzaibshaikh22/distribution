@@ -1,5 +1,0 @@
-server/.env*
-# dependencies
-server/node_modules
-/.pnp
-.pnp.js
