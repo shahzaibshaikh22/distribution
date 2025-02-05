@@ -50,6 +50,21 @@ const addProduct = async (req, res) => {
         res.status(500).json({ msg: "Server error", error: error.message });
     }
 };
+const getProducts = async (req,res)=>{
+    try {
+        const products = await Product.find();
+        if(!products.length < 1){
+            return res.json({err:"could'nt find any product"})
+        }
+        if(products){
+            return res.josn({
+                products
+            })
+        }
+    } catch (error) {
+        res.josn({err:"something went wrong",})
+    }
+}
 // const addProduct = async (req, res) => {
 //     try {
 //         const requiredFields = ["producttype", "productname","distributionprice", "barcode", "hscode", "brand", "category", "subcategory","remarks", "unit", "weight", "stocklevel", "openingbalance", "openingcost", "retailprice",
@@ -85,5 +100,6 @@ const addProduct = async (req, res) => {
 
 module.exports = {
     addProduct,
-    upload
+    upload,
+    getProducts
 }
