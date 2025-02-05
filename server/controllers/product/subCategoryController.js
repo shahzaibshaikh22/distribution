@@ -31,33 +31,23 @@ const addSubCategory = async (req, res) => {
     }
 };
 
-// // update brand name
-// // update product type
-// const updateCategory = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         const { category } = req.body;
-       
-//         const isCategory = await Category.findById(id)
-//         if(!category){
-//             return res.json({err:"please type category name"})
-//         }
-//         if(!isCategory){
-//             return res.json({err:"category not fond"})
-//         }
-//         if(isCategory){
-//             isCategory.category = req.body.category || isCategory.category
-//             await isCategory.save()
-//             return res.json({
-//                 msg:"category updated",
-//                 isCategory
-//             })
-//         }
+const getSubCategory = async (req,res)=>{
+    try {
+        const subcategory = await SubCategory.find();
+        if(subcategory){
+            return res.json({
+                subcategory
+            })
+           
+        }
+        if(subcategory.length  <0){
 
-//     } catch (error) {
-//         res.json({ err: "Something went wrong", error: error.message });
-//     }
-// };
+            return res.josn({msg:"could'nt find any subcategory"})
+        }
+    } catch (error) {
+        
+    }
+}
 
 // // delete product type
 // const deleteCategory= async (req, res) => {
@@ -103,6 +93,7 @@ const addSubCategory = async (req, res) => {
 
 module.exports = {
     addSubCategory,
+    getSubCategory
     // updateCategory,
     // deleteCategory,
     // getCategory

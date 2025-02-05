@@ -93,7 +93,7 @@ const getCategory = async (req,res)=>{
         }
         if(category.length  <0){
 
-            return res.josn({msg:"could'nt find any product type"})
+            return res.josn({msg:"could'nt find any category"})
         }
     } catch (error) {
         

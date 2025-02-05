@@ -1,12 +1,12 @@
 const express = require("express");
-const { addSubCategory } = require("../../controllers/product/subCategoryController");
+const { addSubCategory, getSubCategory } = require("../../controllers/product/subCategoryController");
 const route = express.Router();
 
 // add
 route.post("/add-subcategory",addSubCategory)
 
-// // get all type
-// route.get("/get-category", getCategory)
+// get all sub category
+route.get("/get-subcategory", getSubCategory)
 
 // // update
 // route.put("/update-category/:id", updateCategory)

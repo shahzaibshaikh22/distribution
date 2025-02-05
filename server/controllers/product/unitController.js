@@ -31,78 +31,30 @@ const addUnit = async (req, res) => {
     }
 };
 
-// // update brand name
-// // update product type
-// const updateCategory = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         const { category } = req.body;
-       
-//         const isCategory = await Category.findById(id)
-//         if(!category){
-//             return res.json({err:"please type category name"})
-//         }
-//         if(!isCategory){
-//             return res.json({err:"category not fond"})
-//         }
-//         if(isCategory){
-//             isCategory.category = req.body.category || isCategory.category
-//             await isCategory.save()
-//             return res.json({
-//                 msg:"category updated",
-//                 isCategory
-//             })
-//         }
 
-//     } catch (error) {
-//         res.json({ err: "Something went wrong", error: error.message });
-//     }
-// };
 
-// // delete product type
-// const deleteCategory= async (req, res) => {
-//     try {
-//         const { id } = req.params;
-
-//         // Check if Brand name exists
-//         const isCategory = await Category.findById(id);
-//         if (!isCategory) {
-//             return resjson({ err: "category not found" });
-//         }
-
-//         // Delete the category
-//         await Category.findByIdAndDelete(id);
-
-//         return res.json({ err: "category deleted successfully" });
-
-//     } catch (error) {
-//         res.json({ msg: "Something went wrong", error: error.message });
-//     }
-// };
-
-// // get all product type
-
-// const getCategory = async (req,res)=>{
-//     try {
-//         const category = await Category.find();
-//         if(category){
-//             return res.json({
-//                 category
-//             })
+const getUnits = async (req,res)=>{
+    try {
+        const units = await Unit.find();
+        if(units){
+            return res.json({
+                units
+            })
            
-//         }
-//         if(category.length  <0){
+        }
+        if(units.length  <0){
 
-//             return res.josn({msg:"could'nt find any product type"})
-//         }
-//     } catch (error) {
+            return res.josn({msg:"could'nt find any unit"})
+        }
+    } catch (error) {
         
-//     }
-// }
+    }
+}
 
 
 module.exports = {
     addUnit,
+    getUnits
     // updateCategory,
     // deleteCategory,
     // getCategory

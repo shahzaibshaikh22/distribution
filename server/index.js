@@ -14,6 +14,7 @@ dotenv.config();
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static("uploads"));
 
   if(process.env.NODE_ENV === "development"){
     app.use(morgan("dev"))
@@ -46,7 +47,19 @@ app.use("/api/v1/unit", require("./routes/product/units.js"))
 // units routes
 app.use("/api/v1/product", require("./routes/product/product.js"))
 // units routes
+
+// setup
+    // vendor
+    app.use("/api/v1/vendor", require("./routes/setup/vendor.js"))
+    // vendor
+
+     // vendor
+     app.use("/api/v1/warehouse", require("./routes/setup/warehouse.js"))
+     // vendor
+// setup
 // routes
+
+
 
 connect()
 
