@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import InputField from "../../components/InputField";
 
 import { useAddProductMutation } from "../../redux/features/apiSlices/product/productApiSlice";
-import { useGetBrandsQuery } from "../../redux/features/apiSlices/product/brandSlice";
 import { setBrands, setCategory, setProductType, setSubCategory, setUnits } from "../../redux/features/slices/productSlice";
 import { FaChevronDown } from "react-icons/fa";
+import { useGetBrandsQuery } from "../../redux/features/apiSlices/product/brandSlice";
 import { useGetUnitsQuery } from "../../redux/features/apiSlices/product/unitSlice";
 import { useGetCategoryQuery } from "../../redux/features/apiSlices/product/categorySlice";
 import { useGetSubCategoryQuery } from "../../redux/features/apiSlices/product/subCategorySlice";

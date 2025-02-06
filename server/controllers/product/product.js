@@ -53,16 +53,74 @@ const addProduct = async (req, res) => {
 const getProducts = async (req,res)=>{
     try {
         const products = await Product.find();
-        if(!products.length < 1){
+        if(!products){
             return res.json({err:"could'nt find any product"})
         }
         if(products){
-            return res.josn({
+            return res.json({
                 products
             })
         }
     } catch (error) {
-        res.josn({err:"something went wrong",})
+       return res.json({err:"something went wrong", error:error.message})
+    }
+}
+// update product
+const updateProduct = async (req, res) => {
+    try {
+        const { id } = req.params; 
+        
+        let product = await Product.findById(id);
+        if (!product) {
+            return res.status(404).json({ msg: "Product not found" });
+        }
+
+        let imagePath = product.image; 
+        if (req.file) {
+            imagePath = `${req.file.filename}`;             
+        }
+        console.log(imagePath);
+
+
+        // Update the product
+        const updatedProduct = await Product.findByIdAndUpdate(
+            id,
+            { ...req.body, image: imagePath },
+            { new: true, runValidators: true } 
+        );
+
+        res.status(200).json({ msg: "Product updated successfully", product: updatedProduct });
+    } catch (error) {
+        res.status(500).json({ msg: "Server error", error: error.message });
+    }
+};
+
+const deleteProduct= async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Check if Brand name exists
+        const isProduct = await Product.findById(id);
+        if (!isProduct) {
+            return res.status(404).json({ msg: "could'nt delete product" });
+        }
+
+        // Delete the Brand name
+        await Product.findByIdAndDelete(id);
+
+        return res.status(200).json({ msg: "product deleted successfully" });
+
+    } catch (error) {
+        res.status(500).json({ msg: "Something went wrong", error: error.message });
+    }
+};
+
+// get single product
+const getSingleProduct = async (req,res)=>{
+    try {
+        
+    } catch (error) {
+        
     }
 }
 // const addProduct = async (req, res) => {
@@ -101,5 +159,8 @@ const getProducts = async (req,res)=>{
 module.exports = {
     addProduct,
     upload,
-    getProducts
+    getProducts,
+    getSingleProduct,
+    deleteProduct,
+    updateProduct
 }

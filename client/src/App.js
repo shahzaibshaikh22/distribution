@@ -26,6 +26,7 @@ import Units from './pages/product/Units';
 import Product from './pages/product/Product';
 import Purchase from './pages/purchase/Purchase';
 import Vendor from './pages/setup/Vendor';
+import ViewProducts from './pages/product/ViewProducts';
 
 const App = () => {
   const { modes } = useSelector((state)=>state.mode)
@@ -67,6 +68,7 @@ const App = () => {
             <Route path="/add-subcategory" element={ <SubCategory/> }/>
             <Route path="/add-unit" element={ <Units/> }/>
             <Route path="/add-product" element={ <Product/> }/>
+            <Route path="/product" element={ <ViewProducts/> }/>
             {/* Products Route */}
 
             {/* setup */}

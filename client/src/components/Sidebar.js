@@ -117,8 +117,13 @@ const Sidebar = () => {
     },
     {
       id:6,
-      text:'product',
+      text:'new product',
       path:"/add-product"
+    },
+    {
+      id:7,
+      text:'product',
+      path:"/product"
     },
   ]
   const setupLinks = [
