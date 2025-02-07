@@ -10,7 +10,7 @@ const addVendor = async (req, res) => {
         }
 
         // Check if product type already exists
-        const isVendor = await Vendor.findOne({ vendor });
+        const isVendor = await Vendor.findOne({ vendor })
 
 
         if (isVendor) {
@@ -33,7 +33,7 @@ const addVendor = async (req, res) => {
 
 const getVendor = async (req,res)=>{
     try {
-        const vendor = await Vendor.find();
+        const vendor = await Vendor.find().sort({ createdAt: -1 });
         if(vendor){
             return res.json({
                 vendor

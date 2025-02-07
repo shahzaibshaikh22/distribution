@@ -24,9 +24,12 @@ import CategoryName from './pages/product/CategoryName';
 import SubCategory from './pages/product/SubCategory';
 import Units from './pages/product/Units';
 import Product from './pages/product/Product';
-import Purchase from './pages/purchase/Purchase';
+import PurchaseOrder from './pages/purchase/PurchaseOrder';
 import Vendor from './pages/setup/Vendor';
+import Warehouse from './pages/setup/Warehouse';
 import ViewProducts from './pages/product/ViewProducts';
+import AddPurchase from './pages/purchase/AddPurchase';
+import PurchaseInvoice from './pages/purchase/PurchaseInvoice';
 
 const App = () => {
   const { modes } = useSelector((state)=>state.mode)
@@ -73,10 +76,13 @@ const App = () => {
 
             {/* setup */}
             <Route path="/vendor" element={ <Vendor/> }/>
+            <Route path="/warehouse" element={ <Warehouse/> }/>
             {/* setup */}
 
             {/* [purchase] */}
-            <Route path="/purchase" element={ <Purchase/> }/>
+            <Route path="/purchase-order" element={ <PurchaseOrder/> }/>
+            <Route path="/add-purchase" element={ <AddPurchase/> }/>
+            <Route path="/purchase-invoice" element={ <PurchaseInvoice/> }/>
             {/* [purchase] */}
           </Routes>
       </div>

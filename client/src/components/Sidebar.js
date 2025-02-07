@@ -131,13 +131,28 @@ const Sidebar = () => {
       id:1,
       text:'Vendor',
       path:"/vendor"
+    },
+    {
+      id:2,
+      text:'Warehouse',
+      path:"/warehouse"
     }
   ]
   const purchaseLinks = [
     {
       id:1,
-      text:'Purchase',
-      path:"/purchase"
+      text:'Purchase Order',
+      path:"/purchase-order"
+    },
+    {
+      id:2,
+      text:'Add Purchase',
+      path:"/add-purchase"
+    },
+    {
+      id:2,
+      text:'Purchase Invoice',
+      path:"/purchase-invoice"
     }
   ]
 

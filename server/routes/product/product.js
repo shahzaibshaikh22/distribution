@@ -9,7 +9,7 @@ route.post("/add-product", upload.single("image"), addProduct);
 route.get("/get-products", getProducts)
 
 // update product
-route.put("/update-product/:id", updateProduct)
+route.put("/update-product/:id",upload.single("image"), updateProduct)
 
 // delete product
 route.delete("/delete-product/:id", deleteProduct)

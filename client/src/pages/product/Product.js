@@ -81,6 +81,10 @@ const Product = () => {
         for (const key in productData) {
             formData.append(key, productData[key]);
         }
+        if(formData){
+            console.log(formData);
+            
+        }
         const res = await addproduct(formData);
         if(res.data.msg === "Product added successfully"){
             setProductData(initialState);

@@ -3,23 +3,23 @@ import TopBar from "../../components/TopBar";
 import SectionBar from "../../components/SectionBar";
 import { useSelector } from "react-redux";
 import InputField from "../../components/InputField";
-import { useAddVendorMutation } from "../../redux/features/apiSlices/setup/vendor";
+import { useAddWarehouseMutation } from "../../redux/features/apiSlices/setup/warehouse";
 
 
 
-const Vendor = () => {
+const Warehouse = () => {
   const { modes } = useSelector((state)=>state.mode);
 
-  const [vendor, setVendor] = useState("");
+  const [warehouse, setWarehouse] = useState("");
 
 // product type submition
-const [addVendor, {isLoading}] = useAddVendorMutation()
+const [addwarehouse, {isLoading}] = useAddWarehouseMutation()
 
 const handleSubmit = async (e)=>{
     e.preventDefault();
     
-    const res = await addVendor({vendor})
-    setVendor("")
+    const res = await addwarehouse({warehouse})
+    setWarehouse("")
     
     if(res){
         if(res.data.err){
@@ -41,11 +41,11 @@ const handleSubmit = async (e)=>{
             {/* <PhoneMenu/> */}
             <div className="w-full ">
                 <TopBar />
-                <SectionBar sectionHeading="Vendor" />
+                <SectionBar sectionHeading="Warehouse" />
                 {/* form section */}
                 <div className={`w-full md:px-10 mainContainerForm relative rounded-xl ${modes === "dark" ? 'bg-darksecondary text-white' : 'bg-white text-gray-800'} h-[4rem]`}>
                     <div className='md:px-0 px-10'>
-                        <h1 className='text-center md:text-md text-sm pt-6 font-semibold mb-5'>Vendor</h1>
+                        <h1 className='text-center md:text-md text-sm pt-6 font-semibold mb-5'>Warehouse</h1>
                         <div className="divider w-full h-[1px] bg-gray-300   mx-auto left-0" />
                     </div>
 
@@ -55,18 +55,18 @@ const handleSubmit = async (e)=>{
 
                 <div className={`w-full Container h-auto md:mb-0 mb-4  px-10 ${modes === "dark" ? 'bg-darksecondary text-white' : 'bg-white text-gray-800'}`}>
                     <div className='w-full '>
-                        <h1 className=' pt-6 font-semibold mb-4'>Vendor Detail</h1>
+                        <h1 className=' pt-6 font-semibold mb-4'>Warehouse Detail</h1>
                         <div className="divider w-full h-[1px] bg-gray-300 " />
                     </div>
                     <form onSubmit={handleSubmit} className=' py-4'>
                         <div className='flex md:flex-row w-full md:max-w-[45%] flex-col md:gap-20  md:my-4 '>
                             {/* product type  */}
                             <InputField
-                                value={vendor}
-                                onChangeFunction={(e)=>setVendor(e.target.value)}
-                                placeholderText="jhon player"
-                                LabelText="Vendor"
-                                inputName="vendor"
+                                value={warehouse}
+                                onChangeFunction={(e)=>setWarehouse(e.target.value)}
+                                placeholderText="warehouse"
+                                LabelText="Warehouse"
+                                inputName="warehouse"
                                 inputType="text" />
                             {/* product type  */}
                         </div>
@@ -81,4 +81,4 @@ const handleSubmit = async (e)=>{
     );
 };
 
-export default Vendor;
+export default Warehouse;

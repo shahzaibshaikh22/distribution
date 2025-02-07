@@ -1,6 +1,6 @@
 const express = require("express");
-const { addWarehouse, getWarehouse } = require("../../controllers/setup/warehouse");
 const route = express.Router();
+const { addWarehouse,getWarehouse } = require("../../controllers/setup/warehouse")
 
 // add vendor route
 route.post("/add-warehouse",addWarehouse)

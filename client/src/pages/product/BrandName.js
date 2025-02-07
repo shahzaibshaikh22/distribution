@@ -11,7 +11,6 @@ const BrandName = () => {
   const { modes } = useSelector((state)=>state.mode);
 
   const [brand, setBrand] = useState("");
-
 // product type submition
 const [addBrand, {isLoading}] = useAddBrandMutation()
 

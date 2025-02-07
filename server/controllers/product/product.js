@@ -77,11 +77,11 @@ const updateProduct = async (req, res) => {
 
         let imagePath = product.image; 
         if (req.file) {
-            imagePath = `${req.file.filename}`;             
+            imagePath = `${req.file.filename}`; 
+            console.log(imagePath, "ander");
+                        
         }
-        console.log(imagePath);
-
-
+        console.log(imagePath,"baher");
         // Update the product
         const updatedProduct = await Product.findByIdAndUpdate(
             id,
