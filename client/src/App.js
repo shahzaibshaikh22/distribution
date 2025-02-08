@@ -30,66 +30,67 @@ import Warehouse from './pages/setup/Warehouse';
 import ViewProducts from './pages/product/ViewProducts';
 import AddPurchase from './pages/purchase/AddPurchase';
 import PurchaseInvoice from './pages/purchase/PurchaseInvoice';
+import PurchaseOrderForm from './components/PurchaseOrderForm';
 
 const App = () => {
-  const { modes } = useSelector((state)=>state.mode)
+  const { modes } = useSelector((state) => state.mode)
   useEffect(() => {
     document.body.style.backgroundColor = modes === "dark" ? "#222222" : "#EDEDED";
   }, [modes]);
   return (
-        <BrowserRouter>
-  <main className={`w-full bg-transparent transition-all duration-150 ease-linear flex`}>
-     <div className='w-full  flex gap-1'>
-      <div className='sidebar'>
-        <Sidebar/>
-      </div>
-      <div className='content w-full'>
-          <Routes>
-            <Route path="/" element={  <Overview/>}/>
-            <Route path="/complaints" element={<Complaints/>}/>
-            {/* settings routes */}
-            <Route path="/changepassword" element={  <ChangePassword/>}/>
-            <Route path="/settings" element={  <Settings/>}/>
-            <Route path="/users" element={  <Users/>}/>
-            <Route path="/country" element={  <Country/>}/>
-            <Route path="/region" element={  <Region/>}/>
-            <Route path="/city" element={  <City/>}/>
-            <Route path="/financialyear" element={ <FinancialYear/> }/>
-            <Route path="/query" element={ <Query/> }/>
-             {/* settings routes */}
+    <BrowserRouter>
+      <main className={`w-full bg-transparent transition-all duration-150 ease-linear flex`}>
+        <div className='w-full  flex gap-1'>
+          <div className='sidebar'>
+            <Sidebar />
+          </div>
+          <div className='content w-full'>
+            <Routes>
+              <Route path="/" element={<Overview />} />
+              <Route path="/complaints" element={<Complaints />} />
+              {/* settings routes */}
+              <Route path="/changepassword" element={<ChangePassword />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/country" element={<Country />} />
+              <Route path="/region" element={<Region />} />
+              <Route path="/city" element={<City />} />
+              <Route path="/financialyear" element={<FinancialYear />} />
+              <Route path="/query" element={<Query />} />
+              {/* settings routes */}
 
-            {/* distribution routes */}
-            <Route path="/builtyform" element={ <BuiltyForm/> }/>
-            <Route path="/orderbooking" element={ <OrderBooking/> }/>
-            <Route path="/loadsummary" element={ <LoadSummary/> }/>
-            {/* distribution routes */}
+              {/* distribution routes */}
+              <Route path="/builtyform" element={<BuiltyForm />} />
+              <Route path="/orderbooking" element={<OrderBooking />} />
+              <Route path="/loadsummary" element={<LoadSummary />} />
+              {/* distribution routes */}
 
-            {/* Products Route */}
-            <Route path="/product-type" element={ <ProductTypes/> }/>
-            <Route path="/add-brand" element={ <BrandName/> }/>
-            <Route path="/add-category" element={ <CategoryName/> }/>
-            <Route path="/add-subcategory" element={ <SubCategory/> }/>
-            <Route path="/add-unit" element={ <Units/> }/>
-            <Route path="/add-product" element={ <Product/> }/>
-            <Route path="/product" element={ <ViewProducts/> }/>
-            {/* Products Route */}
+              {/* Products Route */}
+              <Route path="/product-type" element={<ProductTypes />} />
+              <Route path="/add-brand" element={<BrandName />} />
+              <Route path="/add-category" element={<CategoryName />} />
+              <Route path="/add-subcategory" element={<SubCategory />} />
+              <Route path="/add-unit" element={<Units />} />
+              <Route path="/add-product" element={<Product />} />
+              <Route path="/product" element={<ViewProducts />} />
+              {/* Products Route */}
 
-            {/* setup */}
-            <Route path="/vendor" element={ <Vendor/> }/>
-            <Route path="/warehouse" element={ <Warehouse/> }/>
-            {/* setup */}
+              {/* setup */}
+              <Route path="/vendor" element={<Vendor />} />
+              <Route path="/warehouse" element={<Warehouse />} />
+              {/* setup */}
 
-            {/* [purchase] */}
-            <Route path="/purchase-order" element={ <PurchaseOrder/> }/>
-            <Route path="/add-purchase" element={ <AddPurchase/> }/>
-            <Route path="/purchase-invoice" element={ <PurchaseInvoice/> }/>
-            {/* [purchase] */}
-          </Routes>
-      </div>
-    </div>
-    <PhoneMenu/>
-   </main>
-        </BrowserRouter>
+              {/* [purchase] */}
+              <Route path="/purchase-order" element={<PurchaseOrder />} />
+              <Route path="/add-purchase" element={<AddPurchase />} />
+              <Route path="/purchase-invoice" element={<PurchaseInvoice />} />
+              {/* [purchase] */}
+            </Routes>
+          </div>
+        </div>
+        <PhoneMenu />
+      </main>
+    </BrowserRouter>
   )
 }
 
