@@ -45,10 +45,10 @@ const ProductSchema = mongoose.Schema({
         type:Number
     },
     openingcost:{
-        type:String
+        type:Number
     },
     costprice:{
-        type:String
+        type:Number
     },
     distributionprice:{
         type:String
