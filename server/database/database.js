@@ -27,7 +27,7 @@
 const mongoose = require('mongoose')
 
  const connect = ()=>{
-    const uri = process.env.MONGODB_URI;
+    const uri = process.env.MONGODB_URI_LOCAL;
     const db =  mongoose.connect(uri)
     .then(()=> console.log("database connected"))
     .catch((error) =>{

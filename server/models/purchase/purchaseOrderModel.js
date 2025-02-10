@@ -66,6 +66,9 @@ const purchaseOrderSchema = mongoose.Schema(
         ref: "Vendor",
         required: true,
       },
+      pono:{
+        type:String
+      },
       warehouse: {
         type: String,
         ref: "Warehouse",
@@ -77,7 +80,6 @@ const purchaseOrderSchema = mongoose.Schema(
       },
       dcno:{
           type:String,
-          required: true,
       },
       products: [
         {

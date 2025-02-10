@@ -6,18 +6,19 @@ import { useSelector } from "react-redux";
 import InputField from "../../components/InputField"
 import { useGetVendorQuery } from "../../redux/features/apiSlices/setup/vendor"
 import { useGetWarehouseQuery } from "../../redux/features/apiSlices/setup/warehouse"
-import { setProducts, setVendors, setWarehouses } from "../../redux/features/slices/productSlice"
+import { setProducts, setVendors, setWarehouses,setPonoLength } from "../../redux/features/slices/productSlice"
 import { useDispatch } from "react-redux";
 import { FaChevronDown, FaTrashAlt } from "react-icons/fa";
 import { useGetProductsQuery } from "../../redux/features/apiSlices/product/productApiSlice";
-import { usePurchaseOrderMutation } from "../../redux/features/apiSlices/purchase/purchaseOrderSlice";
+import { useGetPurchaseOrderQuery, usePurchaseOrderMutation } from "../../redux/features/apiSlices/purchase/purchaseOrderSlice";
 
 
 const Purchase = () => {
     const { modes } = useSelector((state) => state.mode);
-    const { vendors, warehouses, products } = useSelector((state) => state.product);
+    const { vendors, warehouses, products, purchaseOrderLength} = useSelector((state) => state.product);
     const [selectedVendor, setSelectedVendor] = useState("");
       const [selectedWarehouse, setSelectedWarehouse] = useState("");
+      const [pono, setPono] = useState(`pono-000`)
       const [vehicleno, setVehicleNo] = useState("");
       const [dcno, setDcNo] = useState("");
       const [selectedProducts, setSelectedProducts] = useState([]);
@@ -38,6 +39,10 @@ const Purchase = () => {
 
     // fetch brands 
     const { data: warehouseData } = useGetWarehouseQuery();
+    // fetch brands 
+
+    // fetch brands 
+    const { data: ponoData } = useGetPurchaseOrderQuery();
     // fetch brands 
 
     const handleProductSelect = (e) => {
@@ -93,7 +98,7 @@ const Purchase = () => {
         vendor: selectedVendor, // This should be a valid ObjectId
         warehouse: selectedWarehouse, // This should be a valid ObjectId
         vehicleno,
-        dcno,
+        pono,
         products: selectedProducts.map((p) => ({
           product: p._id.toString(), // Ensuring only product ID is sent
           quantity: p.quantity,
@@ -109,9 +114,11 @@ const Purchase = () => {
           e.preventDefault();
           const res = await purchaseOrder(orderData)
       
-          if (res) {
-            console.log("Order Created Successfully:", res);
+          if (res.data.msg) {
             alert("Purchase Order Created Successfully!");
+          }
+          if (res.data.err) {
+            alert(res.data.err);
           }
         } catch (error) {
           console.error("Error Creating Purchase Order:", error);
@@ -138,6 +145,14 @@ const Purchase = () => {
             dispatch(setWarehouses(warehouseData.warehouse));
         }
     }, [warehouseData, dispatch]);
+    useEffect(() => {
+      if (ponoData) {
+          dispatch(setPonoLength(ponoData.length + 1));
+          setPono(`pono-000${purchaseOrderLength}`)
+      }
+  }, [ponoData,purchaseOrderLength, dispatch]);
+
+  
 
 
 
@@ -215,15 +230,30 @@ const Purchase = () => {
                                 inputName="vehicleno"
                                 inputType="text" />
 
-                            <InputField
-                                onChangeFunction={(e)=>setDcNo(e.target.value)}
-                                placeholderText="DC No"
-                                LabelText="d-Challan No:"
-                                inputName="dcno"
-                                inputType="text" />
+                            <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+                                <label className="font-semibold"  htmlFor="pono">Po No:</label>
+                                <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+                                <input
+                                value={pono}
+                                type="text"
+                                readOnly
+                                placeholder="pono-000"
+                                name="pono"
+                                className='bg-transparent w-full'/>
+                                </div>
+                                </div>
+
+                            {/* <InputField
+                                value={pono}
+                                onChangeFunction={(e)=>setPono(e.target.value)}
+                                placeholderText="pono-000"
+                                LabelText="Po No:"
+                                inputName="pono"
+                                inputType="text" /> */}
                         </div>
 
-                        <div className='flex md:flex-row flex-col w-full md:w-[47%] justify-between  md:my-0 my-2  md:gap-20'>
+                        <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
+                        <div className='flex md:flex-row flex-col w-full  justify-between  md:my-0 my-2  md:gap-20'>
                                 <label className="font-semibold" htmlFor="producttype">Warehouse</label>
                                 <div className="inputBorder w-full py-2 rounded-md max-w-xs">
                                     <div className="relative full w-full">
@@ -243,8 +273,8 @@ const Purchase = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        <div className='flex md:flex-row flex-col md:gap-20  w-full md:max-w-[50%] my-4  md:items-center md:justify-center '>
+                        </div>
+                        <div className='flex md:flex-row flex-col gap-4 w-full my-4 '>
                             <div />
                             <button 
                             onClick={handlePurchaseOrder}
@@ -252,6 +282,9 @@ const Purchase = () => {
                             className='bg-blue-700 md:ml-0 w-40 px-4 py-2 rounded-full text-white'>Add New</button>
                             <button type="button" onClick={() => setShowInvoice(true)} className='bg-blue-700 md:ml-0 w-40 px-4 py-2 rounded-full text-white'>View Invoice</button>
                         </div>
+                        </div>
+
+                       
                     </form>
                 </div>
                 <div className="p-6 bg-white shadow rounded-lg">
