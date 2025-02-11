@@ -150,7 +150,7 @@ const Sidebar = () => {
       path:"/add-purchase"
     },
     {
-      id:2,
+      id:3,
       text:'Purchase Invoice',
       path:"/purchase-invoice"
     }
@@ -175,7 +175,7 @@ const Sidebar = () => {
          <div className='flex flex-col gap-2 px-2'>
          {links.map((link)=>{
           return(
-                      <Link
+            <Link
             to={link.path}
             key={link.id}
             className={`w-full flex items-center gap-5 p-2 rounded-full cursor-pointer 

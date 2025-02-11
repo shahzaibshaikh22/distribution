@@ -2,7 +2,7 @@
 
 const mongoose = require("mongoose")
 
-const purchaseOrderSchema = mongoose.Schema(
+const AddpurchaseOrderSchema = mongoose.Schema(
     {
       vendor: {
         type: String,
@@ -48,7 +48,7 @@ const purchaseOrderSchema = mongoose.Schema(
       },
       status: {
         type: String,
-        default: "Pending",
+        default: "In Stock",
       },
       createdAt: {
         type: Date,
@@ -58,5 +58,5 @@ const purchaseOrderSchema = mongoose.Schema(
     { timestamps: true }
   );
 
-const PurchaseOrder = mongoose.model("PurchaseOrder", purchaseOrderSchema)
-module.exports = PurchaseOrder;
+const AddPurchaseOrder = mongoose.model("AddPurchaseOrder", AddpurchaseOrderSchema)
+module.exports = AddPurchaseOrder;

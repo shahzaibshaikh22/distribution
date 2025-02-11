@@ -18,9 +18,17 @@ export const ProductApiSlice = apiSlice.injectEndpoints({
         }),
         providesTags: ['purchaseorders']
        }),
+       AddpurchaseOrder:builder.mutation({
+        query:(data)=>({
+            url:`${purchaseOrderUrl}/add-order`,
+            method:'POST',
+            body:data
+        }),
+        invalidatesTags: ['purchaseorders']
+       }),
 
     }),
     
 })
 
-export const { usePurchaseOrderMutation,useGetPurchaseOrderQuery} = ProductApiSlice
+export const { usePurchaseOrderMutation,useGetPurchaseOrderQuery, useAddpurchaseOrderMutation} = ProductApiSlice

@@ -20,7 +20,7 @@ const Purchase = () => {
       const [selectedWarehouse, setSelectedWarehouse] = useState("");
       const [pono, setPono] = useState(`pono-000`)
       const [vehicleno, setVehicleNo] = useState("");
-      const [dcno, setDcNo] = useState("");
+      // const [dcno, setDcNo] = useState("");
       const [selectedProducts, setSelectedProducts] = useState([]);
       const [totalAmount, setTotalAmount] = useState();
       const [showInvoice, setShowInvoice] = useState(false);
@@ -163,7 +163,7 @@ const Purchase = () => {
                 <TopBar />
                 {/* <SectionBar sectionHeading="Purchase Order" /> */}
                 {/* form section */}
-                <div className={`w-full md:px-10 mainContainerForm relative rounded-xl ${modes === "dark" ? 'bg-darksecondary text-white' : 'bg-white text-gray-800'} h-[4rem]`}>
+                <div className={`w-full md:px-10 mainContainerForm relative mt-4 rounded-xl ${modes === "dark" ? 'bg-darksecondary text-white' : 'bg-white text-gray-800'} h-[4rem]`}>
                     <div className='md:px-0 px-10'>
                         <h1 className='text-center md:text-md text-sm pt-6 font-semibold mb-5'>Purchase Order</h1>
                         <div className="divider w-full h-[1px] bg-gray-300   mx-auto left-0" />
@@ -254,7 +254,7 @@ const Purchase = () => {
 
                         <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
                         <div className='flex md:flex-row flex-col w-full  justify-between  md:my-0 my-2  md:gap-20'>
-                                <label className="font-semibold" htmlFor="producttype">Warehouse</label>
+                                <label className="font-semibold" htmlFor="producttype">Products</label>
                                 <div className="inputBorder w-full py-2 rounded-md max-w-xs">
                                     <div className="relative full w-full">
                                         <select 
@@ -335,7 +335,6 @@ const Purchase = () => {
             <p><strong>Vendor:</strong> {selectedVendor}</p>
             <p><strong>Warehouse:</strong> {selectedWarehouse}</p>
             <p><strong>Vehicle No:</strong> {vehicleno}</p>
-            <p><strong>DC No:</strong> {dcno}</p>
             <table className="w-full border mt-2">
               <thead>
                 <tr className="bg-gray-200">
