@@ -12,7 +12,8 @@ const ProductSlice = createSlice({
     vendors:[],
     warehouses:[],
     purchaseOrderLength:0,
-    purchaseOrders:[]
+    purchaseOrders:[],
+    inventory:null
   },
   reducers: {
     setBrands:(state,action)=>{
@@ -45,8 +46,11 @@ const ProductSlice = createSlice({
     setPurchaseOrders:(state,action)=>{
       state.purchaseOrders = action.payload
     },
+    setInventory:(state,action)=>{
+      state.inventory = action.payload
+    },
   },
 });
 
-export const {setPonoLength,setPurchaseOrders, setProducts,setProductType,setBrands, setUnits, setCategory,setSubCategory,setVendors,setWarehouses} = ProductSlice.actions;
+export const {setPonoLength,setPurchaseOrders,setInventory, setProducts,setProductType,setBrands, setUnits, setCategory,setSubCategory,setVendors,setWarehouses} = ProductSlice.actions;
 export default ProductSlice.reducer

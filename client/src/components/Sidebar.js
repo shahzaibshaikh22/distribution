@@ -155,6 +155,13 @@ const Sidebar = () => {
       path:"/purchase-invoice"
     }
   ]
+  const inventoryLinks = [
+    {
+      id:1,
+      text:'inventory',
+      path:"/get-inventory"
+    }
+  ]
 
 
 
@@ -236,6 +243,12 @@ const Sidebar = () => {
            modes={modes}
            links={purchaseLinks}
            menuText="Purchase"
+           sideBarCollapes={sideBarCollapes}
+           menuIcon={<PiShoppingCartLight  size={25}/>}/>
+            <DropdownMenu
+           modes={modes}
+           links={inventoryLinks}
+           menuText="Inventory"
            sideBarCollapes={sideBarCollapes}
            menuIcon={<PiShoppingCartLight  size={25}/>}/>
             {/* product */}

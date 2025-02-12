@@ -1,0 +1,266 @@
+// const AddpurchaseOrders = async (req, res) => {
+//   try {
+//     const { warehouse, vendor, products, vehicleno, dcno, pono } = req.body;
+
+//     if (!warehouse || !vendor || !products || !vehicleno || !dcno || !pono) {
+//       return res.status(400).json({ err: "All fields are required" });
+//     }
+
+//     // Pehle purchase order create karo
+//     const newOrder = await AddPurchaseOrder.create(req.body);
+
+//     // Inventory check karo
+//     let inventory = await Inventory.findOne();
+
+//     if (!inventory) {
+//       // Agar inventory ka document exist nahi karta, to ek naya bana lo
+//       inventory = new Inventory({ products: [] });
+//     }
+
+//     // Products loop karke inventory update karo
+//     for (const item of products) {
+//       const { product, quantity } = item; // Yeh product ki ID aur quantity hai
+
+//       // Dekho ke yeh product inventory mein hai ya nahi
+//       const existingProduct = inventory.products.find((p) => p.product.toString() === product);
+
+//       if (existingProduct) {
+//         // Agar product mojood hai to sirf quantity update karo
+//         existingProduct.quantity += quantity;
+//       } else {
+//         // Agar product nahi hai to naya product add karo
+//         inventory.products.push({ product, quantity });
+//       }
+//     }
+
+//     // Inventory ko save karo
+//     await inventory.save();
+
+//     res.status(201).json({ msg: "Order created successfully & inventory updated", newOrder });
+//   } catch (error) {
+//     console.error("Error in AddpurchaseOrders:", error);
+//     res.status(500).json({ message: "Failed to save order" });
+//   }
+// };
+
+// const AddpurchaseOrders = async (req, res) => {
+//   try {
+//     const { pono, products, vendor, warehouse , dcno, vehicleno,totalAmount } = req.body;
+
+//     // Pono ke zariye order find karo
+//     const orders = await PurchaseOrder.find();
+//     const isOrder = await PurchaseOrder.findOne({ pono });
+
+//     if (!isOrder) {
+//       return res.status(404).json({ err: "Order not found" });
+//     }
+
+//     let status = "Quantity matches"; // Default status
+
+//     for (const item of products) {
+//       const { product, quantity } = item;
+
+//       // Check karo ke yeh product `isOrder` me hai ya nahi
+//       const existingProduct = isOrder.products.find(
+//         (p) => p._id.toString() === product
+//       );
+
+//       if (!existingProduct) {
+//         return res.status(400).json({ err: `Product ${product} not found in order` });
+//       }
+
+//       if (quantity < existingProduct.quantity) {
+//         const newOrder = new PurchaseOrder({
+//           vendor,
+//           warehouse,
+//           dcno,
+//           pono:`pono-000${orders.length + 1}`,
+//           vehicleno,
+//           products,
+//           totalAmount
+//         })
+//         await newOrder.save();
+//         return res.json({msg:"renew prchase order"})
+//       }
+//       else if(quantity === existingProduct.quantity  ){
+//         const newAddPurchase = new AddPurchaseOrder({
+//           vendor,
+//           warehouse,
+//           dcno,
+//           pono,
+//           vehicleno,
+//           products,
+//           totalAmount
+//         })
+      
+//         await newAddPurchase.save();
+//         return res.json({msg:"prchase order saved"})
+//       }
+//        else if (quantity > existingProduct.quantity) {
+//         return res.json({err:"product quantity is larger than orderd"})
+//       }
+//     }
+
+//     res.status(200).json({ msg: "Quantity checked", status });
+//   } catch (error) {
+//     res.status(500).json({ err: error.message });
+//   }
+// };
+
+const AddpurchaseOrders = async (req, res) => {
+  try {
+    const { pono, products, vendor, warehouse, dcno, vehicleno } = req.body;
+    
+    // Pono ke zariye order find karo
+    const orders = await PurchaseOrder.find();
+    const isOrder = await PurchaseOrder.findOne({ pono });
+    
+
+    if (!isOrder) {
+      return res.status(404).json({ err: "Order not found" });
+    }
+
+    let totalAmount = 0; // Initialize totalAmount
+    
+
+    for (const item of products) {
+      const { product, quantity } = item;
+
+      // Check karo ke yeh product `isOrder` me hai ya nahi
+      const existingProduct = isOrder.products.find(
+        (p) => p.product._id.toString() === product
+      );
+      
+
+      if (!existingProduct) {
+        return res.status(400).json({ err: `Product ${product} not found in order` });
+      }
+
+      // Har product ka price calculate karna hai based on received quantity
+      const perUnitPrice = existingProduct.total / existingProduct.quantity; // Yeh price database me store honi chahiye
+      totalAmount += quantity * perUnitPrice;
+    }
+
+    if (products.every(item => item.quantity === isOrder.products.find(p => p.product.toString() === item.product)?.quantity)) {
+      // Agr quantity same hai, tou add in `AddPurchaseOrder`
+      const newAddPurchase = new AddPurchaseOrder({
+        vendor,
+        warehouse,
+        dcno,
+        pono,
+        vehicleno,
+        products,
+        totalAmount // Update kiya gaya totalAmount
+      });
+
+      await newAddPurchase.save();
+
+      // Inventory update karni hai
+      for (const item of products) {
+        const { product, quantity } = item;
+
+        // Check karo ke product inventory me hai ya nahi
+        const existingInventory = await Inventory.findOne({ product });
+
+        if (existingInventory) {
+          // Agar product pehle se hai, sirf quantity update karo
+          existingInventory.quantity += quantity;
+          await existingInventory.save();
+        } else {
+          // Agar product nahi hai, toh naya product inventory me add karo
+          const newInventoryItem = new Inventory({
+            products,
+            quantity
+          });
+          await newInventoryItem.save();
+        }
+      }
+
+      return res.json({ msg: "Purchase order saved & inventory updated" });
+    } else {
+      // Agr quantity kam hai, tou naya purchase order create hoga
+      const newOrder = new PurchaseOrder({
+        vendor,
+        warehouse,
+        dcno,
+        pono: `pono-000${orders.length + 1}`,
+        vehicleno,
+        products,
+        totalAmount // Update kiya gaya totalAmount
+      });
+
+      await newOrder.save();
+      return res.json({ msg: "Renew purchase order" });
+    }
+  } catch (error) {
+    res.status(500).json({ err: error.message });
+  }
+};
+
+// const AddpurchaseOrders = async (req, res) => {
+//   try {
+//     const { pono, products, vendor, warehouse, dcno, vehicleno } = req.body;
+
+//     // Pono ke zariye order find karo
+//     const orders = await PurchaseOrder.find();
+//     const isOrder = await PurchaseOrder.findOne({ pono });
+
+//     if (!isOrder) {
+//       return res.status(404).json({ err: "Order not found" });
+//     }
+
+//     let totalAmount = 0; 
+
+//     for (const item of products) {
+//       const { product, quantity } = item;
+
+//       const existingProduct = isOrder.products.find(
+//         (p) => p.product._id.toString() === product
+//       );
+
+//       if (!existingProduct) {
+//         return res.status(400).json({ err: `Product ${product} not found in order` });
+//       }
+
+//       const perUnitPrice = existingProduct.total / existingProduct.quantity;
+//       totalAmount += quantity * perUnitPrice;
+//     }
+
+//     if (
+//       products.every(
+//         (item) =>
+//           item.quantity === isOrder.products.find((p) => p.product.toString() === item.product._id)?.quantity
+//       )
+//     ) {
+//       const newAddPurchase = new AddPurchaseOrder({
+//         vendor,
+//         warehouse,
+//         dcno,
+//         pono,
+//         vehicleno,
+//         products,
+//         totalAmount, 
+//       });
+
+//       await newAddPurchase.save();
+
+      
+//     } else {
+//       // **Agar quantity kam hai, tou naya purchase order create hoga**
+//       const newOrder = new PurchaseOrder({
+//         vendor,
+//         warehouse,
+//         dcno,
+//         pono: `pono-000${orders.length + 1}`,
+//         vehicleno,
+//         products,
+//         totalAmount, // Update kiya gaya totalAmount
+//       });
+
+//       await newOrder.save();
+//       return res.json({ msg: "Renew purchase order" });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ err: error.message });
+//   }
+// };

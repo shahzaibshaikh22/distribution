@@ -20,12 +20,14 @@ const AddPurchase = () => {
     const { data: purchaseOrderData } = useGetPurchaseOrderQuery();
     const dispatch = useDispatch();
 
-        // Input change handler
-        const handleQuantityChange = (e, productId) => {
-            const { value } = e.target;
-            setQuantities((prev) => ({...prev,[productId]: Number(value) || 0,
-            }));
-        };
+    const handleQuantityChange = (e, productId) => {
+        const { value } = e.target;
+        setQuantities((prev) => ({
+            ...prev,
+            [productId]: value ? Number(value) : 0, // Ensure it updates correctly
+        }));
+    };
+    
 
 
     useEffect(() => {
@@ -36,11 +38,44 @@ const AddPurchase = () => {
 
     
 
-      
-
+    // const addPurchaseData = {
+    //     vendor, 
+    //     warehouse,
+    //     vehicleno,
+    //     pono,
+    //     dcno,
+    //     products: filteredPurchaseOrder?.products?.map((p) => ({
+    //         product: p.product._id.toString(),
+    //         price:p.price,
+    //         quantity: quantities[p.product._id] || p.quantity,  // Use updated quantity
+    //         total: p.total,
+    //     })),
+    //     totalAmount,
+    //   };
+    const addPurchaseData = {
+        vendor, 
+        warehouse,
+        vehicleno,
+        pono,
+        dcno,
+        products: filteredPurchaseOrder?.products?.map((p) => ({
+            product: p.product._id.toString(),
+            price:p.price,
+            quantity: quantities[p.product._id] ?? p.quantity,  
+            total: (quantities[p.product._id] ?? p.quantity) * p.price, 
+        })),
+        totalAmount: filteredPurchaseOrder?.products?.reduce(
+            (sum, p) => sum + ((quantities[p.product._id] ?? p.quantity) * p.price || 0), 
+            0
+        ),
+    };
+    
+    // Debugging 
+    
     const handleSearch = () => {
-        const foundOrder = purchaseOrders.find((order) => order.pono === searchpo);
-        
+        const foundOrder = purchaseOrders.find((order) => order.pono === searchpo); 
+               console.log(addPurchaseData);
+               
         if (foundOrder) {
             setFilteredPurchaseOrder(foundOrder);
             setPono(foundOrder.pono);
@@ -59,19 +94,7 @@ const AddPurchase = () => {
     };
     
 
-    const addPurchaseData = {
-        vendor, 
-        warehouse,
-        vehicleno,
-        pono,
-        dcno,
-        products: filteredPurchaseOrder?.products?.map((p) => ({
-            product: p._id.toString(),
-            quantity: quantities[p._id] || p.quantity,  // Use updated quantity
-            total: p.total,
-        })),
-        totalAmount,
-      };
+   
 
       const [addpurchaseorder, {isLoading}] = useAddpurchaseOrderMutation();
 const handleAddPurchaseOrder = async ()=>{
@@ -177,24 +200,26 @@ const handleAddPurchaseOrder = async ()=>{
                       </div>
                   </div>
                   <div className="grid grid-cols-4 gap-4">
-                      {
-                          filteredPurchaseOrder?.products?.map((product)=>{
-                              return(
-                                  <div key={product._id} className='flex flex-col w-full justify-between  md:my-0 my-2  gap-2'>
-                          <label className="font-semibold"  htmlFor={`quantity-${product._id}`}>{product.product.productname}</label>
-                          <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
-                              <input
-                                value={quantities[product._id] ?? product.quantity}
-                                onChange={(e) => handleQuantityChange(e, product._id)}
-                                  type="text"
-                                  placeholder={product.quantity}
-                                  name="quantity"
-                                  className='bg-transparent w-full' />
-                          </div>
-                      </div>
-                              )
-                          })
-                      }
+                  {
+    filteredPurchaseOrder?.products?.map((product) => (
+        <div key={product.product._id} className='flex flex-col w-full justify-between md:my-0 my-2 gap-2'>
+            <label className="font-semibold" htmlFor={`quantity-${product.product._id}`}>
+                {product.product.productname}
+            </label>
+            <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+                <input
+                    value={quantities[product.product._id] ?? product.quantity}
+                    onChange={(e) => handleQuantityChange(e, product.product._id)}
+                    type="number"
+                    placeholder="Enter Quantity"
+                    name="quantity"
+                    className='bg-transparent w-full' 
+                />
+            </div>
+        </div>
+    ))
+}
+
                   </div>
                   {filteredPurchaseOrder&&(
                   <button className="bg-blue-500 px-4 py-2 rounded-full" onClick={handleAddPurchaseOrder}>{isLoading ? "adding..." : "Add Order"}</button>

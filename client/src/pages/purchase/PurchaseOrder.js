@@ -20,6 +20,8 @@ const Purchase = () => {
       const [selectedWarehouse, setSelectedWarehouse] = useState("");
       const [pono, setPono] = useState(`pono-000`)
       const [vehicleno, setVehicleNo] = useState("");
+      const [price, setPrice] = useState(0);
+
       // const [dcno, setDcNo] = useState("");
       const [selectedProducts, setSelectedProducts] = useState([]);
       const [totalAmount, setTotalAmount] = useState();
@@ -52,7 +54,7 @@ const Purchase = () => {
         setSelectedProducts((prev) => {
           const existing = prev.find((p) => p._id === product._id);
           if (existing) return prev;
-          return [...prev, { ...product, quantity: 1, total: product.costprice }];
+          return [...prev, { ...product, quantity: 1, total: product.costprice,price:product.costprice }];
         });
       };
     
@@ -102,6 +104,7 @@ const Purchase = () => {
         products: selectedProducts.map((p) => ({
           product: p._id.toString(), // Ensuring only product ID is sent
           quantity: p.quantity,
+          price:p.price,
           total: p.total,
         })),
         totalAmount,
@@ -126,31 +129,32 @@ const Purchase = () => {
         }
       };
     useEffect(() => {
-        if (productData) {
-            dispatch(setProducts(productData.products));
-        }
-    }, [productData, dispatch]);
+      if (productsData) {
+          dispatch(setProducts(productsData.products));
+      }
+  }, [productsData, dispatch]);
     useEffect(() => {
         if (vendorData) {
             dispatch(setVendors(vendorData.vendor));
         }
     }, [vendorData, dispatch]);
-    useEffect(() => {
-        if (productsData) {
-            dispatch(setProducts(productsData.products));
-        }
-    }, [productsData, dispatch]);
+  
     useEffect(() => {
         if (warehouseData) {
             dispatch(setWarehouses(warehouseData.warehouse));
         }
     }, [warehouseData, dispatch]);
+
     useEffect(() => {
       if (ponoData) {
-          dispatch(setPonoLength(ponoData.length + 1));
+          dispatch(setPonoLength(ponoData.length + 1));          
           setPono(`pono-000${purchaseOrderLength}`)
       }
   }, [ponoData,purchaseOrderLength, dispatch]);
+
+  if(selectedProducts){
+    console.log(selectedProducts);
+  }
 
   
 

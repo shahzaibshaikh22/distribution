@@ -31,6 +31,9 @@ const purchaseOrderSchema = mongoose.Schema(
             ref: "Product",
             required: true,
           },
+          price:{
+            type:Number,
+          },
           quantity: {
             type: Number,
             required: true,

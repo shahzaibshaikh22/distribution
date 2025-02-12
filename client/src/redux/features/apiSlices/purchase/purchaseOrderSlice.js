@@ -26,9 +26,16 @@ export const ProductApiSlice = apiSlice.injectEndpoints({
         }),
         invalidatesTags: ['purchaseorders']
        }),
+       getInventory:builder.query({
+        query:()=>({
+            url:`${purchaseOrderUrl}/get-inventory`,
+            method:'GET',
+        }),
+        providesTags: ['inventory']
+       }),
 
     }),
     
 })
 
-export const { usePurchaseOrderMutation,useGetPurchaseOrderQuery, useAddpurchaseOrderMutation} = ProductApiSlice
+export const { usePurchaseOrderMutation,useGetPurchaseOrderQuery, useAddpurchaseOrderMutation, useGetInventoryQuery} = ProductApiSlice
