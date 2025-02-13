@@ -21,6 +21,7 @@ const Purchase = () => {
       const [pono, setPono] = useState(`pono-000`)
       const [vehicleno, setVehicleNo] = useState("");
       const [price, setPrice] = useState(0);
+      const [show, setShow] = useState(false)
 
       // const [dcno, setDcNo] = useState("");
       const [selectedProducts, setSelectedProducts] = useState([]);
@@ -48,6 +49,7 @@ const Purchase = () => {
     // fetch brands 
 
     const handleProductSelect = (e) => {
+      setShow(true);
         const productId = e.target.value;
         if (!productId) return;
         const product = products.find((p) => p._id === productId);
@@ -257,7 +259,10 @@ const Purchase = () => {
                         </div>
 
                         <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
-                        <div className='flex md:flex-row flex-col w-full  justify-between  md:my-0 my-2  md:gap-20'>
+                          
+                      <div className="w-full">
+                      <div className="divider w-full h-[1px] bg-gray-300 mb-4 " />
+                        <div className='flex md:flex-row flex-col w-full md:max-w-[47%]  justify-between  md:my-0 my-2  md:gap-20'>
                                 <label className="font-semibold" htmlFor="producttype">Products</label>
                                 <div className="inputBorder w-full py-2 rounded-md max-w-xs">
                                     <div className="relative full w-full">
@@ -278,20 +283,17 @@ const Purchase = () => {
                                     </div>
                                 </div>
                         </div>
-                        <div className='flex md:flex-row flex-col gap-4 w-full my-4 '>
-                            <div />
-                            <button 
-                            onClick={handlePurchaseOrder}
-                            type="submit" 
-                            className='bg-blue-700 md:ml-0 w-40 px-4 py-2 rounded-full text-white'>Add New</button>
-                            <button type="button" onClick={() => setShowInvoice(true)} className='bg-blue-700 md:ml-0 w-40 px-4 py-2 rounded-full text-white'>View Invoice</button>
-                        </div>
+                      </div>
+                       
                         </div>
 
                        
                     </form>
                 </div>
-                <div className="p-6 bg-white shadow rounded-lg">
+              {
+                show && (
+                  <>
+                       <div className="p-6 bg-white shadow rounded-lg">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
@@ -329,19 +331,30 @@ const Purchase = () => {
                 <div className="bg-white p-6 roundedn-md mt-2">
                     <h3 className="text-lg font-semibold">Summary</h3>
                     <h3 className="mt-2 text-md font-bold">Total Amount: Rs.{totalAmount}</h3>
+                    <div className='flex md:flex-row flex-col  w-full my-4 '>
+                            <div />
+                            <button 
+                            onClick={handlePurchaseOrder}
+                            type="submit" 
+                            className='px-8 bg-blue-700 text-sm py-2 rounded-full text-white'>Add New</button>
+                            <button type="button" onClick={() => setShowInvoice(true)} className='px-8 md:ml-2 bg-blue-700 text-sm py-2 rounded-full text-white'>View Invoice</button>
+                        </div>
                 </div>
+                  </>
+                )
+              }
             </div>
             
       {showInvoice && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div ref={invoiceRef} className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <div className="fixed w-full inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div ref={invoiceRef} className="bg-white w-full border border-2 border-gray-500 max-w-5xl mx-auto p-6 rounded-lg  ">
             <h2 className="text-xl font-bold text-center mb-4">Invoice</h2>
             <p><strong>Vendor:</strong> {selectedVendor}</p>
             <p><strong>Warehouse:</strong> {selectedWarehouse}</p>
             <p><strong>Vehicle No:</strong> {vehicleno}</p>
-            <table className="w-full border mt-2">
+            <table className="w-full mt-2">
               <thead>
-                <tr className="bg-gray-200">
+                <tr className="bg-gray-200 ">
                   <th>Product</th>
                   <th>Qty</th>
                   <th>Price</th>
@@ -349,7 +362,7 @@ const Purchase = () => {
               </thead>
               <tbody>
                 {selectedProducts.map((p) => (
-                  <tr key={p._id}>
+                  <tr className="text-center mb-4 p-2 border-b border-[1px]" key={p._id}>
                     <td>{p.productname}</td>
                     <td>{p.quantity}</td>
                     <td>Rs. {p.total}</td>

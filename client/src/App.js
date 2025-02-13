@@ -32,6 +32,8 @@ import AddPurchase from './pages/purchase/AddPurchase';
 import PurchaseInvoice from './pages/purchase/PurchaseInvoice';
 import PurchaseOrderForm from './components/PurchaseOrderForm';
 import Inventory from './pages/Inventory/Inventory';
+import StockValue from './pages/stocks/StockValue';
+import StockAdjustment from './pages/stocks/StockAdjustment';
 
 const App = () => {
   const { modes } = useSelector((state) => state.mode)
@@ -90,6 +92,11 @@ const App = () => {
               {/* inventory */}
               <Route path="/get-inventory" element={<Inventory />} />
               {/* inventory */}
+
+              {/* stocks */}
+              <Route path="/stockvalue" element={<StockValue />} />
+              <Route path="/stockadjustment" element={<StockAdjustment />} />
+              {/* stocks */}
             </Routes>
           </div>
         </div>

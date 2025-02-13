@@ -8,6 +8,7 @@ import { FaCog } from 'react-icons/fa';
 import { AiOutlineProduct } from "react-icons/ai";
 import { MdOutlineSettingsInputHdmi } from "react-icons/md";
 import { PiShoppingCartLight } from "react-icons/pi";
+import { AiOutlineStock } from "react-icons/ai";
 
 
 
@@ -88,7 +89,6 @@ const Sidebar = () => {
       path:"/loadsummary"
     },
   ]
-
   const productLinks = [
     {
       id:1,
@@ -162,6 +162,19 @@ const Sidebar = () => {
       path:"/get-inventory"
     }
   ]
+  const stockLinks = [
+    {
+      id:1,
+      text:'stock value',
+      path:"/stockvalue"
+    },
+    {
+      id:2,
+      text:'stock adjustment',
+      path:"/stockadjustment"
+    },
+  ]
+
 
 
 
@@ -251,6 +264,12 @@ const Sidebar = () => {
            menuText="Inventory"
            sideBarCollapes={sideBarCollapes}
            menuIcon={<PiShoppingCartLight  size={25}/>}/>
+            <DropdownMenu
+           modes={modes}
+           links={stockLinks}
+           menuText="Stocks"
+           sideBarCollapes={sideBarCollapes}
+           menuIcon={<AiOutlineStock  size={25}/>}/>
             {/* product */}
           {/* <DropdownMenu links={dropdownlinks}/> */}
          </div>

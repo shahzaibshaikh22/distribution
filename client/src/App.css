@@ -76,3 +76,14 @@ input:focus{
 input::placeholder{
   color: rgb(78, 78, 78);
 }
+
+.addPurchaseInputs {
+  @apply w-full flex  flex-col my-2 gap-2 text-gray-700;
+}
+
+.addPurchaseLabel{
+  @appy font-semibold md:text-md text-sm;
+}
+.addPurchaseDiv{
+  @apply inputBorder w-full p-2 rounded-md;
+}

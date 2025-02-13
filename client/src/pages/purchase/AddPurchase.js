@@ -16,6 +16,7 @@ const AddPurchase = () => {
     const [searchpo, setSearchPo] = useState("");
     const [filteredPurchaseOrder, setFilteredPurchaseOrder] = useState(null);
     const [quantities, setQuantities] = useState({});
+    
 
     const { data: purchaseOrderData } = useGetPurchaseOrderQuery();
     const dispatch = useDispatch();
@@ -27,7 +28,7 @@ const AddPurchase = () => {
             [productId]: value ? Number(value) : 0, // Ensure it updates correctly
         }));
     };
-    
+
 
 
     useEffect(() => {
@@ -36,7 +37,7 @@ const AddPurchase = () => {
         }
     }, [purchaseOrderData, dispatch]);
 
-    
+
 
     // const addPurchaseData = {
     //     vendor, 
@@ -53,29 +54,29 @@ const AddPurchase = () => {
     //     totalAmount,
     //   };
     const addPurchaseData = {
-        vendor, 
+        vendor,
         warehouse,
         vehicleno,
         pono,
         dcno,
         products: filteredPurchaseOrder?.products?.map((p) => ({
             product: p.product._id.toString(),
-            price:p.price,
-            quantity: quantities[p.product._id] ?? p.quantity,  
-            total: (quantities[p.product._id] ?? p.quantity) * p.price, 
+            price: p.price,
+            quantity: quantities[p.product._id] ?? p.quantity,
+            total: (quantities[p.product._id] ?? p.quantity) * p.price,
         })),
         totalAmount: filteredPurchaseOrder?.products?.reduce(
-            (sum, p) => sum + ((quantities[p.product._id] ?? p.quantity) * p.price || 0), 
+            (sum, p) => sum + ((quantities[p.product._id] ?? p.quantity) * p.price || 0),
             0
         ),
     };
-    
+
     // Debugging 
-    
+
     const handleSearch = () => {
-        const foundOrder = purchaseOrders.find((order) => order.pono === searchpo); 
-               console.log(addPurchaseData);
-               
+        const foundOrder = purchaseOrders.find((order) => order.pono === searchpo);
+        console.log(addPurchaseData);
+
         if (foundOrder) {
             setFilteredPurchaseOrder(foundOrder);
             setPono(foundOrder.pono);
@@ -92,17 +93,20 @@ const AddPurchase = () => {
             setVehicleno("");
         }
     };
-    
 
-   
 
-      const [addpurchaseorder, {isLoading}] = useAddpurchaseOrderMutation();
-const handleAddPurchaseOrder = async ()=>{
-    const res = await addpurchaseorder(addPurchaseData);
-    if(res){
-        console.log(res);
+
+
+    const [addpurchaseorder, { isLoading }] = useAddpurchaseOrderMutation();
+    const handleAddPurchaseOrder = async () => {
+        const res = await addpurchaseorder(addPurchaseData);
+        if (res.data.msg) {
+            alert(res.data.msg)
+        }
+        if (res.data.err) {
+            alert(res.data.msg)
+        }
     }
-}
 
     return (
         <div className="w-full px-4">
@@ -116,8 +120,8 @@ const handleAddPurchaseOrder = async ()=>{
                 </div>
                 <div className="w-full bg-white p-4">
                     <div className="w-full flex flex-col gap-4 items-center justify-center">
-                        <h3 className="text-md">Search Purchase Order</h3>
-                        <div className="inputBorder w-full p-2 rounded-md max-w-xs">
+                        <h3 className="text-lg font-semibold text-gray-600">Search Purchase Order</h3>
+                        <div className="addPurchaseDiv max-w-xs">
                             <input
                                 value={searchpo}
                                 onChange={(e) => setSearchPo(e.target.value)}
@@ -131,105 +135,102 @@ const handleAddPurchaseOrder = async ()=>{
                     </div>
                 </div>
 
-              {filteredPurchaseOrder&&(
-                  <div className="w-full p-4 rounded-md bg-white">
-                  <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
-                      <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
-                          <label className="font-semibold" htmlFor="pono">Purchase Order No:</label>
-                          <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
-                              <input
-                                  value={pono}
-                                  type="text"
-                                  readOnly
-                                  placeholder="pono-000"
-                                  name="pono"
-                                  className='bg-transparent w-full' />
-                          </div>
-                      </div>
+                {filteredPurchaseOrder && (
+                    <div className="w-full p-4 rounded-md bg-white">
+                        <div className='w-full max-w-5xl mx-auto grid md:grid-cols-3 grid-col-1 md:gap-2'>
+                            <div className='addPurchaseInputs'>
+                                <label className="addPurchaseLabel" htmlFor="pono">Purchase Order No:</label>
+                                <div className="addPurchaseDiv">
+                                    <input
+                                        value={pono}
+                                        type="text"
+                                        readOnly
+                                        placeholder="pono-000"
+                                        name="pono"
+                                        className='bg-transparent w-full' />
+                                </div>
+                            </div>
+                            <div className='addPurchaseInputs'>
+                                <label className="addPurchaseLabel" htmlFor="dcno">Dc Challan No:</label>
+                                <div className="addPurchaseDiv">
+                                    <input
+                                        onChange={(e) => setDcno(e.target.value)}
+                                        value={dcno}
+                                        type="text"
+                                        placeholder="Enter dc challan no"
+                                        name="dcno"
+                                        className='bg-transparent w-full' />
+                                </div>
+                            </div>
+                            <div className='addPurchaseInputs'>
+                                <label className="addPurchaseLabel" htmlFor="vendor">Vendor:</label>
+                                <div className="addPurchaseDiv">
+                                    <input
+                                        value={vendor}
+                                        type="text"
+                                        readOnly
+                                        placeholder="vendor"
+                                        name="venor"
+                                        className='bg-transparent w-full' />
+                                </div>
+                            </div>
+                            <div className='addPurchaseInputs'>
+                                <label className="addPurchaseLabel" htmlFor="warehouse">Warehouse:</label>
+                                <div className="addPurchaseDiv">
+                                    <input
+                                        value={warehouse}
+                                        type="text"
+                                        readOnly
+                                        placeholder="Warehouse"
+                                        name="warehouse"
+                                        className='bg-transparent w-full' />
+                                </div>
+                            </div>
+                            <div className='addPurchaseInputs'>
+                                <label className="addPurchaseLabel" htmlFor="vehicleno">Vehicle No:</label>
+                                <div className="addPurchaseDiv">
+                                    <input
+                                        value={vehicleno}
+                                        type="text"
+                                        readOnly
+                                        placeholder="vehicleno"
+                                        name="vehicleno"
+                                        className='bg-transparent w-full' />
+                                </div>
+                            </div>
+                        </div>
 
-                      <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
-                          <label className="font-semibold" htmlFor="dcno">Dc Challan No:</label>
-                          <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
-                              <input
-                                  onChange={(e)=>setDcno(e.target.value)}
-                                  value={dcno}
-                                  type="text"
-                                  placeholder="Enter dc challan no"
-                                  name="dcno"
-                                  className='bg-transparent w-full' />
-                          </div>
-                      </div>
-                  </div>
-                  <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
-                      <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
-                          <label className="font-semibold" htmlFor="vendor">Vendor:</label>
-                          <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
-                              <input
-                                  value={vendor}
-                                  type="text"
-                                  readOnly
-                                  placeholder="vendor"
-                                  name="venor"
-                                  className='bg-transparent w-full' />
-                          </div>
-                      </div>
+                        <div className="divider w-full h-[1px] bg-gray-300 mt-4 mx-auto left-0" />
+                        <div className="w-full max-w-5xl mx-auto flex mt-4">
+                            {
+                                filteredPurchaseOrder?.products?.map((product) => (
+                                    <div key={product.product._id} className='flex flex-col w-full justify-between md:my-0 my-2 gap-2'>
+                                        <label className="addPurchaseLabel" htmlFor={`quantity-${product.product._id}`}>
+                                            {product.product.productname}
+                                        </label>
+                                        <div className="addPurchaseDiv max-w-xs ">
+                                            <input
+                                                value={quantities[product.product._id] ?? product.quantity}
+                                                onChange={(e) => handleQuantityChange(e, product.product._id)}
+                                                type="number"
+                                                placeholder="Enter Quantity"
+                                                name="quantity"
+                                                className='bg-transparent w-full'
+                                            />
+                                        </div>
+                                    </div>
+                                ))
 
-                      <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
-                          <label className="font-semibold" htmlFor="warehouse">Warehouse:</label>
-                          <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
-                              <input
-                                  value={warehouse}
-                                  type="text"
-                                  readOnly
-                                  placeholder="Warehouse"
-                                  name="warehouse"
-                                  className='bg-transparent w-full' />
-                          </div>
-                      </div>
-                      <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
-                          <label className="font-semibold" htmlFor="vehicleno">Vehicle No:</label>
-                          <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
-                              <input
-                                  value={vehicleno}
-                                  type="text"
-                                  readOnly
-                                  placeholder="vehicleno"
-                                  name="vehicleno"
-                                  className='bg-transparent w-full' />
-                          </div>
-                      </div>
-                  </div>
-                  <div className="grid grid-cols-4 gap-4">
-                  {
-    filteredPurchaseOrder?.products?.map((product) => (
-        <div key={product.product._id} className='flex flex-col w-full justify-between md:my-0 my-2 gap-2'>
-            <label className="font-semibold" htmlFor={`quantity-${product.product._id}`}>
-                {product.product.productname}
-            </label>
-            <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
-                <input
-                    value={quantities[product.product._id] ?? product.quantity}
-                    onChange={(e) => handleQuantityChange(e, product.product._id)}
-                    type="number"
-                    placeholder="Enter Quantity"
-                    name="quantity"
-                    className='bg-transparent w-full' 
-                />
-            </div>
-        </div>
-    ))
-}
+                            }
 
-                  </div>
-                  {filteredPurchaseOrder&&(
-                  <button className="bg-blue-500 px-4 py-2 rounded-full" onClick={handleAddPurchaseOrder}>{isLoading ? "adding..." : "Add Order"}</button>
 
-                  )}
+                        </div>
 
-              </div>
-              )}
 
-                <div className="w-full bg-white p-4 rounded-md">
+                    </div>
+                )}
+
+                <div className="w-full bg-white p-4">
                     <div className="divider w-full h-[1px] bg-gray-300 mx-auto left-0" />
 
                     {filteredPurchaseOrder ? (
@@ -293,7 +294,14 @@ const handleAddPurchaseOrder = async ()=>{
                     ) : (
                         <p className="text-gray-500 text-center">No Purchase Order Found</p>
                     )}
+                    {filteredPurchaseOrder && (
+                        <div className="w-full flex items-end justify-end">
+                            <button className="bg-blue-500  mt-2 text-white inline px-4 py-2 rounded-full" onClick={handleAddPurchaseOrder}>{isLoading ? "adding..." : "Add Order"}</button>
+                        </div>
+
+                    )}
                 </div>
+
             </div>
         </div>
     );

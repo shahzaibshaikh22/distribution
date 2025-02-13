@@ -53,10 +53,10 @@ const Product = () => {
         unit: "",
         weight: "",
         stocklevel: "",
-        openingbalance: "",
-        openingcost: "",
+        // openingbalance: "",
+        // openingcost: "",
+        // wholesaleprice: "",
         retailprice: "",
-        wholesaleprice: "",
         costprice: "",
         image: null
     };
@@ -168,7 +168,7 @@ const Product = () => {
                                     <div className="relative full w-full">
                                         <select onChange={handleChange} value={productData.unit} name="unit" className="w-full inputBorder text-gray-800 px-4  rounded-md appearance-none cursor-pointer">
                                             {units?.map((item) => (
-                                                <option key={item._id} value={item.unit}>
+                                                 <option key={item._id} value={item.unit}>
                                                     {item.unit}
                                                 </option>
                                             ))}
@@ -231,28 +231,6 @@ const Product = () => {
                                 inputName="hscode"
                                 inputType="text"
                             />
-
-                            <InputField
-                                value={productData.openingbalance}
-                                onChangeFunction={handleChange}
-                                placeholderText="Opening Balance"
-                                LabelText="Opening Balance:"
-                                inputName="openingbalance"
-                                inputType="number"
-                            />
-
-                        </div>
-
-                        <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
-                            <InputField
-                                value={productData.openingcost}
-                                onChangeFunction={handleChange}
-                                placeholderText="Opening Cost"
-                                LabelText="Opening Cost:"
-                                inputName="openingcost"
-                                inputType="number"
-                            />
-                            {/* brands select optiions */}
                             <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
                                 <label className="font-semibold" htmlFor="brand">Brand</label>
                                 <div className="inputBorder w-full py-2 rounded-md max-w-xs">
@@ -270,18 +248,30 @@ const Product = () => {
                                     </div>
                                 </div>
                             </div>
-                            {/* brands select optiions */}
+
                         </div>
 
+                       
+
                         <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
-                            <InputField
-                                value={productData.retailprice}
-                                onChangeFunction={handleChange}
-                                placeholderText="Retail Price"
-                                LabelText="Retail Price:"
-                                inputName="retailprice"
-                                inputType="number"
-                            />
+                          
+                               <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+                                <label className="font-semibold" htmlFor="subcategory">Sub Category</label>
+                                <div className="inputBorder w-full py-2 rounded-md max-w-xs">
+                                    <div className="relative full w-full">
+                                        <select onChange={handleChange} value={productData.subcategory} name="subcategory" className="w-full inputBorder text-gray-800 px-4  rounded-md appearance-none cursor-pointer">
+                                            {subCategory?.map((item) => (
+                                                <option key={item._id} value={item.subcategory}>
+                                                    {item.subcategory}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                                            <FaChevronDown />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             {/* units select optiions */}
                             <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
@@ -305,44 +295,14 @@ const Product = () => {
 
                         </div>
 
-                        <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
-                            <InputField
-                                value={productData.wholesaleprice}
-                                onChangeFunction={handleChange}
-                                placeholderText="Wholesale Price"
-                                LabelText="Wholesale Price:"
-                                inputName="wholesaleprice"
-                                inputType="number"
-                            />
-
-                            {/* units select optiions */}
-                            <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
-                                <label className="font-semibold" htmlFor="subcategory">Sub Category</label>
-                                <div className="inputBorder w-full py-2 rounded-md max-w-xs">
-                                    <div className="relative full w-full">
-                                        <select onChange={handleChange} value={productData.subcategory} name="subcategory" className="w-full inputBorder text-gray-800 px-4  rounded-md appearance-none cursor-pointer">
-                                            {subCategory?.map((item) => (
-                                                <option key={item._id} value={item.subcategory}>
-                                                    {item.subcategory}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                                            <FaChevronDown />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* units select optiions */}
-
-                        </div>
+                     
 
                         <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
                             <InputField
                                 value={productData.distributionprice}
                                 onChangeFunction={handleChange}
-                                placeholderText="Distribution Price"
-                                LabelText="Distribution Price:"
+                                placeholderText="Net Rate"
+                                LabelText="Net Rate:"
                                 inputName="distributionprice"
                                 inputType="number"
                             />
@@ -350,8 +310,8 @@ const Product = () => {
                             <InputField
                                 value={productData.costprice}
                                 onChangeFunction={handleChange}
-                                placeholderText="Cost Price"
-                                LabelText="Cost Price:"
+                                placeholderText="Distribution Rate"
+                                LabelText="Distribution Rate:"
                                 inputName="costprice"
                                 inputType="number"
                             />
@@ -367,9 +327,22 @@ const Product = () => {
                                 inputName="remarks"
                                 inputType="text"
                             />
+                              <InputField
+                                value={productData.retailprice}
+                                onChangeFunction={handleChange}
+                                placeholderText="Trade Rate"
+                                LabelText="Trade Rate:"
+                                inputName="retailprice"
+                                inputType="number"
+                            />
 
 
-<div className="flex md:flex-row flex-col w-full justify-between md:my-0 my-2 md:gap-20">
+
+
+                        </div>
+
+                        <div className='flexw-full md:w-[47%]  md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
+                        <div className="flex md:flex-row flex-col w-full justify-between md:my-0 my-2 md:gap-20">
       <label className="font-semibold" htmlFor="image" id="image">Image</label>
       <div className="inputBorder w-full py-2 rounded-md max-w-xs">
         <div className="relative full w-full px-2">
@@ -385,7 +358,6 @@ const Product = () => {
         </div>
       )} */}
     </div>
-
                         </div>
 
                         <div className='flex md:flex-row flex-col md:gap-20  w-full md:max-w-[43%] my-4  md:items-center md:justify-center '>

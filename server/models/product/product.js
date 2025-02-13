@@ -35,18 +35,18 @@ const ProductSchema = mongoose.Schema({
     stocklevel:{
         type:Number
     },
-    openingbalance:{
-        type:Number
-    },
+    // openingbalance:{
+    //     type:Number
+    // },
     retailprice:{
         type:Number
     },
-    wholesaleprice:{
-        type:Number
-    },
-    openingcost:{
-        type:Number
-    },
+    // wholesaleprice:{
+    //     type:Number
+    // },
+    // openingcost:{
+    //     type:Number
+    // },
     costprice:{
         type:Number
     },

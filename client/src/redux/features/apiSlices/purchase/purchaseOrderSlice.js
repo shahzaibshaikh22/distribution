@@ -33,9 +33,16 @@ export const ProductApiSlice = apiSlice.injectEndpoints({
         }),
         providesTags: ['inventory']
        }),
-
+       dltInvItem:builder.mutation({
+        query:(data)=>({
+            url:`${purchaseOrderUrl}/dlt-invitem`,
+            method:'DELETE',
+            body:data
+        }),
+        providesTags: ['inventory']
+       }),
     }),
     
 })
 
-export const { usePurchaseOrderMutation,useGetPurchaseOrderQuery, useAddpurchaseOrderMutation, useGetInventoryQuery} = ProductApiSlice
+export const { usePurchaseOrderMutation,useGetPurchaseOrderQuery, useAddpurchaseOrderMutation, useGetInventoryQuery, useDltInvItemMutation} = ProductApiSlice

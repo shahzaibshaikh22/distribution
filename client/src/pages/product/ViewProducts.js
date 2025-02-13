@@ -29,9 +29,9 @@ const ProductRow = ({ product, handleDelete, handleEdit }) => (
       </td>
       <td className="py-3 text-xs px-4">{product.barcode}</td>
       <td className="py-3 text-xs px-4">{product.stocklevel}</td>
-      <td className="py-3 text-xs px-4">Rs-{product.wholesaleprice}</td>
+      {/* <td className="py-3 text-xs px-4">Rs-{product.wholesaleprice}</td> */}
       <td className="py-3 text-xs px-4">Rs-{product.costprice}</td>
-      <td className="py-3 text-xs px-4">Rs-{product.openingcost}</td>
+      {/* <td className="py-3 text-xs px-4">Rs-{product.openingcost}</td> */}
       <td className="py-3 text-xs px-4">{new Date(product.createdAt).toLocaleString()}</td>
       <td className="py-3 text-xs px-4">
         <button onClick={() => handleEdit(product)} className="px-2 py-1 rounded-md bg-green-400">Edit</button>
@@ -184,9 +184,9 @@ const ViewProducts = () => {
                 <th className="py-3 text-xs px-4">Category</th>
                 <th className="py-3 text-xs px-4">Barcode</th>
                 <th className="py-3 text-xs px-4">Stock</th>
-                <th className="py-3 text-xs px-4">Wholesale Price</th>
+                {/* <th className="py-3 text-xs px-4">Wholesale Price</th> */}
                 <th className="py-3 text-xs px-4">Cost Price</th>
-                <th className="py-3 text-xs px-4">Opening Price</th>
+                {/* <th className="py-3 text-xs px-4">Opening Price</th> */}
                 <th className="py-3 text-xs px-4">Created At</th>
                 <th className="py-3 text-xs px-4">Action</th>
               </tr>
@@ -321,28 +321,7 @@ const ViewProducts = () => {
                 inputType="text"
               />
 
-              <InputField
-                value={editProduct.openingbalance}
-                onChangeFunction={handleChange}
-                placeholderText="Opening Balance"
-                LabelText="Opening Balance:"
-                inputName="openingbalance"
-                inputType="number"
-              />
-
-            </div>
-
-            <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
-              <InputField
-                value={editProduct.openingcost}
-                onChangeFunction={handleChange}
-                placeholderText="Opening Cost"
-                LabelText="Opening Cost:"
-                inputName="openingcost"
-                inputType="number"
-              />
-              {/* brands select optiions */}
-              <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+<div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
                 <label className="font-semibold" htmlFor="brand">Brand</label>
                 <div className="inputBorder w-full py-2 rounded-md max-w-xs">
                   <div className="relative full w-full">
@@ -359,20 +338,27 @@ const ViewProducts = () => {
                   </div>
                 </div>
               </div>
-              {/* brands select optiions */}
+
             </div>
 
             <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
-              <InputField
-                value={editProduct.retailprice}
-                onChangeFunction={handleChange}
-                placeholderText="Retail Price"
-                LabelText="Retail Price:"
-                inputName="retailprice"
-                inputType="number"
-              />
-
-              {/* units select optiions */}
+            <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+                <label className="font-semibold" htmlFor="subcategory">Sub Category</label>
+                <div className="inputBorder w-full py-2 rounded-md max-w-xs">
+                  <div className="relative full w-full">
+                    <select onChange={handleChange} value={editProduct.subcategory} name="subcategory" className="w-full inputBorder text-gray-800 px-4  rounded-md appearance-none cursor-pointer">
+                      {subCategory?.map((item) => (
+                        <option key={item._id} value={item.subcategory}>
+                          {item.subcategory}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                      <FaChevronDown />
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
                 <label className="font-semibold" htmlFor="category">Category</label>
                 <div className="inputBorder w-full py-2 rounded-md max-w-xs">
@@ -390,64 +376,46 @@ const ViewProducts = () => {
                   </div>
                 </div>
               </div>
-              {/* units select optiions */}
-
+              {/* brands select optiions */}
+            
+              {/* brands select optiions */}
             </div>
 
             <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
               <InputField
-                value={editProduct.wholesaleprice}
+                value={editProduct.retailprice}
                 onChangeFunction={handleChange}
-                placeholderText="Wholesale Price"
-                LabelText="Wholesale Price:"
-                inputName="wholesaleprice"
+                placeholderText="Trade Rate"
+                LabelText="Trade Rate:"
+                inputName="retailprice"
                 inputType="number"
               />
-
-              {/* units select optiions */}
-              <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
-                <label className="font-semibold" htmlFor="subcategory">Sub Category</label>
-                <div className="inputBorder w-full py-2 rounded-md max-w-xs">
-                  <div className="relative full w-full">
-                    <select onChange={handleChange} value={editProduct.subcategory} name="subcategory" className="w-full inputBorder text-gray-800 px-4  rounded-md appearance-none cursor-pointer">
-                      {subCategory?.map((item) => (
-                        <option key={item._id} value={item.subcategory}>
-                          {item.subcategory}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                      <FaChevronDown />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* units select optiions */}
-
-            </div>
-
-            <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
-              <InputField
+                <InputField
                 value={editProduct.distributionprice}
                 onChangeFunction={handleChange}
-                placeholderText="Distribution Price"
-                LabelText="Distribution Price:"
+                placeholderText="Net Rate"
+                LabelText="Net Rate:"
                 inputName="distributionprice"
                 inputType="number"
               />
 
-              <InputField
-                value={editProduct.costprice}
-                onChangeFunction={handleChange}
-                placeholderText="Cost Price"
-                LabelText="Cost Price:"
-                inputName="costprice"
-                inputType="number"
-              />
+              {/* units select optiions */}
+              
+              {/* units select optiions */}
 
             </div>
 
             <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
+            
+
+              <InputField
+                value={editProduct.costprice}
+                onChangeFunction={handleChange}
+                placeholderText="Distribution Rate"
+                LabelText="Distribution Rate:"
+                inputName="costprice"
+                inputType="number"
+              />
               <InputField
                 value={editProduct.remarks}
                 onChangeFunction={handleChange}
@@ -456,6 +424,11 @@ const ViewProducts = () => {
                 inputName="remarks"
                 inputType="text"
               />
+
+            </div>
+
+            <div className='flex md:flex-row flex-col md:gap-20 w-full md:max-w-[47%] md:my-4  items-center justify-between '>
+              
 
 
               <div className="flex md:flex-row flex-col w-full justify-between md:my-0 my-2 md:gap-20">

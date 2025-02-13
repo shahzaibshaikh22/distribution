@@ -304,9 +304,6 @@ const AddpurchaseOrders = async (req, res) => {
 
     res.status(200).json({ 
       msg: "Purchase order updated successfully",
-      updatedProducts,
-      totalAmount,
-      remainingProducts,
     });
 
   } catch (error) {
@@ -318,7 +315,7 @@ const getInventoryItems = async(req,res)=>{
   try {
     const inventory = await Inventory.find().populate({
       path:"products.product",
-      select:"productname image costprice brand category "
+      select:"productname image costprice brand category distributionprice retailprice unit subcategory producttype barcode hscode"
     })
     if (inventory) {
       const inventoryproducts = inventory.map(order => order.products).flat();
@@ -332,16 +329,38 @@ const getInventoryItems = async(req,res)=>{
   }
 }
 
+const deleteInventoryItem = async (req, res) => {
+  try {
+    const { inventoryId, product } = req.body;
 
+    const inventory = await Inventory.findById(inventoryId);
+    if (!inventory) {
+      return res.status(404).json({ err: "Inventory not found" });
+    }
 
+    const productIndex = inventory.products.findIndex(
+      (item) => item.product.toString() === product
+    );
 
+    if (productIndex === -1) {
+      return res.status(404).json({ err: "Product not found in inventory" });
+    }
 
+    inventory.products.splice(productIndex, 1);
 
+    await inventory.save();
+
+    return res.json({ msg: "Product removed from inventory" });
+  } catch (error) {
+    return res.status(500).json({ err: error.message });
+  }
+};
 
 
 module.exports = {
     purchaseOrders,
     getPurchaseOrder,
     AddpurchaseOrders,
-    getInventoryItems
+    getInventoryItems,
+    deleteInventoryItem
 }

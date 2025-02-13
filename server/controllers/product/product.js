@@ -18,9 +18,8 @@ const addProduct = async (req, res) => {
     try {
         const requiredFields = [
             "producttype", "productname", "distributionprice", "barcode",
-            "hscode", "brand", "category", "subcategory", "remarks",
-            "unit", "weight", "stocklevel", "openingbalance",
-            "openingcost", "retailprice", "wholesaleprice", "costprice"
+            "hscode", "brand", "category", "subcategory", "remarks","unit", "weight", "stocklevel", 
+             "retailprice",  "costprice"
         ];
 
         for (let field of requiredFields) {
