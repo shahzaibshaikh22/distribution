@@ -178,6 +178,7 @@ const Sidebar = () => {
 
 
 
+
     return (
       <div className={`${sideBarCollapes === "show" ? 'w-[189px]' : 'w-[80px]'} min-h-screen ${modes === "dark" ? 'bg-darksecondary' : 'bg-white'}  md:block hidden transition-all duration-150 ease-linear`}>
         <div className={` ${sideBarCollapes === "show" ? ' flex-col flex' : 'flex flex-col items-center justify-center'}`}>

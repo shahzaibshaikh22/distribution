@@ -1,14 +1,13 @@
-import react, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useDltInvItemMutation, useGetInventoryQuery } from "../../redux/features/apiSlices/purchase/purchaseOrderSlice"
+import { useGetInventoryQuery } from "../../redux/features/apiSlices/purchase/purchaseOrderSlice"
 import { setInventory } from "../../redux/features/slices/productSlice"
 import TopBar from "../../components/TopBar"
-import { FaTrashAlt } from "react-icons/fa"
 
 const StockValue = () =>{
     const { inventory } = useSelector((state)=>state.product)
     const dispatch = useDispatch()
-    const {data:inventoryData,refetch } = useGetInventoryQuery();
+    const {data:inventoryData } = useGetInventoryQuery();
 
 let stockValuePrice;
     if(inventory){
@@ -16,22 +15,7 @@ let stockValuePrice;
     }
 
 
-    
-    
-    // delete product
-    const [dltitem] = useDltInvItemMutation();
-    
-    const handleDeleteItem = async (product)=>{  
-        
-        const data = {
-            inventoryId:"67adc621922fa69a0376a347",
-            product
-        }      
-        const res = await dltitem(data)
-        if(res){
-            refetch()
-        }
-    }
+
     
     useEffect(()=>{
         if(inventoryData){
@@ -64,7 +48,6 @@ let stockValuePrice;
                 <th className="py-3 text-xs px-4">Stock</th>
                 <th className="py-3 text-xs px-4">Distribution Rate</th>
                 <th className="py-3 text-xs px-4">Total Price</th>
-
               </tr>
             </thead>
             <tbody>

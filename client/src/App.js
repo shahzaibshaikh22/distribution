@@ -30,7 +30,6 @@ import Warehouse from './pages/setup/Warehouse';
 import ViewProducts from './pages/product/ViewProducts';
 import AddPurchase from './pages/purchase/AddPurchase';
 import PurchaseInvoice from './pages/purchase/PurchaseInvoice';
-import PurchaseOrderForm from './components/PurchaseOrderForm';
 import Inventory from './pages/Inventory/Inventory';
 import StockValue from './pages/stocks/StockValue';
 import StockAdjustment from './pages/stocks/StockAdjustment';
@@ -97,6 +96,10 @@ const App = () => {
               <Route path="/stockvalue" element={<StockValue />} />
               <Route path="/stockadjustment" element={<StockAdjustment />} />
               {/* stocks */}
+
+              {/* order booking */}
+              <Route path="/orderbooking" element={<OrderBooking />} />
+              {/* order booking */}
             </Routes>
           </div>
         </div>

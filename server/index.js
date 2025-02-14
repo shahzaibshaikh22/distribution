@@ -58,6 +58,10 @@ app.use("/api/v1/product", require("./routes/product/product.js"))
      app.use("/api/v1/purchase", require("./routes/purchase/purchaseOrder.js"))
      // vendor
 // setup
+
+// booking
+app.use("/api/v1/order-booking", require("./routes/booking/booking.js"))
+// booking
 // routes
 
 
