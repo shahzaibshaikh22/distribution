@@ -4,12 +4,14 @@ import SectionBar from "../../components/SectionBar";
 import InputField from "../../components/InputField";
 import SelectField from "../../components/SelectField";
 import { useGetInventoryQuery } from "../../redux/features/apiSlices/purchase/purchaseOrderSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setInventory } from "../../redux/features/slices/productSlice";
-import { FaTrashAlt } from "react-icons/fa";
-import { useCreateBookingMutation } from "../../redux/features/apiSlices/booking/orderBooking";
+import { FaPlus, FaTrashAlt } from "react-icons/fa";
+import { useCreateBookingMutation, useGetBookingsQuery } from "../../redux/features/apiSlices/booking/orderBooking";
+import { setBookingOrderLength } from "../../redux/features/slices/bookings";
 
 const OrderBooking = () => {
+  const {bookOrderNo} = useSelector((state)=>state.booking)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [customer, setCustomer] = useState("");
@@ -18,38 +20,13 @@ const OrderBooking = () => {
   const [changeAmount, setChangeAmount] = useState("");
   const [extraCharges, setExtraCharges] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [bookingOrderNo, setBookingOrderNo] = useState("");
   const dispatch = useDispatch()
 
   const {data:productsData} = useGetInventoryQuery()
+  const {data:bookingData} = useGetBookingsQuery()
 
-  // create new booking
-  const [createbooking, {isLoading}] = useCreateBookingMutation()
-  let productTotal;
-  if(selectedProducts){
-    productTotal = selectedProducts.reduce((sum, inv) => sum + inv.product.costprice * inv.quantity, 0);
-  }
-  const orderData = {
-    customer,
-    totalQuantity: selectedProducts.length,
-    totalAmount:productTotal,
-    products: selectedProducts.map((product) => ({
-      product: product.product._id.toString(),
-      quantity: product.quantity,
-      price: product.product.costprice,
-      totalAmount: product.product.costprice * product.quantity,
-    })),
-    netPayableAmount:productTotal,
-    paymentType, 
-    deliveryCharges,
-    changeAmount, 
-    extraCharges,
-  };
-  const handleCreateBooking = async ()=>{
-    const res = await createbooking(orderData)
-    if(res){
-      console.log(res);
-    }
-  }
+
 
   useEffect(()=>{
     if(productsData){
@@ -58,11 +35,50 @@ const OrderBooking = () => {
       
     }
   },[dispatch,productsData])
-  if(selectedProducts){
-    console.log(selectedProducts);
+  useEffect(()=>{
+    if(bookingData){
+      dispatch(setBookingOrderLength(bookingData.length)) 
+      setBookingOrderNo(`BoNo-000${bookOrderNo + 1}`)     
+    }
+  },[dispatch,bookingData])
+
+  if(bookingOrderNo){
+    console.log(bookingOrderNo);
+    
   }
 
-
+    // create new booking
+    const [createbooking, {isLoading}] = useCreateBookingMutation()
+    let productTotal;
+    if(selectedProducts){
+      productTotal = selectedProducts.reduce((sum, inv) => sum + inv.product.costprice * inv.quantity, 0);
+    }
+    const orderData = {
+      customer,
+      bookingOrderNo,
+      totalQuantity: selectedProducts.length,
+      totalAmount:productTotal,
+      products: selectedProducts.map((product) => ({
+        product: product.product._id.toString(),
+        quantity: product.quantity,
+        price: product.product.costprice,
+        totalAmount: product.product.costprice * product.quantity,
+      })),
+      netPayableAmount:productTotal,
+      paymentType, 
+      deliveryCharges,
+      changeAmount, 
+      extraCharges,
+    };
+    const handleCreateBooking = async ()=>{
+      const res = await createbooking(orderData)
+      if (res.data.msg) {
+        alert(res.data.msg)
+    }
+    if (res.data.err) {
+        alert(res.data.msg)
+    }
+    }
 
 
   const filteredProducts = productsData?.filter((product) =>
@@ -101,9 +117,11 @@ const OrderBooking = () => {
         <form className="py-4">
           <div className="flex md:flex-row flex-col md:gap-20 w-full md:my-4 items-center justify-between">
             <InputField placeholderText="Date" LabelText="Date:" inputName="date" inputType="date" />
+            <input type="text" placeholder="Booking Order No" readOnly value={bookingOrderNo} />
             <select className="w-full"  onChange={(e)=>setCustomer(e.target.value)} name="customer" id="customer">
-              <option value="Ahmed">Ahmed</option>
+              <option value="">Select customer</option>
               <option value="Bilal">Bilal</option>
+              <option value="Ahmed">Ahmed</option>
             </select>
           </div>
 
@@ -171,6 +189,7 @@ const OrderBooking = () => {
           </div>
           <div className="bg-white border-2 border-lightprimary rounded-full w-full px-4 py-2 flex items-center justify-between">
             <select className="w-full"  onChange={(e)=>setPaymentType(e.target.value)} name="paymentType" id="">
+              <option value="">select payment type</option>
               <option value="cash">Cash</option>
               <option value="card">Card</option>
             </select>
@@ -193,15 +212,15 @@ const OrderBooking = () => {
 
         {isModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-lg">
+            <div  className="bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-lg">
               <h2 className="text-xl font-semibold mb-4">Select Products</h2>
-              <input type="text" placeholder="Search products..." className="w-full p-2 border rounded-md mb-4" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <input type="text" placeholder="Search products..." className="w-full p-2 bg-lightsecondary rounded-md mb-4" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
               <ul className="max-h-60 overflow-y-auto">
                 {filteredProducts.map((product) => (
                   <li key={product._id} className="py-2 border-b flex justify-between items-center">
                     <span>{product.product.productname} - Rs {product.product.costprice}</span>
-                    <button className="bg-green-500 text-white px-2 py-1 rounded-md" onClick={() => addProductToTable(product)}>
-                      Add
+                    <button className="bg-lightprimary text-white px-2 py-1 rounded-md" onClick={() => addProductToTable(product)}>
+                     <FaPlus size={15}/>
                     </button>
                   </li>
                 ))}

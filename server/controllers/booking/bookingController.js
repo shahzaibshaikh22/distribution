@@ -63,6 +63,7 @@ const createBooking = async (req, res) => {
         deliveryCharges,
         extraCharges,
         changeAmount,
+        bookingOrderNo
       } = req.body;
   
       // Inventory update karne ke liye loop
@@ -93,6 +94,7 @@ const createBooking = async (req, res) => {
       // Order Booking create karein
       const newBooking = new OrderBooking({
         customer,
+        bookingOrderNo,
         products,
         totalQuantity,
         totalAmount,
@@ -115,10 +117,13 @@ const createBooking = async (req, res) => {
 // Get all bookings
  const getAllBookings = async (req, res) => {
   try {
-    const bookings = await OrderBooking.find().sort({ createdAt: -1 });
-    res.status(200).json({ success: true, data: bookings });
+    const bookings = await OrderBooking.find().sort({ createdAt: -1 }).populate({
+      path:"products.product",
+      select:'productname image brand category costprice'
+    })
+    res.status(200).json(bookings);
   } catch (error) {
-    res.status(500).json({ success: false, message: "Failed to fetch bookings", error: error.message });
+    res.status(500).json({ err: error.message });
   }
 };
 
@@ -153,11 +158,11 @@ const createBooking = async (req, res) => {
   try {
     const deletedBooking = await OrderBooking.findByIdAndDelete(req.params.id);
     if (!deletedBooking) {
-      return res.status(404).json({ success: false, message: "Booking not found" });
+      return res.status(404).json({  err: "Booking not found" });
     }
-    res.status(200).json({ success: true, message: "Booking deleted successfully" });
+    res.status(200).json({msg: "Booking deleted successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Failed to delete booking", error: error.message });
+    res.status(500).json({err: "Failed to delete booking" });
   }
 };
 

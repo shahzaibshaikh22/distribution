@@ -11,16 +11,22 @@ export const BrandApiSlice = apiSlice.injectEndpoints({
         }),
         invalidatesTags: ['bookings']
        }),
-
-    //    getBrands:builder.query({
-    //     query:()=>({
-    //         url:`${brandurl}/get-brand`,
-    //         method:'GEt',
-    //     }),
-    //     providesTags: ['brands']
-    //    }),
+       getBookings:builder.query({
+        query:()=>({
+            url:`${bookingurl}/get-bookings`,
+            method:'GEt',
+        }),
+        providesTags: ['bookings']
+       }),
+       deleteBooking:builder.mutation({
+        query:(id)=>({
+            url:`${bookingurl}/delete-booking/${id}`,
+            method:'DELETE',
+        }),
+        invalidatesTags: ['bookings']
+       }),
     }),
     
 })
 
-export const { useCreateBookingMutation } = BrandApiSlice
+export const { useCreateBookingMutation, useGetBookingsQuery, useDeleteBookingMutation } = BrandApiSlice

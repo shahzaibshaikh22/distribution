@@ -33,6 +33,8 @@ import PurchaseInvoice from './pages/purchase/PurchaseInvoice';
 import Inventory from './pages/Inventory/Inventory';
 import StockValue from './pages/stocks/StockValue';
 import StockAdjustment from './pages/stocks/StockAdjustment';
+import Customers from './pages/setup/Customers';
+import Orders from './pages/distribution/Orders';
 
 const App = () => {
   const { modes } = useSelector((state) => state.mode)
@@ -65,6 +67,7 @@ const App = () => {
               <Route path="/builtyform" element={<BuiltyForm />} />
               <Route path="/orderbooking" element={<OrderBooking />} />
               <Route path="/loadsummary" element={<LoadSummary />} />
+              <Route path="/orders" element={<Orders />} />
               {/* distribution routes */}
 
               {/* Products Route */}
@@ -80,6 +83,7 @@ const App = () => {
               {/* setup */}
               <Route path="/vendor" element={<Vendor />} />
               <Route path="/warehouse" element={<Warehouse />} />
+              <Route path="/customers" element={<Customers />} />
               {/* setup */}
 
               {/* [purchase] */}

@@ -5,6 +5,9 @@ const orderBookingSchema = new mongoose.Schema(
       type: String, 
       required: true,
     },
+    bookingOrderNo:{
+      type:String
+    },
     products: [
       {
         product: {
@@ -51,6 +54,10 @@ const orderBookingSchema = new mongoose.Schema(
     extraCharges: {
       type: Number,
       default: 0,
+    },
+    status:{
+      type:String,
+      default:"Booked"
     },
     changeAmount: {
       type: Number,

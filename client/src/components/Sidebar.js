@@ -88,6 +88,11 @@ const Sidebar = () => {
       text:'Load Summary',
       path:"/loadsummary"
     },
+    {
+      id:4,
+      text:'orders',
+      path:"/orders"
+    },
   ]
   const productLinks = [
     {
@@ -136,7 +141,12 @@ const Sidebar = () => {
       id:2,
       text:'Warehouse',
       path:"/warehouse"
-    }
+    },
+    {
+      id:3,
+      text:'customers',
+      path:"/customers"
+    },
   ]
   const purchaseLinks = [
     {
