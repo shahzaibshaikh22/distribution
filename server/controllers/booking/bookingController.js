@@ -166,10 +166,61 @@ const createBooking = async (req, res) => {
   }
 };
 
+// status delivered
+const updateOrderStatus = async (req, res) => {
+  try {
+    const order = await OrderBooking.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ err: "Booking not found" });
+    }
+
+    // const validStatuses = ["in process", "ready to ship", "delivered", "completed"];
+    // const newStatus = req.body.status;
+
+    // if (!validStatuses.includes(newStatus)) {
+    //   return res.status(400).json({ err: "Invalid status" });
+    // }
+    if(order.step === 1){
+      order.step = 2
+      order.status = "in process"
+      await order.save();
+      res.status(200).json({ msg: `Booking Order status updated successfully` });
+    }
+    else if(order.step === 2){
+      order.step = 3
+      order.status = "ready to ship"
+      await order.save();
+      res.status(200).json({ msg: `Booking Order status updated successfully` });
+    }
+    else if(order.step === 3){
+      order.step = 4
+      order.status = "delivered"
+      await order.save();
+      res.status(200).json({ msg: `Booking Order status updated successfully` });
+    }
+   else if(order.step === 4){
+      order.step = 5
+      order.status = "completed"
+      await order.save();
+      res.status(200).json({ msg: `Booking Order status updated successfully` });
+    }
+    else{
+      return res.json({msg:"cant update"})
+    }
+
+
+  } catch (error) {
+    res.status(500).json({ err: error.message });
+  }
+};
+
+
+
 module.exports = {
     createBooking,
     getAllBookings,
     getBookingById,
     updateBooking,
-    deleteBooking
+    deleteBooking,
+    updateOrderStatus
 }

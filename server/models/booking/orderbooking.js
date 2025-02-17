@@ -5,7 +5,7 @@ const orderBookingSchema = new mongoose.Schema(
       type: String, 
       required: true,
     },
-    bookingOrderNo:{
+    bono:{
       type:String
     },
     products: [
@@ -55,9 +55,13 @@ const orderBookingSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    step:{
+      type:Number,
+      default:1
+    },
     status:{
       type:String,
-      default:"Booked"
+      default:"pending"
     },
     changeAmount: {
       type: Number,

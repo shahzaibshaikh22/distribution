@@ -2,16 +2,20 @@ import React, { useEffect, useState } from "react";
 import TopBar from "../../components/TopBar";
 import SectionBar from "../../components/SectionBar";
 import InputField from "../../components/InputField";
-import SelectField from "../../components/SelectField";
 import { useGetInventoryQuery } from "../../redux/features/apiSlices/purchase/purchaseOrderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setInventory } from "../../redux/features/slices/productSlice";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import { useCreateBookingMutation, useGetBookingsQuery } from "../../redux/features/apiSlices/booking/orderBooking";
 import { setBookingOrderLength } from "../../redux/features/slices/bookings";
+import { useGetCustomersQuery } from "../../redux/features/apiSlices/setup/customer";
+import { setCustomers } from "../../redux/features/slices/customer";
 
 const OrderBooking = () => {
-  const {bookOrderNo} = useSelector((state)=>state.booking)
+  const dispatch = useDispatch()
+  const { bookOrderNo } = useSelector((state) => state.booking)
+  const { customers } = useSelector((state) => state.customer)
+  const [bono, setBono] = useState(`bono-000`)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [customer, setCustomer] = useState("");
@@ -20,65 +24,55 @@ const OrderBooking = () => {
   const [changeAmount, setChangeAmount] = useState("");
   const [extraCharges, setExtraCharges] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [bookingOrderNo, setBookingOrderNo] = useState("");
-  const dispatch = useDispatch()
 
-  const {data:productsData} = useGetInventoryQuery()
-  const {data:bookingData} = useGetBookingsQuery()
+  const { data: productsData } = useGetInventoryQuery()
+  const { data: bookingData } = useGetBookingsQuery()
+  const { data: customerData } = useGetCustomersQuery()
 
-
-
-  useEffect(()=>{
-    if(productsData){
+  useEffect(() => {
+    if (productsData) {
       dispatch(setInventory(productsData))
-      console.log(productsData);
-      
     }
-  },[dispatch,productsData])
-  useEffect(()=>{
-    if(bookingData){
-      dispatch(setBookingOrderLength(bookingData.length)) 
-      setBookingOrderNo(`BoNo-000${bookOrderNo + 1}`)     
+  }, [dispatch, productsData])
+  useEffect(() => {
+    if (customerData) {
+      dispatch(setCustomers(customerData))
     }
-  },[dispatch,bookingData])
+  }, [dispatch, customerData])
 
-  if(bookingOrderNo){
-    console.log(bookingOrderNo);
-    
+
+  // create new booking
+  const [createbooking, { isLoading }] = useCreateBookingMutation()
+  let productTotal;
+  if (selectedProducts) {
+    productTotal = selectedProducts.reduce((sum, inv) => sum + inv.product.costprice * inv.quantity, 0);
   }
-
-    // create new booking
-    const [createbooking, {isLoading}] = useCreateBookingMutation()
-    let productTotal;
-    if(selectedProducts){
-      productTotal = selectedProducts.reduce((sum, inv) => sum + inv.product.costprice * inv.quantity, 0);
-    }
-    const orderData = {
-      customer,
-      bookingOrderNo,
-      totalQuantity: selectedProducts.length,
-      totalAmount:productTotal,
-      products: selectedProducts.map((product) => ({
-        product: product.product._id.toString(),
-        quantity: product.quantity,
-        price: product.product.costprice,
-        totalAmount: product.product.costprice * product.quantity,
-      })),
-      netPayableAmount:productTotal,
-      paymentType, 
-      deliveryCharges,
-      changeAmount, 
-      extraCharges,
-    };
-    const handleCreateBooking = async ()=>{
-      const res = await createbooking(orderData)
-      if (res.data.msg) {
-        alert(res.data.msg)
+  const orderData = {
+    customer,
+    bono,
+    totalQuantity: selectedProducts.length,
+    totalAmount: productTotal,
+    products: selectedProducts.map((product) => ({
+      product: product.product._id.toString(),
+      quantity: product.quantity,
+      price: product.product.costprice,
+      totalAmount: product.product.costprice * product.quantity,
+    })),
+    netPayableAmount: productTotal,
+    paymentType,
+    deliveryCharges,
+    changeAmount,
+    extraCharges,
+  };
+  const handleCreateBooking = async () => {
+    const res = await createbooking(orderData)
+    if (res.data.msg) {
+      alert(res.data.msg)
     }
     if (res.data.err) {
-        alert(res.data.msg)
+      alert(res.data.msg)
     }
-    }
+  }
 
 
   const filteredProducts = productsData?.filter((product) =>
@@ -106,6 +100,15 @@ const OrderBooking = () => {
     );
   };
 
+  useEffect(() => {
+    if (bookingData) {      
+      dispatch(setBookingOrderLength(bookingData.length + 1))
+      setBono(`bono-000${bookOrderNo}`)
+    }
+  }, [dispatch, bookingData,bookOrderNo])
+
+
+
   return (
     <div className="w-full px-4">
       <TopBar />
@@ -115,17 +118,41 @@ const OrderBooking = () => {
         <div className="divider w-full h-[1px] bg-gray-300 " />
 
         <form className="py-4">
-          <div className="flex md:flex-row flex-col md:gap-20 w-full md:my-4 items-center justify-between">
+          <div className="flex md:flex-row flex-col md:gap-20 w-full md:my-4 items-center md:justify-between">
             <InputField placeholderText="Date" LabelText="Date:" inputName="date" inputType="date" />
-            <input type="text" placeholder="Booking Order No" readOnly value={bookingOrderNo} />
-            <select className="w-full"  onChange={(e)=>setCustomer(e.target.value)} name="customer" id="customer">
-              <option value="">Select customer</option>
-              <option value="Bilal">Bilal</option>
-              <option value="Ahmed">Ahmed</option>
-            </select>
+            {/* <input type="text" placeholder="Booking Order No" readOnly value={bookingOrderNo} /> */}
+            <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+              <label className="font-semibold" htmlFor="bono">Order No:</label>
+              <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+                <input
+                  value={bono}
+                  readOnly
+                  type="text"
+                  placeholder="Booking Order No"
+                  className='bg-transparent w-full' />
+              </div>
+            </div>
+           
+            
           </div>
+          <div className='flex md:flex-row flex-col w-full lg:max-w-[47%] justify-between  md:my-0 my-2  md:gap-20'>
+              <label className="font-semibold" htmlFor="bono">Customer:</label>
+             
+            <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+            <select className="w-full" onChange={(e) => setCustomer(e.target.value)} name="customer" id="customer">
+              <option value="">Select customer</option>
+              {customers?.map((c)=>{
+                return(
+                  <option value={c.username}>{c.username}</option>
+                )
+              })}
+              {/* <option value="Bilal">Bilal</option>
+              <option value="Ahmed">Ahmed</option> */}
+            </select>
+              </div>
+            </div>
 
-          <div className="flex justify-center my-4">
+          <div className="flex w-full md:w-[57%] justify-center my-4 ">
             <button
               onClick={(e) => {
                 e.preventDefault();
@@ -165,7 +192,7 @@ const OrderBooking = () => {
                   <td className="py-3 text-xs px-4 text-center">Rs {product.product.costprice * product.quantity}</td>
                   <td className="py-3 text-xs px-4 text-center">
                     <button className=" px-2 py-1 text-red-500 rounded-md" onClick={() => removeProductFromTable(product._id)}>
-                      <FaTrashAlt size={20}/>
+                      <FaTrashAlt size={20} />
                     </button>
                   </td>
                 </tr>
@@ -174,37 +201,39 @@ const OrderBooking = () => {
           </table>
         </div>
 
-        <div className="flex flex-col items-center w-full max-w-xl mx-auto gap-y-4 gap-4 pt-2">
-          <div className="bg-white border-2 border-lightprimary rounded-full w-full px-4 py-2 flex items-center justify-between">
+        <div className="flex flex-col items-end justify-end w-full  mx-auto gap-y-4 gap-4 pt-2 ">
+          <div className="bg-white border-2 border-lightprimary rounded-full max-w-xl w-full px-4 py-2  flex items-end justify-between">
             <h3>Product Quantity</h3>
             <span>{selectedProducts?.length}</span>
           </div>
-          <div className="bg-white border-2 border-lightprimary rounded-full w-full px-4 py-2 flex items-center justify-between">
+          <div className="bg-white border-2 border-lightprimary rounded-full max-w-xl w-full px-4 py-2 flex items-center justify-between">
             <h3>Net Payable Amount Rs:</h3>
             <span>Rs: {productTotal}</span>
           </div>
-          <div className="bg-white border-2 border-lightprimary rounded-full w-full px-4 py-2 flex items-center justify-between">
+          <div className="bg-white border-2 border-lightprimary rounded-full max-w-xl w-full px-4 py-2 flex items-center justify-between">
             <h3>Total Amount Rs:</h3>
             <span>Rs: {productTotal}</span>
           </div>
-          <div className="bg-white border-2 border-lightprimary rounded-full w-full px-4 py-2 flex items-center justify-between">
-            <select className="w-full"  onChange={(e)=>setPaymentType(e.target.value)} name="paymentType" id="">
+          <div className="bg-white border-2 border-lightprimary rounded-full max-w-xl w-full px-4 py-2 flex items-center justify-between">
+            <select className="w-full" onChange={(e) => setPaymentType(e.target.value)} name="paymentType" id="">
               <option value="">select payment type</option>
               <option value="cash">Cash</option>
               <option value="card">Card</option>
             </select>
           </div>
-          <div className="bg-white border-2 border-lightprimary rounded-full w-full px-4 py-2 flex items-center justify-between">
-            <input className="w-full" type="number" value={deliveryCharges} onChange={(e)=>setDeliveryCharges(e.target.value)} name="deliverycharges" placeholder="Enter Delivery Charges" />
+          <div className="bg-white border-2 border-lightprimary rounded-full max-w-xl w-full px-4 py-2 flex items-center justify-between">
+            <input className="w-full" type="number" value={deliveryCharges} onChange={(e) => setDeliveryCharges(e.target.value)} name="deliverycharges" placeholder="Enter Delivery Charges" />
           </div>
-          <div className="bg-white border-2 border-lightprimary rounded-full w-full px-4 py-2 flex items-center justify-between">
-            <input className="w-full" type="number" value={changeAmount} onChange={(e)=>setChangeAmount(e.target.value)} name="changeamount" placeholder="Change Amount" />
+          <div className="bg-white border-2 border-lightprimary rounded-full max-w-xl w-full px-4 py-2 flex items-center justify-between">
+            <input className="w-full" type="number" value={changeAmount} onChange={(e) => setChangeAmount(e.target.value)} name="changeamount" placeholder="Change Amount" />
           </div>
-          <div className="bg-white border-2 border-lightprimary rounded-full w-full px-4 py-2 flex items-center justify-between">
-            <input className="w-full" type="number" value={extraCharges} onChange={(e)=>setExtraCharges(e.target.value)} name="extracharges" placeholder="Extra Charges" />
+          <div className="bg-white border-2 border-lightprimary rounded-full max-w-xl w-full px-4 py-2 flex items-center justify-between">
+            <input className="w-full" type="number" value={extraCharges} onChange={(e) => setExtraCharges(e.target.value)} name="extracharges" placeholder="Extra Charges" />
           </div>
-          <div className="flex items-center gap-4">
-            <button onClick={handleCreateBooking} className="bg-blue-700 text-white px-8 py-2 rounded-full">Add New</button>
+          <div className="flex  gap-4">
+            <button onClick={handleCreateBooking} className="bg-blue-700 text-white px-8 py-2 rounded-full">
+              {isLoading ? "processing" : "Add New"}
+            </button>
             <button className="bg-blue-700 text-white px-8 py-2 rounded-full">Save Sale</button>
           </div>
         </div>
@@ -212,7 +241,7 @@ const OrderBooking = () => {
 
         {isModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div  className="bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-lg">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-lg">
               <h2 className="text-xl font-semibold mb-4">Select Products</h2>
               <input type="text" placeholder="Search products..." className="w-full p-2 bg-lightsecondary rounded-md mb-4" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
               <ul className="max-h-60 overflow-y-auto">
@@ -220,7 +249,7 @@ const OrderBooking = () => {
                   <li key={product._id} className="py-2 border-b flex justify-between items-center">
                     <span>{product.product.productname} - Rs {product.product.costprice}</span>
                     <button className="bg-lightprimary text-white px-2 py-1 rounded-md" onClick={() => addProductToTable(product)}>
-                     <FaPlus size={15}/>
+                      <FaPlus size={15} />
                     </button>
                   </li>
                 ))}

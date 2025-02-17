@@ -25,8 +25,17 @@ export const BrandApiSlice = apiSlice.injectEndpoints({
         }),
         invalidatesTags: ['bookings']
        }),
+       statusDelivered: builder.mutation({
+        query: (id) => ({
+            url: `${bookingurl}/booking-delivered/${id}`, 
+            method: 'PUT',
+        }),
+        invalidatesTags: ['bookings']
+    }),
+    
+    
     }),
     
 })
 
-export const { useCreateBookingMutation, useGetBookingsQuery, useDeleteBookingMutation } = BrandApiSlice
+export const { useCreateBookingMutation, useGetBookingsQuery, useDeleteBookingMutation, useStatusDeliveredMutation } = BrandApiSlice
