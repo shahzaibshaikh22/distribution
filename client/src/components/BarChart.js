@@ -27,15 +27,15 @@ const BarChart = ({chartLabel, chartColor, chartData}) => {
       legend: { display: false },
     },
     scales: {
-      x: {
-        grid: {
-          color: modes === "dark" ? "#2D2D2D" : "#ffffff",
-        },
-      },
+      // x: {
+      //   grid: {
+      //     color: modes === "dark" ? "red" : "white",
+      //   },
+      // },
       y:{
          beginAtZero: true,
          grid: {
-          color: modes === "dark" ? "white" : "red",
+          color: modes === "dark" ? "white" : "gray",
         },
         },
     },

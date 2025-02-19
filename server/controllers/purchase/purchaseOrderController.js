@@ -191,11 +191,32 @@ const getPurchaseOrder = async (req, res) => {
 //   }
 // };
 
+
+// 
+
+
+const getInventoryItems = async(req,res)=>{
+  try {
+    const inventory = await Inventory.find().populate({
+      path:"products.product",
+      select:"productname image costprice brand category distributionprice retailprice unit subcategory producttype barcode hscode"
+    })
+    if (inventory) {
+      const inventoryproducts = inventory.map(order => order.products).flat();
+      return res.json(inventoryproducts);
+  }
+    if(!inventory){
+      return res.json({err:"product not found"})
+    }
+  } catch (error) {
+    return res.json({err:error.message})
+  }
+}
 const AddpurchaseOrders = async (req, res) => {
   try {
     const { pono, products, vendor, warehouse, dcno, vehicleno } = req.body;
 
-     // Inventory check karo
+    // Inventory check karo
     let inventory = await Inventory.findOne();
 
     if (!inventory) {
@@ -221,10 +242,6 @@ const AddpurchaseOrders = async (req, res) => {
 
     // Inventory ko save karo
     await inventory.save();
-    
-
-    // Sab orders fetch karo
-    const orders = await PurchaseOrder.find();
 
     // Existing order dhoondo
     const isOrder = await PurchaseOrder.findOne({ pono });
@@ -233,27 +250,33 @@ const AddpurchaseOrders = async (req, res) => {
       return res.status(404).json({ err: "Order not found" });
     }
 
-
     let totalAmount = 0;
     let updatedProducts = [];
     let remainingProducts = [];
 
-    isOrder.products.forEach((existingProduct) => {
+    for (const existingProduct of isOrder.products) {
       const matchingProduct = products.find(
         (p) => p.product === existingProduct.product._id.toString()
       );
 
       if (matchingProduct) {
-        let updatedQuantity = matchingProduct.quantity; 
-        let remainingQuantity = existingProduct.quantity - updatedQuantity; 
+        let updatedQuantity = matchingProduct.quantity;
 
-        let productTotal = updatedQuantity * existingProduct.price; 
+        // **✅ Quantity check add kiya hai**
+        if (updatedQuantity > existingProduct.quantity) {
+          return res.json({
+            err: `Product ${existingProduct.product.productname} ki quantity zyada hai! Max: ${existingProduct.quantity}`,
+          });
+        }
+
+        let remainingQuantity = existingProduct.quantity - updatedQuantity;
+        let productTotal = updatedQuantity * existingProduct.price;
 
         updatedProducts.push({
           product: existingProduct.product,
           quantity: updatedQuantity,
           price: existingProduct.price,
-          total: productTotal, 
+          total: productTotal,
         });
 
         if (remainingQuantity > 0) {
@@ -261,7 +284,7 @@ const AddpurchaseOrders = async (req, res) => {
             product: existingProduct.product,
             quantity: remainingQuantity,
             price: existingProduct.price,
-            total: remainingQuantity * existingProduct.price, 
+            total: remainingQuantity * existingProduct.price,
           });
         }
 
@@ -269,14 +292,10 @@ const AddpurchaseOrders = async (req, res) => {
       } else {
         remainingProducts.push({
           ...existingProduct,
-          total: existingProduct.quantity * existingProduct.price, 
+          total: existingProduct.quantity * existingProduct.price,
         });
       }
-    });
-
-    // console.log("Updated Products (Saved in AddPurchaseOrder):", updatedProducts);
-    // console.log("Remaining Products (Saved in New PurchaseOrder):", remainingProducts);
-    // console.log("Updated Total Amount:", totalAmount);
+    }
 
     const newAddPurchase = new AddPurchaseOrder({
       vendor,
@@ -297,37 +316,18 @@ const AddpurchaseOrders = async (req, res) => {
         pono: `${pono}revised`,
         vehicleno,
         products: remainingProducts,
-        totalAmount: remainingProducts.reduce((sum, p) => sum + p.total, 0), // ✅ Ensuring correct totalAmount
+        totalAmount: remainingProducts.reduce((sum, p) => sum + p.total, 0),
       });
       await newOrder.save();
     }
 
-    res.status(200).json({ 
-      msg: "Purchase order updated successfully",
-    });
+    res.status(200).json({ msg: "Purchase order updated successfully" });
 
   } catch (error) {
     res.status(500).json({ err: error.message });
   }
 };
 
-const getInventoryItems = async(req,res)=>{
-  try {
-    const inventory = await Inventory.find().populate({
-      path:"products.product",
-      select:"productname image costprice brand category distributionprice retailprice unit subcategory producttype barcode hscode"
-    })
-    if (inventory) {
-      const inventoryproducts = inventory.map(order => order.products).flat();
-      return res.json(inventoryproducts);
-  }
-    if(!inventory){
-      return res.json({err:"product not found"})
-    }
-  } catch (error) {
-    return res.json({err:error.message})
-  }
-}
 
 const deleteInventoryItem = async (req, res) => {
   try {
@@ -355,6 +355,126 @@ const deleteInventoryItem = async (req, res) => {
     return res.status(500).json({ err: error.message });
   }
 };
+// main add purchase
+// const AddpurchaseOrders = async (req, res) => {
+//   try {
+//     const { pono, products, vendor, warehouse, dcno, vehicleno } = req.body;
+
+//      // Inventory check karo
+//     let inventory = await Inventory.findOne();
+
+//     if (!inventory) {
+//       // Agar inventory ka document exist nahi karta, to ek naya bana lo
+//       inventory = new Inventory({ products: [] });
+//     }
+
+//     // Products loop karke inventory update karo
+//     for (const item of products) {
+//       const { product, quantity } = item; // Yeh product ki ID aur quantity hai
+
+//       // Dekho ke yeh product inventory mein hai ya nahi
+//       const existingProduct = inventory.products.find((p) => p.product.toString() === product);
+
+//       if (existingProduct) {
+//         // Agar product mojood hai to sirf quantity update karo
+//         existingProduct.quantity += quantity;
+//       } else {
+//         // Agar product nahi hai to naya product add karo
+//         inventory.products.push({ product, quantity });
+//       }
+//     }
+
+//     // Inventory ko save karo
+//     await inventory.save();
+    
+
+//     // Sab orders fetch karo
+//     const orders = await PurchaseOrder.find();
+
+//     // Existing order dhoondo
+//     const isOrder = await PurchaseOrder.findOne({ pono });
+
+//     if (!isOrder) {
+//       return res.status(404).json({ err: "Order not found" });
+//     }
+
+
+//     let totalAmount = 0;
+//     let updatedProducts = [];
+//     let remainingProducts = [];
+
+//     isOrder.products.forEach((existingProduct) => {
+//       const matchingProduct = products.find(
+//         (p) => p.product === existingProduct.product._id.toString()
+//       );
+
+//       if (matchingProduct) {
+//         let updatedQuantity = matchingProduct.quantity; 
+//         let remainingQuantity = existingProduct.quantity - updatedQuantity; 
+
+//         let productTotal = updatedQuantity * existingProduct.price; 
+
+//         updatedProducts.push({
+//           product: existingProduct.product,
+//           quantity: updatedQuantity,
+//           price: existingProduct.price,
+//           total: productTotal, 
+//         });
+
+//         if (remainingQuantity > 0) {
+//           remainingProducts.push({
+//             product: existingProduct.product,
+//             quantity: remainingQuantity,
+//             price: existingProduct.price,
+//             total: remainingQuantity * existingProduct.price, 
+//           });
+//         }
+
+//         totalAmount += productTotal;
+//       } else {
+//         remainingProducts.push({
+//           ...existingProduct,
+//           total: existingProduct.quantity * existingProduct.price, 
+//         });
+//       }
+//     });
+
+//     // console.log("Updated Products (Saved in AddPurchaseOrder):", updatedProducts);
+//     // console.log("Remaining Products (Saved in New PurchaseOrder):", remainingProducts);
+//     // console.log("Updated Total Amount:", totalAmount);
+
+//     const newAddPurchase = new AddPurchaseOrder({
+//       vendor,
+//       warehouse,
+//       dcno,
+//       pono,
+//       vehicleno,
+//       products: updatedProducts,
+//       totalAmount,
+//     });
+//     await newAddPurchase.save();
+
+//     if (remainingProducts.length > 0) {
+//       const newOrder = new PurchaseOrder({
+//         vendor,
+//         warehouse,
+//         dcno,
+//         pono: `${pono}revised`,
+//         vehicleno,
+//         products: remainingProducts,
+//         totalAmount: remainingProducts.reduce((sum, p) => sum + p.total, 0), // ✅ Ensuring correct totalAmount
+//       });
+//       await newOrder.save();
+//     }
+
+//     res.status(200).json({ 
+//       msg: "Purchase order updated successfully",
+//     });
+
+//   } catch (error) {
+//     res.status(500).json({ err: error.message });
+//   }
+// };
 
 
 module.exports = {

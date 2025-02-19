@@ -68,33 +68,44 @@ const Orders = () => {
             </div>
 
             {/* Orders Table */}
-            <div className="w-full bg-lightsecondary rounded-md mb-2">
-                <table className="w-full min-w-full rounded-md border border-gray-200">
-                    <thead className="bg-white text-gray-800">
+            <div className="w-full bg-white p-6 rounded-md  mb-2">
+                <h1>Booking Orders</h1>
+                <table className="w-full my-4 min-w-full rounded-md ">
+                    <thead className="bg-lightsecondary text-gray-800">
                         <tr>
-                            <th className="py-3 text-xs px-4">Customer</th>
-                            <th className="py-3 text-xs px-4">Product Qty</th>
-                            <th className="py-3 text-xs px-4">Total Amount</th>
-                            <th className="py-3 text-xs px-4">Delivery Charges</th>
-                            <th className="py-3 text-xs px-4">Extra Charges</th>
-                            <th className="py-3 text-xs px-4">Net Payable Amount</th>
-                            <th className="py-3 text-xs px-4">Status</th>
-                            <th className="py-3 text-xs px-4">Action</th>
+                            <th className="p-2 text-xs ">Customer</th>
+                            <th className="p-2 text-xs ">Product Qty</th>
+                            <th className="p-2 text-xs ">Total Amount</th>
+                            <th className="p-2 text-xs ">Delivery Charges</th>
+                            <th className="p-2 text-xs ">Extra Charges</th>
+                            <th className="p-2 text-xs ">Net Payable Amount</th>
+                            <th className="p-2 text-xs ">Status</th>
+                            <th className="p-2 text-xs ">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {bookings?.map((b) => (
                             <tr key={b._id} className="border-b border-gray-300">
-                                <td className="py-3 text-xs px-4 text-center">{b.customer}</td>
-                                <td className="py-3 text-xs px-4 text-center">{b.totalQuantity}</td>
-                                <td className="py-3 text-xs px-4 text-center">{b.totalAmount}</td>
-                                <td className="py-3 text-xs px-4 text-center">{b.deliveryCharges}</td>
-                                <td className="py-3 text-xs px-4 text-center">{b.extraCharges}</td>
-                                <td className="py-3 text-xs px-4 text-center">{b.netPayableAmount}</td>
-                                <td className={`py-3 text-xs  text-center `}>
-                                    <span className={`px-4 py-1 rounded-full  ${b.status === "Booked" ? 'bg-orange-100 text-orange-600 ' : 'bg-green-100 text-green-600'}`}>
-                                        {b.status}
-                                    </span>
+                                <td className=" text-xs  text-center">{b.customer}</td>
+                                <td className=" text-xs  text-center">{b.totalQuantity}</td>
+                                <td className=" text-xs  text-center">{b.totalAmount}</td>
+                                <td className=" text-xs  text-center">{b.deliveryCharges}</td>
+                                <td className=" text-xs  text-center">{b.extraCharges}</td>
+                                <td className=" text-xs  text-center">{b.netPayableAmount}</td>
+                                <td className={` text-xs  text-center `}>
+                                <span
+                                className={`px-4 py-1 rounded-full ${
+                                    {
+                                    "pending": "bg-yellow-200 text-yellow-600",
+                                    "in orocess": "bg-blue-200 text-blue-600",
+                                    "delivered": "bg-green-200 text-green-600",
+                                    "ready to ship": "bg-purple-200 text-purple-600",
+                                    "completed": "bg-teal-200 text-teal-600",
+                                    }[b.status] || "bg-gray-200 text-gray-600" // Default style agar koi aur status ho
+                                }`}
+                                >
+                                {b.status}
+                                </span>
                                 </td>
                                 <td className="py-3 text-xs px-4 text-center flex items-center gap-1 justify-center">
                                     <span

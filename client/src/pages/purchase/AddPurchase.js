@@ -104,7 +104,7 @@ const AddPurchase = () => {
             alert(res.data.msg)
         }
         if (res.data.err) {
-            alert(res.data.msg)
+            alert(res.data.err)
         }
     }
 

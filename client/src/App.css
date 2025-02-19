@@ -80,6 +80,19 @@ input::placeholder{
 .addPurchaseInputs {
   @apply w-full flex  flex-col my-2 gap-2 text-gray-700;
 }
+@media print {
+  #orderSummary{
+    border: 2px solid #ECECEC !important;
+  }
+  table{
+    background-color: #f3f4f6 !important;
+  }
+  thead tr {
+    background-color: #f3f4f6 !important; /* Gray-100 Tailwind ka equivalent */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
 
 .addPurchaseLabel{
   @appy font-semibold md:text-md text-sm;
