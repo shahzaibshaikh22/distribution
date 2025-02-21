@@ -3,10 +3,14 @@ const Vendor = require("../../models/setup/vendor")
 // add new brand function
 const addVendor = async (req, res) => {
     try {
-        const { vendor } = req.body;
+        const vendors = await Vendor.find()
+        const { vendor,address,email,phone,openingbalance } = req.body;
 
         if(!vendor){
             return res.json({err:"Please type vendor"})
+        }
+        if(!vendor || !address || !email || !phone){
+            return res.json({err:"fields are required"})
         }
 
         // Check if product type already exists
@@ -18,7 +22,7 @@ const addVendor = async (req, res) => {
         }
 
         // Add new product type if not found
-        const newVendor = new Vendor({ vendor });
+        const newVendor = new Vendor({ vendor,address,email,openingbalance,phone,code:vendors.length + 1 });
         await newVendor.save();
 
         return res.status(200).json({

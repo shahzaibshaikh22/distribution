@@ -1,5 +1,6 @@
 const OrderBooking = require("../../models/booking/orderbooking")
 const Inventory = require("../../models/inventory/inventory")
+const OrderDetail = require("../../models/booking/OrderDetails")
 
 // Create a new order booking
 // const createBooking = async (req, res) => {
@@ -313,6 +314,35 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+// order Summary
+
+const createOrderDetail = async (req, res) => {
+  try {
+    const { responsiblePerson, driverName, vehicleNo, orderId } = req.body;
+    const existingOrder = await OrderDetail.findOne({ orderId });
+
+if (existingOrder) {
+  throw new Error("This orderId already exists! Duplicate entries are not allowed.");
+}
+
+   if(!existingOrder){
+    const newsummary = new OrderDetail({
+      responsiblePerson,
+      driverName,
+      vehicleNo,
+      orderId,
+    });
+
+    await newsummary.save();
+    res.status(201).json({ msg: "Booking saved successfully!" });
+   }
+  } catch (error) {
+    res.json({ err: error.message });
+  }
+};
+
+
+
 
 
 
@@ -323,5 +353,6 @@ module.exports = {
   getBookingById,
   updateBooking,
   deleteBooking,
-  updateOrderStatus
+  updateOrderStatus,
+  createOrderDetail
 }

@@ -31,11 +31,19 @@ export const BrandApiSlice = apiSlice.injectEndpoints({
             method: 'PUT',
         }),
         invalidatesTags: ['bookings']
-    }),
+        }),
+        OrderSummary: builder.mutation({
+            query: (data) => ({
+                url: `${bookingurl}/booking-summary`, 
+                method: 'POST',
+                body:data
+            }),
+            invalidatesTags: ['bookings']
+            }),
     
     
     }),
     
 })
 
-export const { useCreateBookingMutation, useGetBookingsQuery, useDeleteBookingMutation, useStatusDeliveredMutation } = BrandApiSlice
+export const {useOrderSummaryMutation, useCreateBookingMutation, useGetBookingsQuery, useDeleteBookingMutation, useStatusDeliveredMutation } = BrandApiSlice

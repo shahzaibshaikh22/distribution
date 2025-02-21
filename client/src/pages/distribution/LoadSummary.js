@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TopBar from "../../components/TopBar";
-import { useGetBookingsQuery } from "../../redux/features/apiSlices/booking/orderBooking";
+import { useGetBookingsQuery,useOrderSummaryMutation } from "../../redux/features/apiSlices/booking/orderBooking";
 import { useDispatch, useSelector } from "react-redux";
 import { setBookings } from "../../redux/features/slices/bookings";
 
@@ -9,6 +9,9 @@ const LoadSummary = () => {
   const { bookings } = useSelector((state) => state.booking);
   const [bono, setBono] = useState("");
   const { data: orderData } = useGetBookingsQuery();
+  const [responsiblePerson,setResponsiblePerson] = useState("")
+  const [driverName,setDriverName] = useState("")
+  const [vehicleNo,setVehicleNo] = useState("")
 
   useEffect(() => {
     if (orderData) {
@@ -17,9 +20,29 @@ const LoadSummary = () => {
   }, [dispatch, orderData]);
 
   let filteredOrder;
+  let summayData;
   if (bookings) {
     filteredOrder = bookings.find((o) => o.bono === bono);
   }
+  if(filteredOrder){
+    summayData = {
+      orderId:filteredOrder._id.toString(),
+      responsiblePerson,
+      driverName,
+      vehicleNo
+  
+    }
+  }
+  const [savesummary, {isLoading}] = useOrderSummaryMutation()
+  const handleSaveSummary = async ()=>{
+    const res = await savesummary(summayData)
+    if(res.data.msg){
+      alert(res.data.msg);
+    }
+    if(res.data.err){
+      alert(res.data.err);
+    }
+  } 
 
   return (
     <div className="w-full px-4">
@@ -46,9 +69,12 @@ const LoadSummary = () => {
         </div>
       </div>
       {filteredOrder && (
-        <div className="print:p-20 p-0 mb-4">
-          <div id="orderSummary" className="w-full  print:border-[2px] print:border-gray-300 print:fixed print:top-0 print:left-0  print:z-50 bg-white p-6 rounded-md mt-6 shadow-md print:shadow-none">
+        <div className="print:p-20 p-0 mb-4 ">
+          <div id="orderSummary" className="w-full print:border-[2px] print:border-gray-300 print:fixed print:top-0 print:left-0  print:z-50 bg-white p-6 rounded-md mt-6 shadow-md print:shadow-none">
+          <div className="w-full flex items-center justify-between">
           <h2 className="text-xl font-bold mb-4 block print:hidden">Order Details</h2>
+          <span onClick={()=>window.print()} className="bg-green-500 cursor-pointer text-white px-4 py-2 rounded-md">Print</span>
+          </div>
           {/* print header */}
           <div className="w-full print:block hidden">
             <div className="mb-4 flex justify-between items-center">
@@ -67,7 +93,7 @@ const LoadSummary = () => {
             <hr className="mb-4 print:block hidden"/>
 
             <div className="text-center">
-              <h3 className="text-lg font-semibold">Process Order For Packaging</h3>
+              <h3 className="text-lg font-semibold">Order Summary</h3>
             </div>
 
             {/* Process Order Details */}
@@ -83,29 +109,30 @@ const LoadSummary = () => {
 
           <hr className="my-4 print:block hidden"/>
           {/* print header */}
-          <div className="flex mt-2 mb-4 items-center md:gap-10 gap-2">
+          <div className="flex md:flex-row flex-col mt-2 mb-4 items-center md:gap-10 gap-2">
             <div className="w-full">
-              <label className="my-4 font-semibold text-md" htmlFor="person">Responsible Person</label>
+              <label className="my-4 font-semibold md:text-md text-xs" htmlFor="person">Responsible Person</label>
               <div className="w-full border-[2px] border-gray-200 rounded-md mt-2">
-                <input type="text" placeholder="Responsible person" className="w-full p-2" />
+                <input type="text" value={responsiblePerson} name="responsiblePerson" onChange={(e)=>setResponsiblePerson(e.target.value)} placeholder="Responsible person" className="w-full p-2" />
               </div>
             </div>
             <div className="w-full">
-              <label className="my-4 font-semibold text-md" htmlFor="person">Driver Name</label>
+              <label className="my-4 font-semibold md:text-md text-xs" htmlFor="person">Driver Name</label>
               <div className="w-full border-[2px] border-gray-200 rounded-md mt-2">
-                <input type="text" placeholder="Driver Name" className="w-full p-2" />
+                <input type="text" value={driverName}  name="driverName" onChange={(e)=>setDriverName(e.target.value)} placeholder="Driver Name" className="w-full p-2" />
               </div>
             </div>
             <div className="w-full">
-              <label className="my-4 font-semibold text-md" htmlFor="person">Vehicle No</label>
+              <label className="my-4 font-semibold md:text-md text-xs" htmlFor="person">Vehicle No</label>
               <div className="w-full border-[2px] border-gray-200 rounded-md mt-2">
-                <input type="text" placeholder="Vehicle No" className="w-full p-2" />
+                <input type="text"  value={vehicleNo}  name="vehicleNo" onChange={(e)=>setVehicleNo(e.target.value)} placeholder="Vehicle No" className="w-full p-2" />
               </div>
             </div>
 
           </div>
           <hr className="my-4 print:block hidden"/>
-          <table className="w-full text-sm  text-center  ">
+            <div className="w-full overflow-x-scroll ">
+            <table className="w-full text-sm  text-center ">
             <thead>
               <tr className="bg-gray-100 print:bg-gray-100">
                 <th className="print:border border-gray-300 px-4 py-2">Order No</th>
@@ -156,6 +183,8 @@ const LoadSummary = () => {
               ))}
             </tbody>
           </table>
+            </div>
+          <div><button onClick={handleSaveSummary}>save summary</button></div>
           <div className=" justify-between mt-6 text-sm print:flex hidden">
             <p>PO Generate by: <br /> Production Officer</p>
             <p>Issued by: <br /> Dispensing/Warehouse Officer</p>

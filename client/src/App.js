@@ -35,6 +35,9 @@ import StockValue from './pages/stocks/StockValue';
 import StockAdjustment from './pages/stocks/StockAdjustment';
 import Customers from './pages/setup/Customers';
 import Orders from './pages/distribution/Orders';
+import PurchasePayment from './pages/payments/PurchasePayment';
+import StaffCategory from './pages/setup/StaffCategory';
+import Staff from './pages/setup/Staff';
 
 const App = () => {
   const { modes } = useSelector((state) => state.mode)
@@ -84,6 +87,8 @@ const App = () => {
               <Route path="/vendor" element={<Vendor />} />
               <Route path="/warehouse" element={<Warehouse />} />
               <Route path="/customers" element={<Customers />} />
+              <Route path="/staff-category" element={<StaffCategory />} />
+              <Route path="/staff" element={<Staff />} />
               {/* setup */}
 
               {/* [purchase] */}
@@ -104,6 +109,10 @@ const App = () => {
               {/* order booking */}
               <Route path="/orderbooking" element={<OrderBooking />} />
               {/* order booking */}
+
+              {/* payments */}
+              <Route path="/purchase-payment" element={<PurchasePayment />} />
+              {/* payments */}
             </Routes>
           </div>
         </div>

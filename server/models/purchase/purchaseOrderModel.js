@@ -24,6 +24,9 @@ const purchaseOrderSchema = mongoose.Schema(
       dcno:{
           type:String,
       },
+      paymentType:{
+          type:String,
+      },
       products: [
         {
           product: {

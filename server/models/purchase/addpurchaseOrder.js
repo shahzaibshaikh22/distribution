@@ -12,6 +12,9 @@ const AddpurchaseOrderSchema = mongoose.Schema(
       pono:{
         type:String
       },
+      paymentType:{
+        type:String,
+    },
       warehouse: {
         type: String,
         ref: "Warehouse",

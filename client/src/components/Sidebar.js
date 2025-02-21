@@ -9,6 +9,7 @@ import { AiOutlineProduct } from "react-icons/ai";
 import { MdOutlineSettingsInputHdmi } from "react-icons/md";
 import { PiShoppingCartLight } from "react-icons/pi";
 import { AiOutlineStock } from "react-icons/ai";
+import { BsCash } from "react-icons/bs";
 
 
 
@@ -147,6 +148,16 @@ const Sidebar = () => {
       text:'customers',
       path:"/customers"
     },
+    {
+      id:4,
+      text:'staff category',
+      path:"/staff-category"
+    },
+    {
+      id:5,
+      text:'staff',
+      path:"/staff"
+    },
   ]
   const purchaseLinks = [
     {
@@ -183,6 +194,14 @@ const Sidebar = () => {
       text:'stock adjustment',
       path:"/stockadjustment"
     },
+  ]
+  const paymentsLink = [
+    {
+      id:1,
+      text:'purchase payments',
+      path:"/purchase-payment"
+    },
+
   ]
 
 
@@ -269,18 +288,27 @@ const Sidebar = () => {
            menuText="Purchase"
            sideBarCollapes={sideBarCollapes}
            menuIcon={<PiShoppingCartLight  size={25}/>}/>
+
             <DropdownMenu
            modes={modes}
            links={inventoryLinks}
            menuText="Inventory"
            sideBarCollapes={sideBarCollapes}
            menuIcon={<PiShoppingCartLight  size={25}/>}/>
+
             <DropdownMenu
            modes={modes}
            links={stockLinks}
            menuText="Stocks"
            sideBarCollapes={sideBarCollapes}
            menuIcon={<AiOutlineStock  size={25}/>}/>
+
+            <DropdownMenu
+           modes={modes}
+           links={paymentsLink}
+           menuText="Payments"
+           sideBarCollapes={sideBarCollapes}
+           menuIcon={<BsCash  size={25}/>}/>
             {/* product */}
           {/* <DropdownMenu links={dropdownlinks}/> */}
          </div>

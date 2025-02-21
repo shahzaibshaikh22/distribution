@@ -57,6 +57,7 @@ app.use("/api/v1/product", require("./routes/product/product.js"))
      app.use("/api/v1/warehouse", require("./routes/setup/warehouse.js"))
      app.use("/api/v1/customer", require("./routes/setup/customer.js"))
      app.use("/api/v1/purchase", require("./routes/purchase/purchaseOrder.js"))
+     app.use("/api/v1/staff", require("./routes/setup/staffcategory.js"))
      // vendor
 // setup
 

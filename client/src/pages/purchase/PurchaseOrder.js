@@ -20,7 +20,7 @@ const Purchase = () => {
       const [selectedWarehouse, setSelectedWarehouse] = useState("");
       const [pono, setPono] = useState(`pono-000`)
       const [vehicleno, setVehicleNo] = useState("");
-      const [price, setPrice] = useState(0);
+      const [paymentType, setPaymentType] = useState(0);
       const [show, setShow] = useState(false)
 
       // const [dcno, setDcNo] = useState("");
@@ -102,6 +102,7 @@ const Purchase = () => {
         vendor: selectedVendor, // This should be a valid ObjectId
         warehouse: selectedWarehouse, // This should be a valid ObjectId
         vehicleno,
+        paymentType,
         pono,
         products: selectedProducts.map((p) => ({
           product: p._id.toString(), // Ensuring only product ID is sent
@@ -138,6 +139,7 @@ const Purchase = () => {
     useEffect(() => {
         if (vendorData) {
             dispatch(setVendors(vendorData.vendor));
+            
         }
     }, [vendorData, dispatch]);
   
@@ -154,11 +156,10 @@ const Purchase = () => {
       }
   }, [ponoData,purchaseOrderLength, dispatch]);
 
-  if(selectedProducts){
-    console.log(selectedProducts);
-  }
 
-  
+  if(vendors){
+    console.log(vendors);
+  }
 
 
 
@@ -215,9 +216,9 @@ const Purchase = () => {
                                         name="vendor" onChange={(e) => setSelectedVendor(e.target.value)} 
                                         className="w-full inputBorder text-gray-800 px-4  rounded-md appearance-none cursor-pointer">
                                             <option value="">Select Vendor</option>
-                                            {vendors?.map((item) => (
-                                                <option key={item._id} value={item.vendor}>
-                                                    {item.vendor}
+                                            {vendors?.map((vendor) => (
+                                                <option key={vendor._id} value={vendor.vendor}>
+                                                    {vendor.vendor}
                                                 </option>
                                             ))}
                                         </select>
@@ -258,11 +259,10 @@ const Purchase = () => {
                                 inputType="text" /> */}
                         </div>
 
+                      <div className="divider w-full h-[1px] bg-gray-300 mb-4 " />
                         <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
                           
-                      <div className="w-full">
-                      <div className="divider w-full h-[1px] bg-gray-300 mb-4 " />
-                        <div className='flex md:flex-row flex-col w-full md:max-w-[47%]  justify-between  md:my-0 my-2  md:gap-20'>
+                        <div className='flex md:flex-row flex-col w-full   justify-between  md:my-0 my-2  md:gap-20'>
                                 <label className="font-semibold" htmlFor="producttype">Products</label>
                                 <div className="inputBorder w-full py-2 rounded-md max-w-xs">
                                     <div className="relative full w-full">
@@ -283,7 +283,27 @@ const Purchase = () => {
                                     </div>
                                 </div>
                         </div>
-                      </div>
+                        <div className='flex md:flex-row flex-col w-full   justify-between  md:my-0 my-2  md:gap-20'>
+                                <label className="font-semibold" htmlFor="producttype">Products</label>
+                                <div className="inputBorder w-full py-2 rounded-md max-w-xs">
+                                    <div className="relative full w-full">
+                                        <select 
+                                         name="paymentType"
+                                         onChange={(e)=>setPaymentType(e.target.value)}
+                                         className="w-full inputBorder text-gray-800 px-4  rounded-md appearance-none cursor-pointer">
+                                             <option value="">Select payment type</option>
+                                             <option value="cash">Cash</option>
+                                             <option value="credit">Credit</option>
+                                            
+                                        </select>
+                                        <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                                            <FaChevronDown />
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                       
+                   
                        
                         </div>
 

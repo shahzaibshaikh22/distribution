@@ -1,13 +1,14 @@
 const PurchaseOrder = require("../../models/purchase/purchaseOrderModel")
 const AddPurchaseOrder = require("../../models/purchase/addpurchaseOrder")
 const Inventory = require("../../models/inventory/inventory")
+const PurchaseDue = require("../../models/purchaseDue/purchaseValue")
 
 const purchaseOrders = async (req,res)=>{
   try {
-    const { warehouse,vendor,products,vehicleno } = req.body;
+    const { warehouse,vendor,products,vehicleno,paymentType } = req.body;
 
     const purchaseOrder = await PurchaseOrder.find();
-    if(!warehouse || !vendor || !products || !vehicleno){
+    if(!warehouse || !vendor || !products || !vehicleno || !paymentType){
       return res.json({err:"fields are required"})
     }
     const newOrder = await PurchaseOrder.create(req.body);
@@ -194,7 +195,6 @@ const getPurchaseOrder = async (req, res) => {
 
 // 
 
-
 const getInventoryItems = async(req,res)=>{
   try {
     const inventory = await Inventory.find().populate({
@@ -216,35 +216,31 @@ const AddpurchaseOrders = async (req, res) => {
   try {
     const { pono, products, vendor, warehouse, dcno, vehicleno } = req.body;
 
-    // Inventory check karo
     let inventory = await Inventory.findOne();
 
     if (!inventory) {
-      // Agar inventory ka document exist nahi karta, to ek naya bana lo
       inventory = new Inventory({ products: [] });
     }
 
-    // Products loop karke inventory update karo
     for (const item of products) {
-      const { product, quantity } = item; // Yeh product ki ID aur quantity hai
+      const { product, quantity } = item; 
 
-      // Dekho ke yeh product inventory mein hai ya nahi
       const existingProduct = inventory.products.find((p) => p.product.toString() === product);
 
       if (existingProduct) {
-        // Agar product mojood hai to sirf quantity update karo
         existingProduct.quantity += quantity;
       } else {
-        // Agar product nahi hai to naya product add karo
         inventory.products.push({ product, quantity });
       }
     }
 
-    // Inventory ko save karo
     await inventory.save();
 
-    // Existing order dhoondo
     const isOrder = await PurchaseOrder.findOne({ pono });
+    const existingAddPurchase = await AddPurchaseOrder.findOne({ pono });
+    if(existingAddPurchase){
+      return res.json({err:"purchase Order is already exists..."})
+    }
 
     if (!isOrder) {
       return res.status(404).json({ err: "Order not found" });
@@ -262,7 +258,6 @@ const AddpurchaseOrders = async (req, res) => {
       if (matchingProduct) {
         let updatedQuantity = matchingProduct.quantity;
 
-        // **✅ Quantity check add kiya hai**
         if (updatedQuantity > existingProduct.quantity) {
           return res.json({
             err: `Product ${existingProduct.product.productname} ki quantity zyada hai! Max: ${existingProduct.quantity}`,
@@ -299,6 +294,7 @@ const AddpurchaseOrders = async (req, res) => {
 
     const newAddPurchase = new AddPurchaseOrder({
       vendor,
+      paymentType:isOrder.paymentType,
       warehouse,
       dcno,
       pono,
@@ -320,8 +316,17 @@ const AddpurchaseOrders = async (req, res) => {
       });
       await newOrder.save();
     }
+    
+    const due =  PurchaseDue({
+      vendor,
+      paymentType:isOrder.paymentType,
+      purchseOrderNo:pono,
+      totalAmount
+    })
+    await due.save()
 
     res.status(200).json({ msg: "Purchase order updated successfully" });
+
 
   } catch (error) {
     res.status(500).json({ err: error.message });
@@ -476,11 +481,25 @@ const deleteInventoryItem = async (req, res) => {
 //   }
 // };
 
+const getPorderByVendor = async (req, res) => {
+  try {
+    const { vendor } = req.body
+    const purchaseOrder = await PurchaseOrder.find({vendor}).populate({
+      path: "products.product",
+      select: "productname image brand category costprice", 
+    });
+      return res.json(purchaseOrder);
+  } catch (error) {
+    return res.json({ err: error.message });
+  }
+};
+
 
 module.exports = {
     purchaseOrders,
     getPurchaseOrder,
     AddpurchaseOrders,
     getInventoryItems,
-    deleteInventoryItem
+    deleteInventoryItem,
+    getPorderByVendor
 }
