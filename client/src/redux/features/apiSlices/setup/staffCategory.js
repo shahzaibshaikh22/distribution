@@ -9,7 +9,7 @@ export const staffCategoryApiSlice = apiSlice.injectEndpoints({
             method:'POST',
             body:category
         }),
-        invalidatesTags: ['StaffCategory']
+        invalidatesTags: ['staffCategories']
        }),
        addStaff:builder.mutation({
         query:(data)=>({
@@ -17,18 +17,39 @@ export const staffCategoryApiSlice = apiSlice.injectEndpoints({
             method:'POST',
             body:data
         }),
-        invalidatesTags: ['Staffs']
+        invalidatesTags: ['staffs']
        }),
 
-       getWarehouse:builder.query({
+       getStaffCategory:builder.query({
         query:()=>({
-            url:`${setupurl}/get-warehouse`,
+            url:`${setupurl}/get-staff-category`,
             method:'GET',
         }),
-        providesTags: ['StaffCategories']
+        providesTags: ['staffCategories']
+       }),
+       getStaff:builder.query({
+        query:()=>({
+            url:`${setupurl}/get-staff`,
+            method:'GET',
+        }),
+        providesTags: ['staffs']
+       }),
+       deleteStaffCat:builder.mutation({
+        query:(id)=>({
+            url:`${setupurl}/dlt-staff-cat/${id}`,
+            method:'DELETE',
+        }),
+        invalidatesTags: ['staffs']
+       }),
+       deleteStaff:builder.mutation({
+        query:(id)=>({
+            url:`${setupurl}/dlt-staff/${id}`,
+            method:'DELETE',
+        }),
+        invalidatesTags: ['staffs']
        }),
     }),
     
 })
 
-export const {useAddStaffMutation, useAddStaffCategoryMutation,useGetWarehouseQuery } = staffCategoryApiSlice
+export const {useAddStaffMutation, useAddStaffCategoryMutation,useGetStaffCategoryQuery, useGetStaffQuery, useDeleteStaffMutation, useDeleteStaffCatMutation } = staffCategoryApiSlice

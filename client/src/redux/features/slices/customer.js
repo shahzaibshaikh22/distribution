@@ -9,9 +9,12 @@ const customerSlice = createSlice({
     setCustomers:(state,action)=>{
       state.customers = action.payload
     },
+    setCustomerCaty:(state,action)=>{
+      state.customerCategories = action.payload
+    },
 
   },
 });
 
-export const { setCustomers} = customerSlice.actions;
+export const { setCustomers, setCustomerCaty} = customerSlice.actions;
 export default customerSlice.reducer

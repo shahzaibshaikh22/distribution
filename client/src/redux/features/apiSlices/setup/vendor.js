@@ -19,8 +19,16 @@ export const VendorApiSlice = apiSlice.injectEndpoints({
         }),
         providesTags: ['vendor']
        }),
+
+       deleteVendor:builder.mutation({
+        query:(id)=>({
+            url:`${vendorurl}/delete-vendor/${id}`,
+            method:'DELETE',
+        }),
+        invalidatesTags: ['vendors']
+       }),
     }),
     
 })
 
-export const { useAddVendorMutation,useGetVendorQuery } = VendorApiSlice
+export const { useAddVendorMutation,useGetVendorQuery, useDeleteVendorMutation } = VendorApiSlice

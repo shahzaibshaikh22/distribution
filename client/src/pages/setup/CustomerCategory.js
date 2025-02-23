@@ -3,28 +3,32 @@ import TopBar from "../../components/TopBar";
 import SectionBar from "../../components/SectionBar";
 import { useDispatch, useSelector } from "react-redux";
 import InputField from "../../components/InputField";
-import { useAddStaffCategoryMutation, useGetStaffCategoryQuery } from "../../redux/features/apiSlices/setup/staffCategory";
-import { setStaffCaty } from "../../redux/features/slices/setup";
+import { setCustomerCaty } from "../../redux/features/slices/setup";
+import { useCreateCustomerCategoryMutation, useGetCustomersCategoryQuery } from "../../redux/features/apiSlices/setup/customer";
 
 
 
-const StaffCategory = () => {
+const CustomerCategory = () => {
   const { modes } = useSelector((state)=>state.mode);
-  const { staffCategories } = useSelector((state)=>state.setup);
+  const { customerCategories } = useSelector((state)=>state.setup);
 
   const [category, setCategory] = useState("");
 
   const dispatch = useDispatch()
 
 // product type submition
-const [addStaffCategory, {isLoading}] = useAddStaffCategoryMutation()
-const {data:staffCatyData,refetch} = useGetStaffCategoryQuery()
+const [addcustomerCategory, {isLoading}] = useCreateCustomerCategoryMutation()
+const {data:customercategortData,refetch} = useGetCustomersCategoryQuery()
+if(customercategortData){
+    console.log(customercategortData);
+}
 
 
 const handleSubmit = async (e)=>{
     e.preventDefault();
     
-    const res = await addStaffCategory({category})
+    
+    const res = await addcustomerCategory({category})
     setCategory("")
     refetch()
     
@@ -32,6 +36,7 @@ const handleSubmit = async (e)=>{
         if(res.data.err){
             alert(res.data.err)
         }else if(res.data.msg){
+            refetch()
             alert(res.data.msg)
         }
     }
@@ -42,11 +47,11 @@ const handleSubmit = async (e)=>{
 }
 
 useEffect(()=>{
-    if(staffCatyData){
-        dispatch(setStaffCaty(staffCatyData.category))  
+    if(customercategortData){
+        dispatch(setCustomerCaty(customercategortData))  
               
     }
-  },[dispatch,staffCatyData,refetch])
+  },[dispatch,customercategortData,refetch])
     
 
     return (
@@ -87,7 +92,8 @@ useEffect(()=>{
                             <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
                             <input
                             type="text"
-                            placeholder={staffCategories?.length + 1}
+                            onChange={()=>""}
+                            value={customerCategories?.length + 1}
                             readOnly
                             className='bg-transparent w-full'/>
                             </div>
@@ -104,4 +110,4 @@ useEffect(()=>{
     );
 };
 
-export default StaffCategory;
+export default CustomerCategory;

@@ -9,14 +9,32 @@ const VendorSchema = mongoose.Schema({
     openingbalance:{
         type:Number
     },
-    vendor:{
+    name:{
         type:String,
     },
     address:{
         type:String
     },
     phone:{
-        type:Number
+        type:String
+    },
+    mobile:{
+        type:String
+    },
+    fax:{
+        type:String
+    },
+    gst:{
+        type:String
+    },
+    contactperson:{
+        type:String
+    },
+    ntn:{
+        type:String
+    },
+    designation:{
+        type:String
     },
     email:{
         type:String

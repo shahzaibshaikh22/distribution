@@ -38,6 +38,11 @@ import Orders from './pages/distribution/Orders';
 import PurchasePayment from './pages/payments/PurchasePayment';
 import StaffCategory from './pages/setup/StaffCategory';
 import Staff from './pages/setup/Staff';
+import StaffView from './pages/setup/StaffView';
+import StaffCategoryView from './pages/setup/StaffCategoryView';
+import VendorView from './pages/setup/VendorView';
+import CustomerCategory from './pages/setup/CustomerCategory';
+import CustomerCategoryView from './pages/setup/CustomerCategoryView';
 
 const App = () => {
   const { modes } = useSelector((state) => state.mode)
@@ -88,7 +93,12 @@ const App = () => {
               <Route path="/warehouse" element={<Warehouse />} />
               <Route path="/customers" element={<Customers />} />
               <Route path="/staff-category" element={<StaffCategory />} />
-              <Route path="/staff" element={<Staff />} />
+              <Route path="/add-staff" element={<Staff />} />
+              <Route path="/staff-view" element={<StaffView />} />
+              <Route path="/vendor-view" element={<VendorView />} />
+              <Route path="/staff-view-category" element={<StaffCategoryView />} />
+              <Route path="/add-customer-category" element={<CustomerCategory />} />
+              <Route path="/customer-view-category" element={<CustomerCategoryView />} />
               {/* setup */}
 
               {/* [purchase] */}

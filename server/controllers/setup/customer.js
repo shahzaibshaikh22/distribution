@@ -1,4 +1,5 @@
 const Customer = require("../../models/setup/customer");
+const CustomerCategory = require("../../models/setup/customercategory")
 
 //  Create a new customer
 const createCustomer = async (req, res) => {
@@ -11,7 +12,6 @@ const createCustomer = async (req, res) => {
         res.status(500).json({ error: "Failed to create customer" });
     }
 };
-
 //  Get all customers
 const getAllCustomers = async (req, res) => {
     try {
@@ -65,11 +65,60 @@ const deleteCustomer = async (req, res) => {
     }
 };
 
+// create customer category
+const createCustomerCategory = async (req, res) => {
+    try {
+        const { category } = req.body;
+        if(!category){
+            return res.json({msg:"please type category"})
+        }
+        const customerCategory = await CustomerCategory.find()
+        
+        const customercategory = new CustomerCategory({ category, code:customerCategory.length + 1 });
+        await customercategory.save();
+        res.status(201).json({ msg: "Customer created successfully" });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to create customer" });
+    }
+};
+const getCustomerCategory = async (req, res) => {
+    try {
+        const category = await CustomerCategory.find()
+        if(!category){
+            return res.json({msg:"category not found"})
+        }
+        res.status(201).json(category);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to create customer" });
+    }
+};
+const deleteCustomerCategory = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Check if the vendor exists
+        const category = await CustomerCategory.findById(id);
+        if (!category) {
+            return res.status(404).json({ msg: "category not found" });
+        }
+
+        // Delete the vendor
+        await CustomerCategory.findByIdAndDelete(id);
+
+        res.status(200).json({ msg: "category deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: "Internal Server Error" });
+    }
+}
+
 //  Export all functions
 module.exports = {
     createCustomer,
     getAllCustomers,
     getCustomerById,
     updateCustomer,
-    deleteCustomer
+    deleteCustomer,
+    createCustomerCategory,
+    getCustomerCategory,
+    deleteCustomerCategory
 };

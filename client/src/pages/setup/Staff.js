@@ -1,14 +1,21 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import TopBar from "../../components/TopBar";
 import SectionBar from "../../components/SectionBar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import InputField from "../../components/InputField";
-import { useAddStaffCategoryMutation, useAddStaffMutation } from "../../redux/features/apiSlices/setup/staffCategory";
+import {  useAddStaffMutation, useGetStaffCategoryQuery, useGetStaffQuery } from "../../redux/features/apiSlices/setup/staffCategory";
+import {setStaffCaty, setStaff } from "../../redux/features/slices/setup"
 
 
 
 const Staff = () => {
   const { modes } = useSelector((state)=>state.mode);
+  const { staffCategories } = useSelector((state)=>state.setup);
+  const dispatch = useDispatch()
+
+  const {data:staffCatyData} = useGetStaffCategoryQuery();
+
+
 
   const [data, setData] = useState({
     name:"",
@@ -31,6 +38,20 @@ const handleSubmit = async (e)=>{
     e.preventDefault();
     
     const res = await addStaff(data)
+  
+    
+    if(res){
+        if(res.data.err){
+            alert(res.data.err)
+        }else if(res.data.msg){
+            alert(res.data.msg)
+        }
+    }
+
+    
+}
+
+const handleReset = ()=>{
     setData(
         {
             name:"",
@@ -43,19 +64,13 @@ const handleSubmit = async (e)=>{
             nic:"",
           }
     )
-    
-    if(res){
-        if(res.data.err){
-            alert(res.data.err)
-        }else if(res.data.msg){
-            alert(res.data.msg)
-        }
-    }
-    // if(res.data.msg){
-    //     alert(res.data.msg)
-    // }
-    
 }
+
+useEffect(()=>{
+    if(staffCatyData){
+        dispatch(setStaffCaty(staffCatyData.category))        
+    }
+  },[dispatch,staffCatyData])
 
     
 
@@ -64,21 +79,12 @@ const handleSubmit = async (e)=>{
             {/* <PhoneMenu/> */}
             <div className="w-full ">
                 <TopBar />
-                <SectionBar sectionHeading="Staff Category" />
+                <SectionBar sectionHeading="Staff" />
                 {/* form section */}
-                <div className={`w-full md:px-10 mainContainerForm relative rounded-xl ${modes === "dark" ? 'bg-darksecondary text-white' : 'bg-white text-gray-800'} h-[4rem]`}>
-                    <div className='md:px-0 px-10'>
-                        <h1 className='text-center md:text-md text-sm pt-6 font-semibold mb-5'>Staff Category</h1>
-                        <div className="divider w-full h-[1px] bg-gray-300   mx-auto left-0" />
-                    </div>
 
-                    <div className={`${modes === "dark" ? 'bg-darkprimary' : 'bg-lightprimary'} w-56 absolute formContainer h-16 right-0 top-0 hidden`}>
-                    </div>
-                </div>
-
-                <div className={`w-full Container h-auto md:mb-0 mb-4  px-10 ${modes === "dark" ? 'bg-darksecondary text-white' : 'bg-white text-gray-800'}`}>
+                <div className={`w-full Container rounded-md h-auto md:mb-0 mb-4  px-10 ${modes === "dark" ? 'bg-darksecondary text-white' : 'bg-white text-gray-800'}`}>
                     <div className='w-full '>
-                        <h1 className=' pt-6 font-semibold mb-4'>Category Detail</h1>
+                        <h1 className=' pt-6 font-semibold mb-4'>staff Detail</h1>
                         <div className="divider w-full h-[1px] bg-gray-300 " />
                     </div>
                     <form onSubmit={handleSubmit} className=' py-4'>
@@ -143,18 +149,25 @@ const handleSubmit = async (e)=>{
                                 <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
                                 <select className="w-full" name="category" onChange={handleChange} id="category">
                                     <option value="">select Category</option>
-                                    <option value="employee">employee</option>
+                                    {staffCategories?.map((cat)=>{
+                                        return(
+                                            <option key={cat._id} value={cat.category}>{cat.category}</option>
+                                        )
+                                    })}
                                 </select>
                                 </div>
                                 </div>
                         </div>
-                        <div className='flex md:flex-row flex-col md:gap-20  w-full md:max-w-[50%] my-4  md:items-center md:justify-center '>
+                        <div className='flex items-center justify-end w-full my-4 '>
                             <div />
-                            <button type="submit" className='bg-blue-700 md:ml-0 w-40 px-4 py-2 rounded-full text-white'>{isLoading ? "Processing" : "Add New"}</button>
+                            <button type="submit" className='bg-blue-700 px-10 py-2 rounded-full text-white'>{isLoading ? "Adding..." : "Add"}</button>
+                            <button onClick={handleReset} type="button" className='bg-blue-700 md:ml-4 ml-0 px-10 py-2 rounded-full text-white'>Add New</button>
                         </div>
                     </form>
                 </div>
+               
             </div>
+            
         </div>
     );
 };

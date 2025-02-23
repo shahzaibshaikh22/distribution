@@ -68,7 +68,7 @@ const Sidebar = () => {
       path:'/financialyear'
     },
     {
-      id:7,
+      id:8,
       text:'Query',
       path:'/query'
     }
@@ -155,8 +155,33 @@ const Sidebar = () => {
     },
     {
       id:5,
-      text:'staff',
-      path:"/staff"
+      text:'add staff',
+      path:"/add-staff"
+    },
+    {
+      id:6,
+      text:'staffs view',
+      path:"/staff-view"
+    },
+    {
+      id:7,
+      text:'staff category view',
+      path:"/staff-view-category"
+    },
+    {
+      id:8,
+      text:'vendor view',
+      path:"/vendor-view"
+    },
+    {
+      id:9,
+      text:'customer category',
+      path:"/add-customer-category"
+    },
+    {
+      id:10,
+      text:'customer category view',
+      path:"/customer-view-category"
     },
   ]
   const purchaseLinks = [

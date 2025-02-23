@@ -3,6 +3,7 @@ import modeReducer from "./features/slices/modeSlice"
 import productReducer from "./features/slices/productSlice"
 import bookingReducer from "./features/slices/bookings"
 import customerReducer from "./features/slices/customer"
+import setupReducer from "./features/slices/setup"
 import { configureStore } from "@reduxjs/toolkit";
 
 const store = configureStore({
@@ -11,6 +12,7 @@ const store = configureStore({
         product:productReducer,
         booking:bookingReducer,
         customer:customerReducer,
+        setup:setupReducer,
         [apiSlice.reducerPath]: apiSlice.reducer
     },
     devTools:true,

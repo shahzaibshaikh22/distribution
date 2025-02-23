@@ -11,10 +11,16 @@ const Vendor = () => {
   const { modes } = useSelector((state)=>state.mode);
 
   const [data, setData] = useState({
-    vendor:"",
+    name:"",
     phone:"",
     email:"",
     address:"",
+    mobile:"",
+    fax:"",
+    gst:"",
+    ntn:"",
+    contactperson:"",
+    designation:"",
     openingbalance:0
   });
 
@@ -30,10 +36,16 @@ const handleSubmit = async (e)=>{
     
     const res = await addVendor(data)
     setData({
-        vendor:"",
+        name:"",
         phone:"",
         email:"",
         address:"",
+        mobile:"",
+        fax:"",
+        gst:"",
+        ntn:"",
+        contactperson:"",
+        designation:"",
         openingbalance:0
       })
     
@@ -43,11 +55,7 @@ const handleSubmit = async (e)=>{
         }else if(res.data.msg){
             alert(res.data.msg)
         }
-    }
-    // if(res.data.msg){
-    //     alert(res.data.msg)
-    // }
-    
+    }    
 }
 
     
@@ -57,7 +65,7 @@ const handleSubmit = async (e)=>{
             {/* <PhoneMenu/> */}
             <div className="w-full ">
                 <TopBar />
-                <SectionBar sectionHeading="Vendor" />
+                <SectionBar sectionHeading="Vendor" secRedirect="/vendor" view="/vendor-view" />
                 {/* form section */}
                 <div className={`w-full md:px-10 mainContainerForm relative rounded-xl ${modes === "dark" ? 'bg-darksecondary text-white' : 'bg-white text-gray-800'} h-[4rem]`}>
                     <div className='md:px-0 px-10'>
@@ -78,11 +86,11 @@ const handleSubmit = async (e)=>{
                         <div className='flex md:flex-row w-full  flex-col md:gap-20  md:my-4 '>
                             {/* product type  */}
                             <InputField
-                                value={data.vendor}
+                                value={data.name}
                                 onChangeFunction={handleChange}
                                 placeholderText="vendor name"
                                 LabelText="Vendor Name"
-                                inputName="vendor"
+                                inputName="name"
                                 inputType="text" />
                             <InputField
                                 value={data.address}
@@ -101,25 +109,85 @@ const handleSubmit = async (e)=>{
                                 placeholderText="vendor phone"
                                 LabelText="Vendor Phone:"
                                 inputName="phone"
-                                inputType="number" />
+                                inputType="text" />
+                            <InputField
+                                value={data.mobile}
+                                onChangeFunction={handleChange}
+                                placeholderText="Mobile"
+                                LabelText="Mobile:"
+                                inputName="mobile"
+                                inputType="text" />
+                            {/* product type  */}
+                        </div>
+                        <div className='flex md:flex-row w-full   flex-col md:gap-20  md:my-4 '>
+                            {/* product type  */}
+                            <InputField
+                                value={data.gst}
+                                onChangeFunction={handleChange}
+                                placeholderText="Gst No"
+                                LabelText="Gst NO:"
+                                inputName="gst"
+                                inputType="text" />
+                            <InputField
+                                value={data.fax}
+                                onChangeFunction={handleChange}
+                                placeholderText="Fax No"
+                                LabelText="Fax NO:"
+                                inputName="fax"
+                                inputType="text" />
+                        </div>
+                        <div className='flex md:flex-row w-full   flex-col md:gap-20  md:my-4 '>
+                            {/* product type  */}
+                            <InputField
+                                value={data.ntn}
+                                onChangeFunction={handleChange}
+                                placeholderText="Ntn No"
+                                LabelText="Ntn NO:"
+                                inputName="ntn"
+                                inputType="text" />
+                            <InputField
+                                value={data.contactperson}
+                                onChangeFunction={handleChange}
+                                placeholderText="Contact Person"
+                                LabelText="Contact Person:"
+                                inputName="contactperson"
+                                inputType="text" />
+                        </div>
+                        <div className='flex md:flex-row w-full   flex-col md:gap-20  md:my-4 '>
+                            {/* product type  */}
+                            <InputField
+                                value={data.designation}
+                                onChangeFunction={handleChange}
+                                placeholderText="Designation"
+                                LabelText="Designation:"
+                                inputName="designation"
+                                inputType="text" />
                             <InputField
                                 value={data.email}
                                 onChangeFunction={handleChange}
-                                placeholderText="vendor email"
-                                LabelText="Vendor Email:"
+                                placeholderText="Email"
+                                LabelText="Email:"
                                 inputName="email"
                                 inputType="email" />
-                            {/* product type  */}
                         </div>
-                        <div className='flex md:flex-row w-full md:max-w-[47%]  flex-col md:gap-20  md:my-4 '>
+                        <div className='flex md:flex-row w-full   flex-col md:gap-20  md:my-4 '>
                             {/* product type  */}
                             <InputField
                                 value={data.openingbalance}
                                 onChangeFunction={handleChange}
-                                placeholderText="opening balance"
+                                placeholderText="Opening Balance"
                                 LabelText="Opening Balance:"
                                 inputName="openingbalance"
                                 inputType="number" />
+                              <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+                                <label className="font-semibold"  htmlFor="code">Code</label>
+                                <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+                                <input
+                                placeholder="0"
+                                readOnly
+                                className='bg-transparent w-full'/>
+                                </div>
+                                </div>
                         </div>
                         <div className='flex md:flex-row flex-col md:gap-20  w-full md:max-w-[50%] my-4  md:items-center md:justify-center '>
                             <div />
