@@ -31,6 +31,7 @@ const handleDelete = async (id)=>{
     }
 }
 const [updateCategory] = useUpdateStaffCategoryMutation()
+
 const handleEdit = (category) => {
     setSelectedCategory(category);
     setCategory(category.category);
