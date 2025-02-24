@@ -43,20 +43,22 @@ import StaffCategoryView from './pages/setup/StaffCategoryView';
 import VendorView from './pages/setup/VendorView';
 import CustomerCategory from './pages/setup/CustomerCategory';
 import CustomerCategoryView from './pages/setup/CustomerCategoryView';
+import AddTown from './pages/setup/AddTown';
+import TownsView from './pages/setup/TownsView';
 
 const App = () => {
-  const { modes } = useSelector((state) => state.mode)
+  const { modes,sideBarCollapes } = useSelector((state) => state.mode)
   useEffect(() => {
     document.body.style.backgroundColor = modes === "dark" ? "#222222" : "#EDEDED";
   }, [modes]);
   return (
     <BrowserRouter>
       <main className={`w-full bg-transparent transition-all duration-150 ease-linear flex`}>
-        <div className='w-full  flex gap-1'>
-          <div className='sidebar'>
-            <Sidebar />
+        <div className='w-full'>
+          <div className='sidebar '>
+            <Sidebar/>
           </div>
-          <div className='content w-full'>
+          <div className={`content w-full ${sideBarCollapes  === "show" ? "md:pl-[11.6rem]" : "md:pl-[4.8rem]"}`}>
             <Routes>
               <Route path="/" element={<Overview />} />
               <Route path="/complaints" element={<Complaints />} />
@@ -99,6 +101,8 @@ const App = () => {
               <Route path="/staff-view-category" element={<StaffCategoryView />} />
               <Route path="/add-customer-category" element={<CustomerCategory />} />
               <Route path="/customer-view-category" element={<CustomerCategoryView />} />
+              <Route path="/add-town" element={<AddTown />} />
+              <Route path="/town-view" element={<TownsView />} />
               {/* setup */}
 
               {/* [purchase] */}

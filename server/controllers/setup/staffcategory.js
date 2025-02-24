@@ -122,6 +122,21 @@ const deleteStaff = async (req, res) => {
         res.status(500).json({ msg: "Internal Server Error" });
     }
 }
+const updateStaffCategory = async (req, res) => {
+    try {
+        const updatestfCat = await staffCategory.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+        if (!updatestfCat) {
+            return res.status(404).json({ msg: "Customer not found" });
+        }
+        res.status(200).json({ msg: "Customer updated successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+};
 
 
 
@@ -131,5 +146,6 @@ module.exports = {
     getStaffCategory,
     getStaff,
     deleteStaffCategory,
-    deleteStaff
+    deleteStaff,
+    updateStaffCategory
 }

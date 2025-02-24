@@ -110,6 +110,21 @@ const deleteCustomerCategory = async (req, res) => {
         res.status(500).json({ msg: "Internal Server Error" });
     }
 }
+const updatedCustomerCategory = async (req, res) => {
+    try {
+        const updatedTown = await CustomerCategory.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+        if (!updatedTown) {
+            return res.status(404).json({ msg: "category not found" });
+        }
+        res.status(200).json({ msg: "category updated successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+};
 
 //  Export all functions
 module.exports = {
@@ -120,5 +135,6 @@ module.exports = {
     deleteCustomer,
     createCustomerCategory,
     getCustomerCategory,
-    deleteCustomerCategory
+    deleteCustomerCategory,
+    updatedCustomerCategory
 };

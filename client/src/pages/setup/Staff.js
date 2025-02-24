@@ -3,8 +3,8 @@ import TopBar from "../../components/TopBar";
 import SectionBar from "../../components/SectionBar";
 import { useDispatch, useSelector } from "react-redux";
 import InputField from "../../components/InputField";
-import {  useAddStaffMutation, useGetStaffCategoryQuery, useGetStaffQuery } from "../../redux/features/apiSlices/setup/staffCategory";
-import {setStaffCaty, setStaff } from "../../redux/features/slices/setup"
+import {  useAddStaffMutation, useGetStaffCategoryQuery } from "../../redux/features/apiSlices/setup/staffCategory";
+import {setStaffCaty } from "../../redux/features/slices/setup"
 
 
 

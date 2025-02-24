@@ -3,9 +3,9 @@ import SelectBox from './SelectBox'
 
 const SelectField = ({labelText, options,onChangeFunction,value}) => {
   return (
-    <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+    <div className='flex flex-col w-full justify-between gap-2 my-2 '>
     <label className="font-semibold" htmlFor="dated">{labelText}</label>
-    <div className="inputBorder w-full py-2 rounded-md max-w-xs">
+    <div className="inputBorder w-full py-2 rounded-md ">
     <SelectBox onChangeFunction={onChangeFunction} value={value}  options={options} />
     </div>
     </div>

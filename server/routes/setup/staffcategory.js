@@ -1,5 +1,5 @@
 const express = require("express");
-const { addStaffCategory, addStaff, getStaffCategory, getStaff, deleteStaffCategory, deleteStaff } = require("../../controllers/setup/staffcategory");
+const { addStaffCategory, addStaff, getStaffCategory,updateStaffCategory, getStaff, deleteStaffCategory, deleteStaff } = require("../../controllers/setup/staffcategory");
 const route = express.Router();
 
 // add staff category
@@ -12,6 +12,7 @@ route.delete("/dlt-staff-cat/:id", deleteStaffCategory)
 route.delete("/dlt-staff/:id", deleteStaff)
 // add staff
 route.post("/add-staff",addStaff)
+route.put("/update-staff-category/:id",updateStaffCategory)
 
 
 

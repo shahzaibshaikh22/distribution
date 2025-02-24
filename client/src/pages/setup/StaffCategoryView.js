@@ -1,15 +1,20 @@
-import React,{useState, useEffect} from "react";
+import React,{ useEffect, useState} from "react";
 import TopBar from "../../components/TopBar";
 import SectionBar from "../../components/SectionBar";
 import { useDispatch, useSelector } from "react-redux";
-import { useDeleteStaffCatMutation, useGetStaffCategoryQuery } from "../../redux/features/apiSlices/setup/staffCategory";
+import { useDeleteStaffCatMutation, useGetStaffCategoryQuery, useUpdateStaffCategoryMutation } from "../../redux/features/apiSlices/setup/staffCategory";
 import { setStaffCaty } from "../../redux/features/slices/setup";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt,FaPencilAlt } from "react-icons/fa";
+import InputField from "../../components/InputField";
 
 
 
 const StaffCategoryView = () => {
   const { staffCategories } = useSelector((state)=>state.setup);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [category, setCategory] = useState("");
+  const [code, setCode] = useState("");
 
   const dispatch = useDispatch()
 
@@ -25,9 +30,21 @@ const handleDelete = async (id)=>{
         refetch()
     }
 }
-
-
-
+const [updateCategory] = useUpdateStaffCategoryMutation()
+const handleEdit = (category) => {
+    setSelectedCategory(category);
+    setCategory(category.category);
+    setCode(category.code);
+    setIsModalOpen(true);
+    
+  };
+  const handleUpdate = async () => {
+    if (selectedCategory) {
+      await updateCategory({ id: selectedCategory._id.toString(), category });
+      setIsModalOpen(false);
+      refetch()
+    }
+  };
 
 useEffect(()=>{
     if(staffCatyData){
@@ -62,8 +79,9 @@ useEffect(()=>{
                                     <td className="print:border border-gray-300 px-4 py-2">{cat.code}</td>
                                     <td className="print:border border-gray-300 px-4 py-2">{cat.category}</td>
                                     <td className="print:border border-gray-300 px-4 py-2">{cat.code}</td>
-                                    <td className="print:border border-gray-300 px-4 py-2">
+                                    <td className="print:border flex items-center gap-2 border-gray-300 px-4 py-2">
                                         <FaTrashAlt onClick={()=>handleDelete(cat._id.toString())} className="text-red-600"/>
+                                        <FaPencilAlt onClick={() => handleEdit(cat)} className="text-blue-600 cursor-pointer" />
                                     </td>
              
                                 </tr>
@@ -72,6 +90,35 @@ useEffect(()=>{
                     </tbody>
                 </table>
             </div>
+
+            {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white flex flex-col  items-center gap-2 p-6 rounded-md shadow-md md:w-[40%] w-[80%] text-black">
+              <h2 className="text-lg font-bold mb-4">Edit Town</h2>
+             <InputField
+              value={category}
+              onChangeFunction={(e)=>setCategory(e.target.value)}
+              placeholderText="Category"
+              LabelText="Category:"
+              inputName="category"
+              inputType="text"
+             />
+             <InputField
+                    placeholderText="code"
+                  value={code}
+                  readOnly
+                  onChangeFunction={(e)=>e.target.value}
+                  LabelText="Code:"
+                  inputName="address"
+                  inputType="text"
+             />
+              <div className="flex justify-end gap-2">
+                <button className="bg-gray-400 px-4 py-2 rounded" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={handleUpdate}>Update</button>
+              </div>
+            </div>
+          </div>
+        )}
             </div>
         </div>
     );

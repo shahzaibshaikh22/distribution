@@ -9,7 +9,7 @@ const Complaints = () => {
   
 
   return (
-    <div className="w-full flex  text-white px-4">
+    <div className="w-full flex  text-white md:px-4 px-2">
       <div className="w-full ">
         <TopBar/>
         <SectionBar sectionHeading="Complain Management"/>

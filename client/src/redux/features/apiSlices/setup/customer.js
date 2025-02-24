@@ -41,8 +41,16 @@ export const CustomerApiSlice = apiSlice.injectEndpoints({
         }),
         invalidatesTags: ['customers']
        }),
+       updateCustomerCategory:builder.mutation({
+        query:({id,category})=>({
+            url:`${customerurl}/update-customer-category/${id}`,
+            method:'PUT',
+            body:{category}
+        }),
+        invalidatesTags: ['towns']
+       }),
     }),
     
 })
 
-export const { useCreateCustomerMutation, useGetCustomersQuery, useCreateCustomerCategoryMutation,useGetCustomersCategoryQuery,useDeleteCustomerCategoryMutation } = CustomerApiSlice
+export const { useCreateCustomerMutation,useUpdateCustomerCategoryMutation, useGetCustomersQuery, useCreateCustomerCategoryMutation,useGetCustomersCategoryQuery,useDeleteCustomerCategoryMutation } = CustomerApiSlice

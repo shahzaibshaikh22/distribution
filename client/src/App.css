@@ -11,7 +11,7 @@ body,html{
   transition: all .2s ease-in-out;
 }
 ::-webkit-scrollbar{
-  width: 5px;
+  width: 0px;
 }
 .formborder{
   border-radius: 0 15px 0 0;

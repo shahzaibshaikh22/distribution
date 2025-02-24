@@ -179,9 +179,9 @@ const handleSubmit = async (e)=>{
                                 LabelText="Opening Balance:"
                                 inputName="openingbalance"
                                 inputType="number" />
-                              <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+                              <div className='flex flex-col w-full gap-4'>
                                 <label className="font-semibold"  htmlFor="code">Code</label>
-                                <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+                                <div className="inputBorder w-full p-2 rounded-md ">
                                 <input
                                 placeholder="0"
                                 readOnly

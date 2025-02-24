@@ -35,7 +35,7 @@ const handleSubmit = async (e)=>{
     
 
     return (
-        <div className="w-full flex  text-white px-4">
+        <div className="w-full flex  text-white md:px-4 px-2">
             {/* <PhoneMenu/> */}
             <div className="w-full ">
                 <TopBar />

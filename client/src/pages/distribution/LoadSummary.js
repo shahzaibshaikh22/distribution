@@ -33,7 +33,7 @@ const LoadSummary = () => {
   
     }
   }
-  const [savesummary, {isLoading}] = useOrderSummaryMutation()
+  const [savesummary] = useOrderSummaryMutation()
   const handleSaveSummary = async ()=>{
     const res = await savesummary(summayData)
     if(res.data.msg){

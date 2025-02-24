@@ -49,17 +49,16 @@ app.use("/api/v1/product", require("./routes/product/product.js"))
 // units routes
 
 // setup
-    // vendor
-    app.use("/api/v1/vendor", require("./routes/setup/vendor.js"))
-    // vendor
-
-     // vendor
+     app.use("/api/v1/vendor", require("./routes/setup/vendor.js"))
      app.use("/api/v1/warehouse", require("./routes/setup/warehouse.js"))
      app.use("/api/v1/customer", require("./routes/setup/customer.js"))
-     app.use("/api/v1/purchase", require("./routes/purchase/purchaseOrder.js"))
      app.use("/api/v1/staff", require("./routes/setup/staffcategory.js"))
-     // vendor
-// setup
+     app.use("/api/v1/town", require("./routes/setup/town.js"))
+     // setup
+     
+    //  puchase
+     app.use("/api/v1/purchase", require("./routes/purchase/purchaseOrder.js"))
+    //  puchase
 
 // booking
 app.use("/api/v1/order-booking", require("./routes/booking/booking.js"))

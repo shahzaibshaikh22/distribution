@@ -8,7 +8,7 @@ import { useSelector } from "react-redux"
 const SectionBar = ({sectionHeading, secRedirect,view}) => {
   const {modes} = useSelector((state)=> state.mode)
   return (
-    <div className={`w-full drop-shadow-md md:px-10 px-4 flex justify-between ${modes === "dark" ? "bg-darksecondary text-white" :"bg-white text-gray-800"} items-center  h-[4rem] my-5  rounded-lg`}>
+    <div className={`w-full drop-shadow-md  px-4 flex justify-between ${modes === "dark" ? "bg-darksecondary text-white" :"bg-white text-gray-800"} items-center  h-[4rem] my-5  rounded-lg`}>
       <h1 className='md:text-md text-sm font-semibold'>{sectionHeading}</h1>
       <div className='flex items-center gap-5'>
       <Link to={secRedirect} className='flex items-center gap-2'>

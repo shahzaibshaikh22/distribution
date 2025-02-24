@@ -31,7 +31,6 @@ const Purchase = () => {
     const dispatch = useDispatch()
     
 
-    const { data: productData } = useGetProductsQuery();
  
     // fetch brands 
     const { data: vendorData } = useGetVendorQuery();

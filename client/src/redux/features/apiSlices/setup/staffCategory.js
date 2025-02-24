@@ -48,8 +48,16 @@ export const staffCategoryApiSlice = apiSlice.injectEndpoints({
         }),
         invalidatesTags: ['staffs']
        }),
+       updateStaffCategory:builder.mutation({
+        query:({id,category})=>({
+            url:`${setupurl}/update-staff-category/${id}`,
+            method:'PUT',
+            body:{category}
+        }),
+        invalidatesTags: ['towns']
+       }),
     }),
     
 })
 
-export const {useAddStaffMutation, useAddStaffCategoryMutation,useGetStaffCategoryQuery, useGetStaffQuery, useDeleteStaffMutation, useDeleteStaffCatMutation } = staffCategoryApiSlice
+export const {useAddStaffMutation, useUpdateStaffCategoryMutation, useAddStaffCategoryMutation,useGetStaffCategoryQuery, useGetStaffQuery, useDeleteStaffMutation, useDeleteStaffCatMutation } = staffCategoryApiSlice

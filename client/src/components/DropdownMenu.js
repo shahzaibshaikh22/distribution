@@ -1,68 +1,83 @@
-import { useState, useRef, useEffect } from "react";
-import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-const DropdownMenu = ({ links, menuText, menuIcon, sideBarCollapes, modes }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef(null);
+const DropdownMenu = ({ 
+    modes, links, menuText, sideBarCollapes, menuIcon, 
+    openDropdown, setOpenDropdown 
+}) => {
+    const isOpen = openDropdown === menuText;
     const location = useLocation();
+    const dropdownRef = useRef(null);
 
+    // Check if any link inside the dropdown is active
+    const isAnyLinkActive = links.some(link => location.pathname === link.path);
+
+    // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsOpen(false);
+                setOpenDropdown(null);
             }
         };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
+
+        document.addEventListener("click", handleClickOutside);
+        return () => document.removeEventListener("click", handleClickOutside);
+    }, [setOpenDropdown]);
 
     return (
-        <div className={` transition-all duration-500 ease-in-out rounded-md h-auto ${isOpen} ${modes === "dark" ? 'text-white hover:bg-darkprimary' : 'text-black hover:bg-lightsecondary'}`} ref={dropdownRef}>
-            <div
-                onClick={() => setIsOpen(!isOpen)}
-                className={`w-full  flex justify-between rounded-full p-2`}>
-                <div className="w-6 h-6 flex items-center">
-                    <div className="flex items-center justify-center w-6 h-6">
-                        {menuIcon}
-                    </div>
-                    <span className={`text-xs pl-5 mt-1   ${sideBarCollapes === "show" ? "block" : "hidden"}`}>
+        <div className="relative" ref={dropdownRef}>
+            {/* Dropdown Button */}
+            <div 
+                onClick={(event) => {
+                    event.stopPropagation(); // Prevent closing when clicking inside
+                    setOpenDropdown(isOpen ? null : menuText);
+                }}
+                className={`flex items-center gap-5 p-2 rounded-full cursor-pointer w-full transition-all
+                    ${sideBarCollapes === "show" ? "" : "justify-center"}
+                    ${modes === "dark" ? 
+                        (isOpen || isAnyLinkActive ? "bg-darkprimary text-white" : "text-white hover:bg-darkprimary") :
+                        (isOpen || isAnyLinkActive ? "bg-gray-300 text-black" : "text-black hover:bg-lightsecondary")
+                    }
+                `}
+            >
+                {/* Icon Container - Stays Active If Any Dropdown Link is Active */}
+                <div className={`w-6 h-6 flex items-center justify-center rounded-full transition-all
+                    
+                `}>
+                    {menuIcon}
+                </div>
+
+                <span className={`${sideBarCollapes === "show" ? "block" : "hidden"} text-xs`}>
                     {menuText}
                 </span>
-                </div>
-                { sideBarCollapes === "show" ? isOpen ? ( <FaChevronDown className="pt-2  h-full"/>) : (<FaChevronRight className="pt-2  h-full"/>) : ''}
-               
-                
             </div>
 
+            {/* Dropdown Links */}
             {isOpen && (
-                <div className=" text-xs mt-2 w-32 ml-12 z-10">
-                    {links.map((link) => (
-                        <Link
-                            to={link.path}
-                            key={link.id}
-                            className={`w-full flex items-center gap-5 p-1 rounded-sm cursor-pointer transition 
-                ${sideBarCollapes === "show" ? "" : "justify-center"}
-                ${modes === "dark"
-                                    ? location.pathname === link.path
-                                        ? "bg-grayPrimary text-white"  // Active state in dark mode
-                                        : "text-white hover:bg-darkprimary"
-                                    : location.pathname === link.path
-                                        ? "bg-lightsecondary text-black"  // Active state in light mode
-                                        : "text-black hover:bg-lightsecondary"
-                                }
-              `}
-                        >
+                <div 
+                    className={` px-2 absolute left-full top-0 bg-white shadow-md rounded-md w-48 py-2 z-50 
+                        ${modes === "dark" ? "bg-darksecondary text-white" : "bg-white text-black"}
+                    `}
+                    onClick={(event) => event.stopPropagation()} // Prevent closing when clicking inside
+                >
+                    {links.map((link) => {
+                        const isActive = location.pathname === link.path;
 
-                            {link.text}
-
-                        </Link>
-                    ))}
+                        return (
+                            <Link 
+                                key={link.id} 
+                                to={link.path} 
+                                className={`block text-xs px-4 py-2 hover:bg-gray-200 
+                                    ${isActive ? "bg-gray-300 text-white font-bold" : ""}
+                                `}
+                                onClick={() => setOpenDropdown(null)} // Close dropdown on link click
+                            >
+                                {link.text}
+                            </Link>
+                        );
+                    })}
                 </div>
             )}
-
         </div>
     );
 };
