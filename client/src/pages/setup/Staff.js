@@ -79,7 +79,7 @@ useEffect(()=>{
             {/* <PhoneMenu/> */}
             <div className="w-full ">
                 <TopBar />
-                <SectionBar sectionHeading="Staff" />
+                <SectionBar sectionHeading="Staff"  secRedirect="/add-staff" view="/vendor-view" />
                 {/* form section */}
 
                 <div className={`w-full Container rounded-md h-auto md:mb-0 mb-4  px-10 ${modes === "dark" ? 'bg-darksecondary text-white' : 'bg-white text-gray-800'}`}>
@@ -87,8 +87,8 @@ useEffect(()=>{
                         <h1 className=' pt-6 font-semibold mb-4'>staff Detail</h1>
                         <div className="divider w-full h-[1px] bg-gray-300 " />
                     </div>
-                    <form onSubmit={handleSubmit} className=' py-4'>
-                        <div className='flex md:flex-row w-full  flex-col md:gap-20  md:my-4 '>
+                    <form onSubmit={handleSubmit} className='py-4 w-full max-w-3xl mx-auto'>
+                        <div className='flex items-center md:flex-row flex-col gap-4 my-2 '>
                             <InputField
                                 value={data.name}
                                 onChangeFunction={handleChange}
@@ -104,7 +104,7 @@ useEffect(()=>{
                                 inputName="address"
                                 inputType="text" />
                         </div>
-                        <div className='flex md:flex-row w-full  flex-col md:gap-20  md:my-4 '>
+                        <div className='flex items-center md:flex-row flex-col gap-4 my-2 '>
                             <InputField
                                 value={data.email}
                                 onChangeFunction={handleChange}
@@ -120,7 +120,7 @@ useEffect(()=>{
                                 inputName="phone"
                                 inputType="text" />
                         </div>
-                        <div className='flex md:flex-row w-full  flex-col md:gap-20  md:my-4 '>
+                        <div className='flex items-center md:flex-row flex-col gap-4 my-2 '>
                             <InputField
                                 value={data.mobile}
                                 onChangeFunction={handleChange}
@@ -136,7 +136,7 @@ useEffect(()=>{
                                 inputName="nic"
                                 inputType="text" />
                         </div>
-                        <div className='flex md:flex-row w-full  flex-col md:gap-20  md:my-4 '>
+                        <div className='flex items-center md:flex-row flex-col gap-4 my-2 '>
                             <InputField
                                 value={data.openingbalance}
                                 onChangeFunction={handleChange}
@@ -144,9 +144,9 @@ useEffect(()=>{
                                 LabelText="Opening Balance:"
                                 inputName="openingbalance"
                                 inputType="number" />
-                            <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+                            <div className='flex flex-col w-full gap-2'>
                                 <label className="font-semibold"  htmlFor="category">Category</label>
-                                <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+                                <div className="inputBorder w-full p-2 rounded-md  ">
                                 <select className="w-full" name="category" onChange={handleChange} id="category">
                                     <option value="">select Category</option>
                                     {staffCategories?.map((cat)=>{
@@ -158,10 +158,10 @@ useEffect(()=>{
                                 </div>
                                 </div>
                         </div>
-                        <div className='flex items-center justify-end w-full my-4 '>
+                        <div className='flex items-center md:flex-row flex-colmy-2'>
                             <div />
-                            <button type="submit" className='bg-blue-700 px-10 py-2 rounded-full text-white'>{isLoading ? "Adding..." : "Add"}</button>
-                            <button onClick={handleReset} type="button" className='bg-blue-700 md:ml-4 ml-0 px-10 py-2 rounded-full text-white'>Add New</button>
+                            <button type="submit" className='disButton'>{isLoading ? "Adding..." : "Add"}</button>
+                            <button onClick={handleReset} type="button" className='disButton ml-2'>Add New</button>
                         </div>
                     </form>
                 </div>

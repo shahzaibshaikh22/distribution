@@ -46,7 +46,21 @@ const getVendor = async (req, res) => {
 
     }
 }
-
+const updatedVendor = async (req, res) => {
+    try {
+        const vendor = await Vendor.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+        if (!vendor) {
+            return res.status(404).json({ msg: "vendor not found" });
+        }
+        res.status(200).json({ msg: "vendor updated successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: "Failed to update vendor" });
+    }
+};
 const deleteVendor = async (req, res) => {
     try {
         const { id } = req.params;
@@ -71,5 +85,6 @@ const deleteVendor = async (req, res) => {
 module.exports = {
     addVendor,
     getVendor,
-    deleteVendor
+    deleteVendor,
+    updatedVendor
 }

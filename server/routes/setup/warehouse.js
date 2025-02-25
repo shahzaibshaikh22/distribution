@@ -1,12 +1,18 @@
 const express = require("express");
 const route = express.Router();
-const { addWarehouse,getWarehouse } = require("../../controllers/setup/warehouse")
+const { addWarehouse,getWarehouse, updateWarehouse, deleteWarehouse } = require("../../controllers/setup/warehouse")
 
-// add vendor route
+// add warehouse route
 route.post("/add-warehouse",addWarehouse)
 
-// add vendor route
+// add warehouse route
 route.get("/get-warehouse",getWarehouse)
+
+// add warehouse route
+route.put("/update-warehouse/:id",updateWarehouse)
+
+// add warehouse route
+route.delete("/delete-warehouse/:id",deleteWarehouse)
 
 
 

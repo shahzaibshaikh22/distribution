@@ -71,8 +71,8 @@ useEffect(()=>{
                         <h1 className=' pt-6 font-semibold mb-4'>Category Detail</h1>
                         <div className="divider w-full h-[1px] bg-gray-300 " />
                     </div>
-                    <form onSubmit={handleSubmit} className=' py-4'>
-                        <div className='flex md:flex-row w-full flex-col md:gap-20  md:my-4 '>
+                    <form onSubmit={handleSubmit} className='py-4 w-full max-w-3xl mx-auto'>
+                        <div className='flex items-center md:flex-row flex-col gap-4 my-2'>
                             {/* product type  */}
                             <InputField
                                 value={category}
@@ -82,9 +82,9 @@ useEffect(()=>{
                                 inputName="category"
                                 inputType="" />
                             {/* product type  */}
-                            <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+                            <div className='flex flex-col w-full'>
                             <label className="font-semibold"  htmlFor="code">Code</label>
-                            <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+                            <div className="inputBorder w-full p-2 rounded-md ">
                             <input
                             type="text"
                             placeholder={staffCategories?.length + 1}
@@ -93,7 +93,7 @@ useEffect(()=>{
                             </div>
                             </div>
                         </div>
-                        <div className='flex md:flex-row flex-col md:gap-20  w-full md:max-w-[47%] my-4  md:items-center md:justify-center '>
+                        <div className='flex md:flex-row flex-col gap-4 my-2 '>
                             <div />
                             <button type="submit" className='bg-blue-700 md:ml-0 w-40 px-4 py-2 rounded-full text-white'>{isLoading ? "Processing" : "Add New"}</button>
                         </div>

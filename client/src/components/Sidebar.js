@@ -198,6 +198,31 @@ const Sidebar = () => {
       text:'town view',
       path:"/town-view"
     },
+    {
+      id:13,
+      text:'warehouse view',
+      path:"/warehouse-view"
+    },
+    {
+      id:14,
+      text:'add zone',
+      path:"/add-zone"
+    },
+    {
+      id:15,
+      text:'zone view',
+      path:"/zone-view"
+    },
+    {
+      id:16,
+      text:'add saleman',
+      path:"/add-saleman"
+    },
+    {
+      id:17,
+      text:'saleman view',
+      path:"/saleman-view"
+    },
   ]
   const purchaseLinks = [
     {
@@ -292,6 +317,15 @@ const Sidebar = () => {
 
           )
          })}
+               {/* setup */}
+               <DropdownMenu
+           modes={modes}
+            openDropdown={openDropdown}
+                setOpenDropdown={handleDropdownToggle}
+           links={setupLinks}
+           menuText="Setup"
+           sideBarCollapes={sideBarCollapes}
+           menuIcon={<MdOutlineSettingsInputHdmi size={25}/>}/>
           <DropdownMenu
           modes={modes}
            openDropdown={openDropdown}
@@ -300,6 +334,7 @@ const Sidebar = () => {
            menuText="Settings"
            sideBarCollapes={sideBarCollapes}
            menuIcon={<FaCog size={25}/>}/>
+       
 
           <DropdownMenu
           modes={modes}
@@ -320,15 +355,7 @@ const Sidebar = () => {
            sideBarCollapes={sideBarCollapes}
            menuIcon={<AiOutlineProduct size={25}/>}/>
 
-           {/* setup */}
-           <DropdownMenu
-           modes={modes}
-            openDropdown={openDropdown}
-                setOpenDropdown={handleDropdownToggle}
-           links={setupLinks}
-           menuText="Setup"
-           sideBarCollapes={sideBarCollapes}
-           menuIcon={<MdOutlineSettingsInputHdmi size={25}/>}/>
+         
 
             <DropdownMenu
            modes={modes}

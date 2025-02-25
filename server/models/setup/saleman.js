@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 
-const WarehouseSchema = mongoose.Schema({
+const SalemanSchema = mongoose.Schema({
     code:{
         type:Number
     },
-    warehouse:{
+    saleman:{
         type:String,
     },
     createdAt:{
@@ -14,5 +14,5 @@ const WarehouseSchema = mongoose.Schema({
     }
 },{timestamps:true})
 
-const Warehouse = mongoose.model("Warehouse", WarehouseSchema)
-module.exports = Warehouse;
+const Saleman = mongoose.model("Saleman", SalemanSchema)
+module.exports = Saleman;

@@ -137,6 +137,21 @@ const updateStaffCategory = async (req, res) => {
         res.status(500).json({ msg: error.message });
     }
 };
+const updateStaff = async (req, res) => {
+    try {
+        const updatestf = await Staff.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+        if (!updatestf) {
+            return res.status(404).json({ msg: "Staff not found" });
+        }
+        res.status(200).json({ msg: "Staff updated successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+};
 
 
 
@@ -147,5 +162,6 @@ module.exports = {
     getStaff,
     deleteStaffCategory,
     deleteStaff,
-    updateStaffCategory
+    updateStaffCategory,
+    updateStaff
 }

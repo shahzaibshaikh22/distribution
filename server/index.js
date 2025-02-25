@@ -54,6 +54,8 @@ app.use("/api/v1/product", require("./routes/product/product.js"))
      app.use("/api/v1/customer", require("./routes/setup/customer.js"))
      app.use("/api/v1/staff", require("./routes/setup/staffcategory.js"))
      app.use("/api/v1/town", require("./routes/setup/town.js"))
+     app.use("/api/v1/zone", require("./routes/setup/zone.js"))
+     app.use("/api/v1/saleman", require("./routes/setup/saleman.js"))
      // setup
      
     //  puchase

@@ -39,14 +39,14 @@ const TownsView = () => {
     setTownName(town.townname);
     setTownCode(town.code);
     setIsModalOpen(true);
-    
+
   };
 
   const handleUpdate = async () => {
     if (selectedTown) {
       await updateTown({ id: selectedTown._id.toString(), townname });
       setIsModalOpen(false);
-    //   refetch();
+      //   refetch();
     }
   };
 
@@ -73,8 +73,12 @@ const TownsView = () => {
                   <td className=" px-4 py-2">{t.townname}</td>
                   <td className=" px-4 py-2">{t.code}</td>
                   <td className=" flex items-center gap-2 px-4 py-2">
-                    <FaTrashAlt onClick={() => handleDelete(t._id.toString())} className="text-red-600 cursor-pointer" />
-                    <FaPencilAlt onClick={() => handleEdit(t)} className="text-blue-600 cursor-pointer" />
+                    <button onClick={() => handleDelete(t._id.toString())} className="text-white bg-red-600 px-3 py-2 text-xs rounded-md">
+                      <FaTrashAlt />
+                    </button>
+                    <button onClick={() => handleEdit(t)} className="text-white bg-blue-600 px-3 py-2 text-xs rounded-md">
+                      <FaPencilAlt />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -86,23 +90,23 @@ const TownsView = () => {
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white flex flex-col  items-center gap-2 p-6 rounded-md shadow-md md:w-[40%] w-[80%] text-black">
               <h2 className="text-lg font-bold mb-4">Edit Town</h2>
-             <InputField
-              value={townname}
-              onChangeFunction={(e)=>setTownName(e.target.value)}
-              placeholderText="Town Name"
-              LabelText="Town Name:"
-              inputName="townname"
-              inputType="text"
-             />
-             <InputField
-                    placeholderText="code"
-                  value={townCode}
-                  readOnly
-                  onChangeFunction={(e)=>e.target.value}
-                  LabelText="Code:"
-                  inputName="address"
-                  inputType="text"
-             />
+              <InputField
+                value={townname}
+                onChangeFunction={(e) => setTownName(e.target.value)}
+                placeholderText="Town Name"
+                LabelText="Town Name:"
+                inputName="townname"
+                inputType="text"
+              />
+              <InputField
+                placeholderText="code"
+                value={townCode}
+                readOnly
+                onChangeFunction={(e) => e.target.value}
+                LabelText="Code:"
+                inputName="address"
+                inputType="text"
+              />
               <div className="flex justify-end gap-2">
                 <button className="bg-gray-400 px-4 py-2 rounded" onClick={() => setIsModalOpen(false)}>Cancel</button>
                 <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={handleUpdate}>Update</button>

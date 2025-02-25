@@ -19,8 +19,23 @@ export const WarehouseApiSlice = apiSlice.injectEndpoints({
         }),
         providesTags: ['warehouses']
        }),
-    }),
+       updateWaurehouse:builder.mutation({
+        query:({id,warehouse})=>({
+            url:`${warehouseurl}/update-warehouse/${id}`,
+            method:'PUT',
+            body:{warehouse}
+        }),
+        invalidatesTags: ['warehouses']
+       }),
+       deleteWarehouse:builder.mutation({
+        query:(id)=>({
+            url:`${warehouseurl}/delete-warehouse/${id}`,
+            method:'DELETE',
+        }),
+        invalidatesTags: ['warehouses']
+       }),
+    })
     
 })
 
-export const { useAddWarehouseMutation,useGetWarehouseQuery } = WarehouseApiSlice
+export const { useAddWarehouseMutation,useGetWarehouseQuery,useDeleteWarehouseMutation,useUpdateWaurehouseMutation } = WarehouseApiSlice

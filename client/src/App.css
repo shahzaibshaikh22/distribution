@@ -94,9 +94,12 @@ input::placeholder{
   }
 }
 
-.addPurchaseLabel{
-  @appy font-semibold md:text-md text-sm;
-}
+/* .addPurchaseLabel{
+  @apply font-semibold md:text-md text-sm;
+} */
 .addPurchaseDiv{
   @apply inputBorder w-full p-2 rounded-md;
+}
+.disButton{
+  @apply bg-blue-700 text-white px-6 py-2 rounded-full text-sm
 }

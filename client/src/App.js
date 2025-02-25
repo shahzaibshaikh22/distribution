@@ -45,6 +45,11 @@ import CustomerCategory from './pages/setup/CustomerCategory';
 import CustomerCategoryView from './pages/setup/CustomerCategoryView';
 import AddTown from './pages/setup/AddTown';
 import TownsView from './pages/setup/TownsView';
+import WarehouseView from './pages/setup/WarehouseView';
+import AddZone from './pages/setup/AddZone';
+import ZoneView from './pages/setup/ZoneView';
+import AddSaleman from './pages/setup/AddSaleman';
+import SalemanView from './pages/setup/SalemanView';
 
 const App = () => {
   const { modes,sideBarCollapes } = useSelector((state) => state.mode)
@@ -102,7 +107,12 @@ const App = () => {
               <Route path="/add-customer-category" element={<CustomerCategory />} />
               <Route path="/customer-view-category" element={<CustomerCategoryView />} />
               <Route path="/add-town" element={<AddTown />} />
+              <Route path="/add-zone" element={<AddZone />} />
               <Route path="/town-view" element={<TownsView />} />
+              <Route path="/zone-view" element={<ZoneView />} />
+              <Route path="/warehouse-view" element={<WarehouseView />} />
+              <Route path="/saleman-view" element={<SalemanView />} />
+              <Route path="/add-saleman" element={<AddSaleman />} />
               {/* setup */}
 
               {/* [purchase] */}

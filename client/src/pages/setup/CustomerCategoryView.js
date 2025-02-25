@@ -82,10 +82,14 @@ useEffect(()=>{
                                     <td className="print:border border-gray-300 px-4 py-2">{cat.code}</td>
                                     <td className="print:border border-gray-300 px-4 py-2">{cat.category}</td>
                                     <td className="print:border border-gray-300 px-4 py-2">{cat.code}</td>
-                                    <td className="print:border flex items-center gap-2 border-gray-300 px-4 py-2">
-                                        <FaTrashAlt onClick={()=>handleDelete(cat._id.toString())} className="text-red-600"/>
-                                        <FaPencilAlt onClick={() => handleEdit(cat)} className="text-blue-600 cursor-pointer" />
-                                    </td>
+                                    <td className=" flex items-center gap-2 px-4 py-2">
+                                    <button onClick={() => handleDelete(cat._id.toString())} className="text-white bg-red-600 px-3 py-2 text-xs rounded-md">
+                                    <FaTrashAlt />
+                                    </button>
+                                    <button onClick={() => handleEdit(cat)} className="text-white bg-blue-600 px-3 py-2 text-xs rounded-md">
+                                    <FaPencilAlt />
+                                    </button>
+                                  </td>
              
                                 </tr>
                             )

@@ -68,7 +68,7 @@ const DropdownMenu = ({
                                 key={link.id} 
                                 to={link.path} 
                                 className={`block text-xs px-4 py-2 hover:bg-gray-200 
-                                    ${isActive ? "bg-gray-300 text-white font-bold" : ""}
+                                    ${isActive ? "bg-gray-300  font-bold" : ""}
                                 `}
                                 onClick={() => setOpenDropdown(null)} // Close dropdown on link click
                             >

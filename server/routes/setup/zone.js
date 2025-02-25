@@ -1,12 +1,12 @@
 const express = require("express");
-const { createTown, getAllTown, updatedTown, deleteTown } = require("../../controllers/setup/town");
+const { createZone, getAllZone, updatedZone, deleteZone } = require("../../controllers/setup/zone");
 const route = express.Router();
 
 // create new town
-route.post("/add-zone",createTown)
-route.get("/get-zones",getAllTown)
-route.put("/update-zone/:id",updatedTown)
-route.delete("/delete-zone/:id",deleteTown)
+route.post("/add-zone",createZone)
+route.get("/get-zones",getAllZone)
+route.put("/update-zone/:id",updatedZone)
+route.delete("/delete-zone/:id",deleteZone)
 
 
 
