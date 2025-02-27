@@ -50,6 +50,7 @@ import AddZone from './pages/setup/AddZone';
 import ZoneView from './pages/setup/ZoneView';
 import AddSaleman from './pages/setup/AddSaleman';
 import SalemanView from './pages/setup/SalemanView';
+import CustomersView from './pages/setup/CustomersView';
 
 const App = () => {
   const { modes,sideBarCollapes } = useSelector((state) => state.mode)
@@ -113,6 +114,7 @@ const App = () => {
               <Route path="/warehouse-view" element={<WarehouseView />} />
               <Route path="/saleman-view" element={<SalemanView />} />
               <Route path="/add-saleman" element={<AddSaleman />} />
+              <Route path="/customers-view" element={<CustomersView />} />
               {/* setup */}
 
               {/* [purchase] */}

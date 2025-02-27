@@ -319,6 +319,7 @@ const AddpurchaseOrders = async (req, res) => {
     
     const due =  PurchaseDue({
       vendor,
+      products,
       paymentType:isOrder.paymentType,
       purchseOrderNo:pono,
       totalAmount
@@ -332,8 +333,6 @@ const AddpurchaseOrders = async (req, res) => {
     res.status(500).json({ err: error.message });
   }
 };
-
-
 const deleteInventoryItem = async (req, res) => {
   try {
     const { inventoryId, product } = req.body;
@@ -483,14 +482,41 @@ const deleteInventoryItem = async (req, res) => {
 
 const getPorderByVendor = async (req, res) => {
   try {
-    const { vendor } = req.body
-    const purchaseOrder = await PurchaseOrder.find({vendor}).populate({
+    const { vendor } = req.params
+    const purchaseOrder = await PurchaseDue.find({vendor,paymentType: "credit"}).populate({
       path: "products.product",
       select: "productname image brand category costprice", 
     });
+    if(!purchaseOrder){
+      return res.json({msg:"not found"})
+    }
       return res.json(purchaseOrder);
   } catch (error) {
     return res.json({ err: error.message });
+  }
+};
+
+// get grand total of all add purchase orders
+const getAllAddPurchaseOrdersTotal = async (req, res) => {
+  try {
+    // Sare AddPurchaseOrders fetch karna
+    const allOrders = await PurchaseDue.find();
+    
+    // Grand Total calculate karna
+    const grandTotal = allOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+    
+    // Vendor-wise total calculate karna
+    const vendorTotals = allOrders.reduce((acc, order) => {
+      acc[order.vendor] = (acc[order.vendor] || 0) + order.totalAmount;
+      return acc;
+    }, {});
+    
+    res.status(200).json({
+      grandTotal,
+      vendorTotals
+    });
+  } catch (error) {
+    res.status(500).json({ err: error.message });
   }
 };
 
@@ -501,5 +527,6 @@ module.exports = {
     AddpurchaseOrders,
     getInventoryItems,
     deleteInventoryItem,
-    getPorderByVendor
+    getPorderByVendor,
+    getAllAddPurchaseOrdersTotal
 }

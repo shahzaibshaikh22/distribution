@@ -5,6 +5,7 @@ const setupSlice = createSlice({
   initialState: {
     staffCategories:[],
     customerCategories:[],
+    customers:[],
     staffs:[],
     towns:[],
     zones:[],
@@ -30,8 +31,11 @@ const setupSlice = createSlice({
     setSalemans:(state,action)=>{
       state.salemans = action.payload
     },
+    setCustomers:(state,action)=>{
+      state.customers = action.payload
+    },
   },
 });
 
-export const { setStaffCaty, setStaff,setCustomerCaty,setTowns,setZones,setSalemans } = setupSlice.actions;
+export const { setStaffCaty, setStaff,setCustomerCaty,setTowns,setZones,setSalemans,setCustomers } = setupSlice.actions;
 export default setupSlice.reducer

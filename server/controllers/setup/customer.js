@@ -4,36 +4,55 @@ const CustomerCategory = require("../../models/setup/customercategory")
 //  Create a new customer
 const createCustomer = async (req, res) => {
     try {
-        const { username, address, phone, nten } = req.body;
-        const newCustomer = new Customer({ username, address, phone, nten });
+        const customers = await Customer.find()
+        const {name,address,town,zone,salesman,productcompany,customercategory,ratetype,phone,mobile,email,gst,ntn,designation,contactperson,openingbalance} = req.body
+        const requiredFields = [
+         "name", "address", "town", "zone", "salesman", "productcompany",
+            "customercategory", "phone", "mobile", "email", "gst", "ntn", "designation",
+            "contactperson", "openingbalance", "ratetype"
+        ];
+
+        let missingFields = [];
+
+        requiredFields.forEach(field => {
+            if (!req.body[field] || req.body[field].toString().trim() === "") {
+                missingFields.push(field);
+            }
+        });
+
+        if (missingFields.length > 0) {
+            return res.json({ 
+                msg: `Missing fields: ${missingFields.join(", ")}`,
+            });
+        }
+
+        const existingCustomer = await Customer.findOne( {name: req.body.name });
+        if (existingCustomer) {
+            return res.json({ msg: "Customer with this Name already exists." });
+        }
+
+        const newCustomer = new Customer({
+            name,address,town,zone,salesman,productcompany,ratetype,customercategory,phone,mobile,email,gst,ntn,designation,contactperson,openingbalance,code:customers.length + 1
+        });
         await newCustomer.save();
-        res.status(201).json({ msg: "Customer created successfully" });
+
+        res.json({ msg: "Customer created successfully" });
     } catch (error) {
-        res.status(500).json({ error: "Failed to create customer" });
+        res.status(500).json({ msg: "Failed to create customer" });
     }
 };
+
 //  Get all customers
 const getAllCustomers = async (req, res) => {
     try {
         const customers = await Customer.find();
-        res.status(200).json(customers);
+        res.json(customers);
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch customers" });
     }
 };
 
-//  Get a single customer by ID
-const getCustomerById = async (req, res) => {
-    try {
-        const customer = await Customer.findById(req.params.id);
-        if (!customer) {
-            return res.status(404).json({ error: "Customer not found" });
-        }
-        res.status(200).json(customer);
-    } catch (error) {
-        res.status(500).json({ error: "Failed to fetch customer" });
-    }
-};
+
 
 //  Update customer
 const updateCustomer = async (req, res) => {
@@ -130,7 +149,6 @@ const updatedCustomerCategory = async (req, res) => {
 module.exports = {
     createCustomer,
     getAllCustomers,
-    getCustomerById,
     updateCustomer,
     deleteCustomer,
     createCustomerCategory,

@@ -64,8 +64,7 @@ const handleSubmit = async (e)=>{
 
 useEffect(()=>{
     if(vendorsData){
-        dispatch(setVendors())
-        console.log(vendorsData.vendor);
+        dispatch(setVendors(vendorsData))
         
     }
 },[dispatch,vendorsData])

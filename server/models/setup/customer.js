@@ -30,6 +30,9 @@ const CustomerSchema = mongoose.Schema({
     code:{
         type:Number
     },
+    ratetype:{
+        type:String
+    },
     name:{
         type:String,
     },

@@ -24,7 +24,9 @@ export const ProductApiSlice = apiSlice.injectEndpoints({
             method:'POST',
             body:data
         }),
-        invalidatesTags: ['purchaseorders']
+        invalidatesTags: ['addpurchaseorders']
+
+
        }),
        getInventory:builder.query({
         query:()=>({
@@ -41,8 +43,23 @@ export const ProductApiSlice = apiSlice.injectEndpoints({
         }),
         providesTags: ['inventory']
        }),
+       getPurOrByVendor:builder.query({
+        query:(vendor)=>({
+            url:`${purchaseOrderUrl}/vendor-orders/${vendor}`,
+            method:'GET',
+        }),
+        providesTags: ['purchaseorders']
+       }),
+       getAllTotal:builder.query({
+        query:()=>({
+            url:`${purchaseOrderUrl}/get-total`,
+            method:'GET',
+        }),
+        providesTags: ['addpurchaseorders']
+       }),
+       
     }),
     
 })
 
-export const { usePurchaseOrderMutation,useGetPurchaseOrderQuery, useAddpurchaseOrderMutation, useGetInventoryQuery, useDltInvItemMutation} = ProductApiSlice
+export const {useGetAllTotalQuery, useLazyGetPurOrByVendorQuery,usePurchaseOrderMutation,useGetPurchaseOrderQuery, useAddpurchaseOrderMutation, useGetInventoryQuery, useDltInvItemMutation} = ProductApiSlice

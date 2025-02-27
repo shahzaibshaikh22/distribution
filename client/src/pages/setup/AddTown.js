@@ -59,7 +59,7 @@ useEffect(()=>{
                         <div className="divider w-full h-[1px] bg-gray-300 " />
                     </div>
                     <form onSubmit={handleSubmit} className='w-full max-w-3xl mx-auto '>
-                        <div className='flex md:flex-row w-full  flex-col md:gap-20  md:my-4 '>
+                        <div className='flex md:flex-row w-full  flex-col gap-2 md:my-4 '>
                             <InputField
                                 value={townname}
                                 onChangeFunction={(e)=>setTownName(e.target.value)}

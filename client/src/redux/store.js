@@ -4,6 +4,7 @@ import productReducer from "./features/slices/productSlice"
 import bookingReducer from "./features/slices/bookings"
 import customerReducer from "./features/slices/customer"
 import setupReducer from "./features/slices/setup"
+import paymentReducer from "./features/slices/payment"
 import { configureStore } from "@reduxjs/toolkit";
 
 const store = configureStore({
@@ -13,6 +14,7 @@ const store = configureStore({
         booking:bookingReducer,
         customer:customerReducer,
         setup:setupReducer,
+        payment:paymentReducer,
         [apiSlice.reducerPath]: apiSlice.reducer
     },
     devTools:true,

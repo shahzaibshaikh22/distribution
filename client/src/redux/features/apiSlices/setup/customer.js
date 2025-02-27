@@ -17,7 +17,9 @@ export const CustomerApiSlice = apiSlice.injectEndpoints({
             method:'POST',
             body:category
         }),
-        invalidatesTags: ['customers']
+        invalidatesTags: ['customercategories']
+
+
        }),
 
        getCustomers:builder.query({
@@ -32,11 +34,18 @@ export const CustomerApiSlice = apiSlice.injectEndpoints({
             url:`${customerurl}/get-category`,
             method:'GET',
         }),
-        providesTags: ['customers']
+        providesTags: ['customercategories']
        }),
        deleteCustomerCategory:builder.mutation({
         query:(id)=>({
             url:`${customerurl}/delete-category/${id}`,
+            method:'DELETE',
+        }),
+        invalidatesTags: ['customercategories']
+       }),
+       deleteCustomer:builder.mutation({
+        query:(id)=>({
+            url:`${customerurl}/delete-customer/${id}`,
             method:'DELETE',
         }),
         invalidatesTags: ['customers']
@@ -47,10 +56,18 @@ export const CustomerApiSlice = apiSlice.injectEndpoints({
             method:'PUT',
             body:{category}
         }),
-        invalidatesTags: ['towns']
+        invalidatesTags: ['customercategories']
+       }),
+       updateCustomer:builder.mutation({
+        query:({id,data})=>({
+            url:`${customerurl}/update-customer/${id}`,
+            method:'PUT',
+            body:data
+        }),
+        invalidatesTags: ['customers']
        }),
     }),
     
 })
 
-export const { useCreateCustomerMutation,useUpdateCustomerCategoryMutation, useGetCustomersQuery, useCreateCustomerCategoryMutation,useGetCustomersCategoryQuery,useDeleteCustomerCategoryMutation } = CustomerApiSlice
+export const {useDeleteCustomerMutation,useUpdateCustomerMutation, useCreateCustomerMutation,useUpdateCustomerCategoryMutation, useGetCustomersQuery, useCreateCustomerCategoryMutation,useGetCustomersCategoryQuery,useDeleteCustomerCategoryMutation } = CustomerApiSlice

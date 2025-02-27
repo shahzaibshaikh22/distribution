@@ -55,7 +55,7 @@ const DropdownMenu = ({
             {/* Dropdown Links */}
             {isOpen && (
                 <div 
-                    className={` px-2 absolute left-full top-0 bg-white shadow-md rounded-md w-48 py-2 z-50 
+                    className={` px-2 absolute h-64 overflow-y-auto left-full top-0 bg-white shadow-md rounded-md w-48 py-2 z-50 
                         ${modes === "dark" ? "bg-darksecondary text-white" : "bg-white text-black"}
                     `}
                     onClick={(event) => event.stopPropagation()} // Prevent closing when clicking inside
@@ -67,7 +67,7 @@ const DropdownMenu = ({
                             <Link 
                                 key={link.id} 
                                 to={link.path} 
-                                className={`block text-xs px-4 py-2 hover:bg-gray-200 
+                                className={`block border-b text-xs px-4 py-2 hover:bg-gray-200 
                                     ${isActive ? "bg-gray-300  font-bold" : ""}
                                 `}
                                 onClick={() => setOpenDropdown(null)} // Close dropdown on link click

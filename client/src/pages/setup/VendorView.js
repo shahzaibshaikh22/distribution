@@ -76,9 +76,10 @@ const handleDelete = async (id)=>{
 }
 useEffect(()=>{
     if(vendorData){
-        dispatch(setVendors(vendorData.vendor))        
+        dispatch(setVendors(vendorData)) 
+               
     }
-  },[dispatch,vendorData,refetch])
+  },[dispatch,vendorData])
 
     return (
         <div className="w-full flex  text-white px-4">

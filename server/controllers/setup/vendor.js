@@ -33,9 +33,7 @@ const getVendor = async (req, res) => {
     try {
         const vendor = await Vendor.find()
         if (vendor) {
-            return res.json({
-                vendor
-            })
+            return res.json(vendor)
 
         }
         if (vendor.length < 0) {

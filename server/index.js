@@ -65,6 +65,10 @@ app.use("/api/v1/product", require("./routes/product/product.js"))
 // booking
 app.use("/api/v1/order-booking", require("./routes/booking/booking.js"))
 // booking
+
+// payments
+app.use("/api/v1/payment", require("./routes/payments/paytovendorRoute.js"))
+// payments
 // routes
 
 

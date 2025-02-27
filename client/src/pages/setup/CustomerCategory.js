@@ -76,8 +76,8 @@ useEffect(()=>{
                         <h1 className=' pt-6 font-semibold mb-4'>Category Detail</h1>
                         <div className="divider w-full h-[1px] bg-gray-300 " />
                     </div>
-                    <form onSubmit={handleSubmit} className=' py-4'>
-                        <div className='flex md:flex-row w-full flex-col md:gap-20  md:my-4 '>
+                    <form onSubmit={handleSubmit}  className='w-full max-w-3xl mx-auto'>
+                        <div className='flex md:flex-row items-center w-full  flex-col gap-2  md:my-4 '>
                             {/* product type  */}
                             <InputField
                                 value={category}
@@ -87,9 +87,9 @@ useEffect(()=>{
                                 inputName="category"
                                 inputType="" />
                             {/* product type  */}
-                            <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+                            <div className='flex  flex-col w-full justify-between  gap-2'>
                             <label className="font-semibold"  htmlFor="code">Code</label>
-                            <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+                            <div className="inputBorder w-full p-2 rounded-md ">
                             <input
                             type="text"
                             onChange={()=>""}

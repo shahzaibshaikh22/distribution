@@ -13,6 +13,27 @@ const purchaseDueSchema = mongoose.Schema(
       paymentType:{
         type:String,
     },
+    products: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        price:{
+          type:Number
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: 1,
+        },
+        total: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
       totalAmount: {
         type: Number,
         required: true,

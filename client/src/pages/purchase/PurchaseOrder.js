@@ -137,7 +137,7 @@ const Purchase = () => {
   }, [productsData, dispatch]);
     useEffect(() => {
         if (vendorData) {
-            dispatch(setVendors(vendorData.vendor));
+            dispatch(setVendors(vendorData));
             
         }
     }, [vendorData, dispatch]);
@@ -182,11 +182,11 @@ const Purchase = () => {
                         <h1 className=' pt-6 font-semibold mb-4'>Purchase Order Detail</h1>
                         <div className="divider w-full h-[1px] bg-gray-300 " />
                     </div>
-                    <form className='py-4'>
-                        <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
-                            <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+                    <form className='py-4 w-full max-w-3xl mx-auto'>
+                        <div className='flex md:flex-row flex-col gap-2  w-full  '>
+                            <div className='flex  flex-col w-full gap-2 my-2  '>
                                 <label className="font-semibold" htmlFor="producttype">Warehouse</label>
-                                <div className="inputBorder w-full py-2 rounded-md max-w-xs">
+                                <div className="inputBorder w-full py-2 rounded-md ">
                                     <div className="relative full w-full">
                                         <select 
                                          value={selectedWarehouse} name="warehouse" 
@@ -206,9 +206,9 @@ const Purchase = () => {
                                 </div>
                             </div>
 
-                            <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+                            <div className='flex  flex-col w-full gap-2 my-2 '>
                                 <label className="font-semibold" htmlFor="producttype">Vendors</label>
-                                <div className="inputBorder w-full py-2 rounded-md max-w-xs">
+                                <div className="inputBorder w-full py-2 rounded-md ">
                                     <div className="relative full w-full">
                                         <select
                                         value={selectedVendor} 
@@ -216,8 +216,8 @@ const Purchase = () => {
                                         className="w-full inputBorder text-gray-800 px-4  rounded-md appearance-none cursor-pointer">
                                             <option value="">Select Vendor</option>
                                             {vendors?.map((vendor) => (
-                                                <option key={vendor._id} value={vendor.vendor}>
-                                                    {vendor.vendor}
+                                                <option key={vendor._id} value={vendor.name}>
+                                                    {vendor.name}
                                                 </option>
                                             ))}
                                         </select>
@@ -228,7 +228,7 @@ const Purchase = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
+                        <div className='flex md:flex-row items-center flex-col gap-2 w-full  '>
                             <InputField
                                 onChangeFunction={(e)=>setVehicleNo(e.target.value)} 
                                 placeholderText="Vehicle No"
@@ -236,9 +236,9 @@ const Purchase = () => {
                                 inputName="vehicleno"
                                 inputType="text" />
 
-                            <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+                            <div className='flex flex-col w-full gap-2'>
                                 <label className="font-semibold"  htmlFor="pono">Po No:</label>
-                                <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+                                <div className="inputBorder w-full p-2 rounded-md  ">
                                 <input
                                 value={pono}
                                 type="text"
@@ -258,12 +258,12 @@ const Purchase = () => {
                                 inputType="text" /> */}
                         </div>
 
-                      <div className="divider w-full h-[1px] bg-gray-300 mb-4 " />
-                        <div className='flex md:flex-row flex-col md:gap-20 w-full md:my-4  items-center justify-between '>
-                          
-                        <div className='flex md:flex-row flex-col w-full   justify-between  md:my-0 my-2  md:gap-20'>
+                      <div className="divider w-full h-[1px] bg-gray-300 mb-4 mt-4 " />
+
+                        <div className='flex md:flex-row flex-col gap-2  w-full '>
+                        <div className='flex  flex-col w-full gap-2'>
                                 <label className="font-semibold" htmlFor="producttype">Products</label>
-                                <div className="inputBorder w-full py-2 rounded-md max-w-xs">
+                                <div className="inputBorder w-full py-2 rounded-md ">
                                     <div className="relative full w-full">
                                         <select 
                                          onChange={handleProductSelect} 
@@ -282,9 +282,9 @@ const Purchase = () => {
                                     </div>
                                 </div>
                         </div>
-                        <div className='flex md:flex-row flex-col w-full   justify-between  md:my-0 my-2  md:gap-20'>
+                        <div className='flex  flex-col w-full gap-2'>
                                 <label className="font-semibold" htmlFor="producttype">Products</label>
-                                <div className="inputBorder w-full py-2 rounded-md max-w-xs">
+                                <div className="inputBorder w-full py-2 rounded-md ">
                                     <div className="relative full w-full">
                                         <select 
                                          name="paymentType"
@@ -300,10 +300,7 @@ const Purchase = () => {
                                         </div>
                                     </div>
                                 </div>
-                        </div>
-                       
-                   
-                       
+                        </div>  
                         </div>
 
                        
