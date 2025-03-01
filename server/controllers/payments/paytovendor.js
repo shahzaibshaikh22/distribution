@@ -3,9 +3,10 @@ const payToVendor = require("../../models/payments/paytovendor")
 const PurchaseDue = require("../../models/purchaseDue/purchaseValue")
 const createVendorPay = async (req, res) => {
   try {
-    const { pono, vendor, payamount, account } = req.body;
+    const { pono, vendor, payamount, account,totalamount } = req.body;
 
     const purchaseDue = await PurchaseDue.findOne({ purchseOrderNo: pono });
+    const payments = await payToVendor.find();
     
     if (!purchaseDue) {
       return res.json({ err: "Purchase order not found" });
@@ -16,7 +17,7 @@ const createVendorPay = async (req, res) => {
     }
 
     // Payment save karna
-    const newPayment = new payToVendor({ pono, vendor, payamount, account });
+    const newPayment = new payToVendor({ pono,remainingamount:purchaseDue.totalAmount -= payamount, vendor, payamount,totalamount, account,voucherno:`vono-000${payments.length + 1}` });
     await newPayment.save();
 
     // Amount minus karna
@@ -29,18 +30,15 @@ const createVendorPay = async (req, res) => {
   }
 };
 
-const getVendorPayments = async (req,res)=>{
+const getVendorPayments = async (req, res) => {
   try {
-    const {vendor} = req.params
-    const payments = await payToVendor.find({vendor});
-    if(payments.length < 1 || !payments){
-      return res.json({msg:"not fonund"})
-    }
-    return res.json(payments)
+    const { vendor } = req.params;
+    const payments = await payToVendor.find({ vendor })
+    return res.json(payments);
   } catch (error) {
     res.json({ msg: error.message });
   }
-}
+};
 
 module.exports = {
     createVendorPay,

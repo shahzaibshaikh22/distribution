@@ -9,12 +9,12 @@ import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import { useCreateBookingMutation, useGetBookingsQuery } from "../../redux/features/apiSlices/booking/orderBooking";
 import { setBookingOrderLength } from "../../redux/features/slices/bookings";
 import { useGetCustomersQuery } from "../../redux/features/apiSlices/setup/customer";
-import { setCustomers } from "../../redux/features/slices/customer";
+import { setCustomers } from "../../redux/features/slices/setup";
 
 const OrderBooking = () => {
   const dispatch = useDispatch()
   const { bookOrderNo } = useSelector((state) => state.booking)
-  const { customers } = useSelector((state) => state.customer)
+  const { customers } = useSelector((state) => state.setup)
   const [bono, setBono] = useState(`bono-000`)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,6 +37,8 @@ const OrderBooking = () => {
   useEffect(() => {
     if (customerData) {
       dispatch(setCustomers(customerData))
+      console.log(customerData);
+      
     }
   }, [dispatch, customerData])
 
@@ -117,13 +119,13 @@ const OrderBooking = () => {
         <h1 className="text-center pt-6 font-semibold mb-4">Order Booking Details</h1>
         <div className="divider w-full h-[1px] bg-gray-300 " />
 
-        <form className="py-4">
-          <div className="flex md:flex-row flex-col md:gap-20 w-full md:my-4 items-center md:justify-between">
+        <form className='w-full max-w-3xl mx-auto '>
+          <div  className='flex md:flex-row w-full items-center flex-col gap-2 md:my-4 '>
             <InputField placeholderText="Date" LabelText="Date:" inputName="date" inputType="date" />
             {/* <input type="text" placeholder="Booking Order No" readOnly value={bookingOrderNo} /> */}
-            <div className='flex md:flex-row flex-col w-full justify-between  md:my-0 my-2  md:gap-20'>
+            <div className='flex  flex-col w-full justify-between gap-2  md:my-0 my-2  '>
               <label className="font-semibold" htmlFor="bono">Order No:</label>
-              <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+              <div className="inputBorder w-full p-2 rounded-md  ">
                 <input
                   value={bono}
                   readOnly
@@ -135,15 +137,15 @@ const OrderBooking = () => {
            
             
           </div>
-          <div className='flex md:flex-row flex-col w-full lg:max-w-[47%] justify-between  md:my-0 my-2  md:gap-20'>
+          <div  className='flex  w-full  flex-col gap-2 md:my-4 '>
               <label className="font-semibold" htmlFor="bono">Customer:</label>
              
-            <div className="inputBorder w-full p-2 rounded-md max-w-xs ">
+            <div className="inputBorder w-full p-2 rounded-md  ">
             <select className="w-full" onChange={(e) => setCustomer(e.target.value)} name="customer" id="customer">
               <option value="">Select customer</option>
               {customers?.map((c)=>{
                 return(
-                  <option value={c.username}>{c.username}</option>
+                  <option key={c._id} value={c.name}>{c.name}</option>
                 )
               })}
               {/* <option value="Bilal">Bilal</option>
@@ -151,23 +153,21 @@ const OrderBooking = () => {
             </select>
               </div>
             </div>
-
-          <div className="flex w-full md:w-[57%] justify-center my-4 ">
             <button
               onClick={(e) => {
                 e.preventDefault();
                 setIsModalOpen(true);
               }}
               type="button"
-              className="bg-blue-700 w-40 px-4 py-2 rounded-full text-white"
+              className="disButton"
             >
               View Products
             </button>
-          </div>
+         
         </form>
 
-        <div className="w-full bg-lightsecondary rounded-md p-4 mb-2">
-          <table className="w-full min-w-full rounded-md border border-gray-200">
+        <div className="w-full bg-white shadow-md mt-4 rounded-md p-4 mb-2">
+          <table className="w-full min-w-full rounded-md ">
             <thead className="bg-gray-100 text-gray-800">
               <tr>
                 <th className="py-3 text-xs px-4">Product</th>
@@ -180,7 +180,7 @@ const OrderBooking = () => {
             </thead>
             <tbody>
               {selectedProducts.map((product) => (
-                <tr key={product._id} className="border-b border-gray-400">
+                <tr key={product._id} className="border-b border-gray-300">
                   <td className="py-3 text-xs px-4 text-center">Image</td>
                   <td className="py-3 text-xs px-4 text-center">{product.product.productname}</td>
                   <td className="py-3 text-xs px-4 text-center flex items-center justify-center">
@@ -231,10 +231,10 @@ const OrderBooking = () => {
             <input className="w-full" type="number" value={extraCharges} onChange={(e) => setExtraCharges(e.target.value)} name="extracharges" placeholder="Extra Charges" />
           </div>
           <div className="flex  gap-4">
-            <button onClick={handleCreateBooking} className="bg-blue-700 text-white px-8 py-2 rounded-full">
+            <button onClick={handleCreateBooking} className="disButton">
               {isLoading ? "processing" : "Add New"}
             </button>
-            <button className="bg-blue-700 text-white px-8 py-2 rounded-full">Save Sale</button>
+            <button className="disButton">Save Sale</button>
           </div>
         </div>
 

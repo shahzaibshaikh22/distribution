@@ -34,7 +34,7 @@ const Inventory = () =>{
     },[inventoryData, dispatch])
 
     return(
-        <div className="w-full">
+        <div className="w-full px-4">
             <TopBar/>
        <div className="w-full bg-white rounded-md my-4 p-6">
        <table className="w-full text-left border-collapse">
