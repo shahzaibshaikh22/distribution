@@ -40,10 +40,17 @@ export const BrandApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['bookings']
             }),
+            getCustomerBookings:builder.query({
+                query:(customer)=>({
+                    url:`${bookingurl}/get-customer-order/${customer}`,
+                    method:'GET',
+                }),
+                providesTags: ['customerdues']
+               }),
     
     
     }),
     
 })
 
-export const {useOrderSummaryMutation, useCreateBookingMutation, useGetBookingsQuery, useDeleteBookingMutation, useStatusDeliveredMutation } = BrandApiSlice
+export const { useLazyGetCustomerBookingsQuery, useOrderSummaryMutation, useCreateBookingMutation, useGetBookingsQuery, useDeleteBookingMutation, useStatusDeliveredMutation } = BrandApiSlice

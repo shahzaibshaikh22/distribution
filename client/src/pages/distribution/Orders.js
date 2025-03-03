@@ -13,6 +13,10 @@ import OrderStatus from "../../components/OrderStatus"
 
 const Orders = () => {
     const { bookings } = useSelector((state) => state.booking);
+    if(bookings){
+        console.log(bookings);
+        
+    }
     const dispatch = useDispatch();
     const { data: bookingData } = useGetBookingsQuery();
     const [selectedOrder, setSelectedOrder] = useState(null);
@@ -86,7 +90,7 @@ const Orders = () => {
                     <tbody>
                         {bookings?.map((b) => (
                             <tr key={b._id} className="border-b border-gray-300">
-                                <td className=" text-xs  text-center">{b.customer}</td>
+                                <td className=" text-xs  text-center">{b.customer.name}</td>
                                 <td className=" text-xs  text-center">{b.totalQuantity}</td>
                                 <td className=" text-xs  text-center">{b.totalAmount}</td>
                                 <td className=" text-xs  text-center">{b.deliveryCharges}</td>

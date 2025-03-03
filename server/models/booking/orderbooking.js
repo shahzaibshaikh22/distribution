@@ -2,8 +2,8 @@ const mongoose = require("mongoose")
 const orderBookingSchema = new mongoose.Schema(
   {
     customer: {
-      type: String, 
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Customer", 
     },
     bono:{
       type:String
@@ -44,7 +44,6 @@ const orderBookingSchema = new mongoose.Schema(
     },
     paymentType: {
       type: String,
-      enum: ["cash", "card"],
       required: true,
     },
     deliveryCharges: {

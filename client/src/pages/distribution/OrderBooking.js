@@ -145,7 +145,7 @@ const OrderBooking = () => {
               <option value="">Select customer</option>
               {customers?.map((c)=>{
                 return(
-                  <option key={c._id} value={c.name}>{c.name}</option>
+                  <option key={c._id} value={c._id}>{c.name}</option>
                 )
               })}
               {/* <option value="Bilal">Bilal</option>
@@ -218,7 +218,7 @@ const OrderBooking = () => {
             <select className="w-full" onChange={(e) => setPaymentType(e.target.value)} name="paymentType" id="">
               <option value="">select payment type</option>
               <option value="cash">Cash</option>
-              <option value="card">Card</option>
+              <option value="credit">credit</option>
             </select>
           </div>
           <div className="bg-white border-2 border-lightprimary rounded-full max-w-xl w-full px-4 py-2 flex items-center justify-between">

@@ -1,28 +1,31 @@
 import React, { useEffect, useState,useRef } from "react";
 import TopBar from "../../components/TopBar";
-import { useGetVendorQuery } from "../../redux/features/apiSlices/setup/vendor";
 import { useDispatch, useSelector } from "react-redux";
-import { setVendors } from "../../redux/features/slices/productSlice";
-import { useGetAllTotalQuery, useLazyGetPurOrByVendorQuery } from "../../redux/features/apiSlices/purchase/purchaseOrderSlice";
-import { setPurOrOfVendor, setVendorPayments } from "../../redux/features/slices/payment";
-import { useLazyGetVendorPaymentQuery, usePayToVendorMutation } from "../../redux/features/apiSlices/payment/paytovendor";
+import { useGetAllTotalQuery, } from "../../redux/features/apiSlices/purchase/purchaseOrderSlice";
+import { setBookingOrdersOfCustomer, setCustomerPayments } from "../../redux/features/slices/payment";
+import { useGetCustomersQuery } from "../../redux/features/apiSlices/setup/customer";
+import { setCustomers } from "../../redux/features/slices/setup";
+import { useLazyGetCustomerBookingsQuery } from "../../redux/features/apiSlices/booking/orderBooking";
+import { useLazyGetCustomerPaymentQuery, useRecieveCustomerPaymentMutation } from "../../redux/features/apiSlices/payment/recievecustomerpayment";
 
-const PurchasePayment = () => {
-  const { PurOrOfVendor, vendorPayments } = useSelector((state) => state.payment);
-  const { data: vendorData } = useGetVendorQuery();
+const RecievePayment = () => {
+  const { PurOrOfVendor, customerPayments,BookingOrdersOfCustomer } = useSelector((state) => state.payment);
+  const { customers } = useSelector((state) => state.setup);
+  const { data: customerData } = useGetCustomersQuery();
   const { data: totalData, refetch } = useGetAllTotalQuery();
-  const [getOrders, { data: orderData, error, isLoading }] = useLazyGetPurOrByVendorQuery();
-  const [getVendorPayment, { data: vendorPaymentData }] = useLazyGetVendorPaymentQuery();
-  const [paytovendor, { isLoading: isPaying }] = usePayToVendorMutation();
+  const [getOrders, { data: orderData, error, isLoading }] = useLazyGetCustomerBookingsQuery();
+  const [getCustomerPayment, { data: customerPaymentData }] = useLazyGetCustomerPaymentQuery();
+  const [recieveCustomerPay, { isLoading: isPaying }] = useRecieveCustomerPaymentMutation();
+  
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [phonePay, setPhonePay] = useState(false);
   const [isVoucher, setIsVoucher] = useState(false);
   const [voucher, setVoucher] = useState(null);
 
   const [data, setData] = useState({
-    pono: "",
-    vendor: "",
-    payamount: 0,
+    bobo: "",
+    customer: "",
+    recieveamount: 0,
     totalamount: 0,
     account: "",
   });
@@ -33,19 +36,18 @@ const PurchasePayment = () => {
   };
 
   const dispatch = useDispatch();
-  const { vendors } = useSelector((state) => state.product);
 
   // Fetch vendors and set them in Redux store
   useEffect(() => {
-    if (vendorData) {
-      dispatch(setVendors(vendorData));
+    if (customerData) {
+      dispatch(setCustomers(customerData));
     }
-  }, [vendorData, dispatch]);
+  }, [customerData, dispatch]);
 
   // Update purchase orders in Redux store when orderData changes
   useEffect(() => {
     if (orderData) {
-      dispatch(setPurOrOfVendor(orderData));
+      dispatch(setBookingOrdersOfCustomer(orderData));
     }
   }, [orderData, dispatch]);
 
@@ -54,16 +56,16 @@ const PurchasePayment = () => {
     if (selectedOrder) {
       setData((prevData) => ({
         ...prevData,
-        pono: selectedOrder.purchseOrderNo,
-        vendor: selectedOrder.vendor,
+        bono: selectedOrder.bono,
+        customer: selectedOrder.customer._id.toString(),
         totalamount: selectedOrder.totalAmount,
       }));
     }
   }, [selectedOrder]);
 
-  const handleFetchOrders = (vendor) => {
-    getOrders(vendor);
-    getVendorPayment(vendor)
+  const handleFetchOrders = (customer) => {
+    getOrders(customer);
+    getCustomerPayment(customer)
   };
 
   const handleSelectView = (order) => {
@@ -73,21 +75,21 @@ const PurchasePayment = () => {
   // Handle payment submission
   const handlePayAmount = async () => {
     try {
-      const res = await paytovendor(data).unwrap(); // unwrap to handle success/error directly
+      const res = await recieveCustomerPay(data).unwrap(); // unwrap to handle success/error directly
       if (res?.msg) {
         alert(res.msg);
         // Reset form and selected order after successful payment
         setData({
-          pono: "",
-          vendor: "",
-          payamount: 0,
+          bono: "",
+          customer: "",
+          recieveamount: 0,
           account: "",
         });
         setSelectedOrder(null);
         // Refetch totals and vendor orders to update UI
         refetch(); // Refetch total data
-        if (data.vendor) {
-          handleFetchOrders(data.vendor); // Refetch vendor-specific orders
+        if (data.customer) {
+          handleFetchOrders(data.customer); 
         }
       }
     } catch (err) {
@@ -96,19 +98,19 @@ const PurchasePayment = () => {
   };
 
   // Calculate grand total for vendor-specific orders
-  const grandTotal = PurOrOfVendor?.reduce((sum, order) => sum + order.totalAmount, 0) || 0;
+  const grandTotal = BookingOrdersOfCustomer?.reduce((sum, order) => sum + order.totalAmount, 0) || 0;
 
-  const totalPayAmount = vendorPayments?.reduce((total, item) => total + item.payamount, 0);
+  const totalPayAmount = customerPayments?.reduce((total, item) => total + item.recieveamount, 0);
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
   useEffect(() => {
-    if (vendorPaymentData) {
-      dispatch(setVendorPayments(vendorPaymentData));
+    if (customerPaymentData) {
+      dispatch(setCustomerPayments(customerPaymentData));
     }
-  }, [vendorPaymentData, dispatch]);
+  }, [customerPaymentData, dispatch]);
 
   const handlePhonePay = ()=>{
     setPhonePay(true)
@@ -124,7 +126,7 @@ const PurchasePayment = () => {
       <TopBar />
       <div className="w-full bg-white rounded-md my-4 p-6">
         <div className="flex items-center justify-between">
-          <h1 className="font-semibold text-gray-700">Vendors</h1>
+          <h1 className="font-semibold text-gray-700">Customers</h1>
           <h1 className="px-2 py-1 bg-gray-200 text-gray-800 rounded-md">
             Overall Amount: Rs-{totalData?.grandTotal || 0}
           </h1>
@@ -142,15 +144,15 @@ const PurchasePayment = () => {
               </tr>
             </thead>
             <tbody>
-              {vendors?.map((v) => (
-                <tr key={v._id} className="border-b p-1">
-                  <td className="py-3 text-xs px-4">{v.name}</td>
-                  <td className="py-3 text-xs px-4">{v.address}</td>
-                  <td className="py-3 text-xs px-4">{v.phone}</td>
-                  <td className="py-3 text-xs px-4">{v.email}</td>
+              {customers?.map((c) => (
+                <tr key={c._id} className="border-b p-1">
+                  <td className="py-3 text-xs px-4">{c.name}</td>
+                  <td className="py-3 text-xs px-4">{c.address}</td>
+                  <td className="py-3 text-xs px-4">{c.phone}</td>
+                  <td className="py-3 text-xs px-4">{c.email}</td>
                   <td className="py-3 text-xs px-4">
                     <span
-                      onClick={() => handleFetchOrders(v.name)}
+                      onClick={() => handleFetchOrders(c._id.toString())}
                       className="px-4 py-2 bg-blue-700 cursor-pointer text-white rounded-md"
                     >
                       view
@@ -166,7 +168,7 @@ const PurchasePayment = () => {
       {orderData && (
         <div className="w-full bg-white rounded-md my-4 p-6">
           <div className="flex items-center justify-between">
-            <h1 className="font-semibold font-gray-700">Purchase Orders</h1>
+            <h1 className="font-semibold font-gray-700">Booking Orders</h1>
             <h1 className="px-2 py-1 bg-gray-200 text-gray-800 rounded-md">
               Overall Amount: Rs-{grandTotal}
             </h1>
@@ -176,18 +178,18 @@ const PurchasePayment = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="py-3 text-xs px-4">Vendor Name</th>
-                  <th className="py-3 text-xs px-4">Purchase Order No</th>
+                  <th className="py-3 text-xs px-4">Customer Name</th>
+                  <th className="py-3 text-xs px-4">Booking Order No</th>
                   <th className="py-3 text-xs px-4">Total Amount</th>
                   <th className="py-3 text-xs px-4">Date</th>
                   <th className="py-3 text-xs px-4">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {PurOrOfVendor?.map((order) => (
+                {BookingOrdersOfCustomer?.map((order) => (
                   <tr key={order._id} className="border-b p-1">
-                    <td className="py-3 text-xs px-4 col-span-1">{order.vendor}</td>
-                    <td className="py-3 text-xs px-4 col-span-1">{order.purchseOrderNo}</td>
+                    <td className="py-3 text-xs px-4 col-span-1">{order.customer.name}</td>
+                    <td className="py-3 text-xs px-4 col-span-1">{order.bono}</td>
                     <td className="py-3 text-xs px-4 col-span-1">{order.totalAmount}</td>
                     <td className="py-3 text-xs px-4 col-span-1">{new Date(order.createdAt).toLocaleString()}</td>
                     <td className="py-3 text-xs px-4 col-span-1">
@@ -215,12 +217,12 @@ const PurchasePayment = () => {
               <table className="w-full border-collapse border border-gray-300 shadow-md">
                 <tbody>
                   <tr className="bg-gray-100">
-                    <td className="border p-3 font-semibold text-gray-700">Purchase order No</td>
-                    <td className="border p-3">{selectedOrder.purchseOrderNo}</td>
+                    <td className="border p-3 font-semibold text-gray-700">Booking order No</td>
+                    <td className="border p-3">{selectedOrder.bono}</td>
                   </tr>
                   <tr>
-                    <td className="border p-3 font-semibold text-gray-700">Vendor Name</td>
-                    <td className="border p-3">{selectedOrder.vendor}</td>
+                    <td className="border p-3 font-semibold text-gray-700">Customer Name</td>
+                    <td className="border p-3">{selectedOrder.customer.name}</td>
                   </tr>
                   <tr>
                     <td className="border p-3 font-semibold text-gray-700">Payment Type</td>
@@ -303,16 +305,16 @@ const PurchasePayment = () => {
                 </div>
               </div>
               <div className="flex flex-col w-full justify-between gap-2 my-2">
-                <label className="font-semibold" htmlFor="payamount">
+                <label className="font-semibold" htmlFor="recieveamount">
                   Amount
                 </label>
                 <div className="inputBorder w-full p-2 rounded-md">
                   <input
-                    value={data.payamount}
+                    value={data.recieveamount}
                     onChange={handleChange}
                     type="number"
                     placeholder="Enter Amount"
-                    name="payamount"
+                    name="recieveamount"
                     className="bg-transparent w-full"
                   />
                 </div>
@@ -389,7 +391,7 @@ const PurchasePayment = () => {
        </div>
       )}
 
-      {vendorPaymentData && (
+      {customerPaymentData && (
         <div className="w-full bg-white rounded-md my-4 p-6">
           <div className="flex items-center justify-between">
             <h1 className="font-semibold font-gray-700">Payed History</h1>
@@ -401,7 +403,7 @@ const PurchasePayment = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-100">
-                <th className="py-3 text-xs px-4">Vendor Name</th>
+                <th className="py-3 text-xs px-4">Customer Name</th>
                 <th className="py-3 text-xs px-4">Purchase Order No</th>
                 <th className="py-3 text-xs px-4">Amount</th>
                 <th className="py-3 text-xs px-4">Account</th>
@@ -410,11 +412,11 @@ const PurchasePayment = () => {
               </tr>
             </thead>
             <tbody>
-              {vendorPayments?.map((order) => (
+              {customerPayments?.map((order) => (
                 <tr key={order._id} className="border-b p-1">
-                  <td className="py-3 text-xs px-4">{order.vendor}</td>
-                  <td className="py-3 text-xs px-4">{order.pono}</td>
-                  <td className="py-3 text-xs px-4">Rs-{order.payamount}</td>
+                  <td className="py-3 text-xs px-4">{order.customer.name}</td>
+                  <td className="py-3 text-xs px-4">{order.bono}</td>
+                  <td className="py-3 text-xs px-4">Rs-{order.recieveamount}</td>
                   <td className="py-3 text-xs px-4">{order.account}</td>
                   <td className="py-3 text-xs px-4">{new Date(order.createdAt).toLocaleString()}</td>
                   <td className="py-3 text-xs px-4">
@@ -465,7 +467,7 @@ const PurchasePayment = () => {
                  <div className="flex justify-between my-4">
                    <div>
                      <p>Voucher Number <strong>{voucher.voucherno}</strong> <br /></p>
-                     <p>Puchase Order Number <strong>{voucher.pono} </strong> <br /></p>
+                     <p>Puchase Order Number <strong>{voucher.bono} </strong> <br /></p>
                    </div>
                    <div className="text-right">
                      <p>Payment Released Date <br /> {new Date().toLocaleDateString()}</p>
@@ -480,10 +482,10 @@ const PurchasePayment = () => {
            <div className="mb-6">
              <h4 className="font-semibold text-lg text-gray-800 mb-2">Payment To:</h4>
              <div className="border border-gray-300 rounded-md p-4 bg-gray-50">
-               <p><strong>Name:</strong> {voucher.vendor}</p>
-               <p><strong>Address:</strong> Address</p>
+               <p><strong>Name:</strong> {voucher.customer.name}</p>
+               <p><strong>Address:</strong> {voucher.customer.address}</p>
                <p><strong>Phone:</strong> 03173883816</p>
-               <p><strong>Email:</strong> Shahzaibb@gmail.com</p>
+               <p><strong>Email:</strong> {voucher.customer.email}</p>
              </div>
            </div>
            
@@ -493,7 +495,7 @@ const PurchasePayment = () => {
              <ul className="list-none space-y-1">
                <li>Payment Type: <strong> Credit </strong></li>
                <li>Total Amount Rs- <strong> {voucher.totalamount} </strong></li>
-               <li>Amount Paid Rs- <strong> {voucher.payamount} </strong></li>
+               <li>Recieved Amount Rs- <strong> {voucher.recieveamount} </strong></li>
                <li>Remaining Amount Rs- <strong>{voucher.remainingamount}  </strong></li>
                <li>Transaction Date: <strong> {new Date(voucher.createdAt).toLocaleString()} </strong></li>
                <li>Transaction ID: <strong> {voucher._id} </strong></li>
@@ -526,4 +528,4 @@ const PurchasePayment = () => {
   );
 };
 
-export default PurchasePayment;
+export default RecievePayment;

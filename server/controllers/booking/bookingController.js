@@ -1,6 +1,7 @@
 const OrderBooking = require("../../models/booking/orderbooking")
 const Inventory = require("../../models/inventory/inventory")
-const OrderDetail = require("../../models/booking/OrderDetails")
+const OrderDetail = require("../../models/booking/OrderDetails");
+const CustomerDue = require("../../models/customerDues/customerdues")
 
 // Create a new order booking
 // const createBooking = async (req, res) => {
@@ -116,17 +117,17 @@ const OrderDetail = require("../../models/booking/OrderDetails")
 
 
 // Get all bookings
-const getAllBookings = async (req, res) => {
-  try {
-    const bookings = await OrderBooking.find().sort({ createdAt: -1 }).populate({
-      path: "products.product",
-      select: 'productname image brand category costprice'
-    })
-    res.status(200).json(bookings);
-  } catch (error) {
-    res.status(500).json({ err: error.message });
-  }
-};
+// const getAllBookings = async (req, res) => {
+//   try {
+//     const bookings = await OrderBooking.find().sort({ createdAt: -1 }).populate({
+//       path: "products.product",
+//       select: 'productname image brand category costprice'
+//     })
+//     res.status(200).json(bookings);
+//   } catch (error) {
+//     res.status(500).json({ err: error.message });
+//   }
+// };
 
 // Get a single booking by ID
 const getBookingById = async (req, res) => {
@@ -140,6 +141,26 @@ const getBookingById = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch booking", error: error.message });
   }
 };
+
+const getAllBookings = async (req, res) => {
+  try {
+    const bookings = await OrderBooking.find()
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "products.product",
+        select: "productname image brand category costprice",
+      })
+      // .populate({
+      //   path: "customer", 
+      //   select: "name", 
+      // });
+
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ err: error.message });
+  }
+};
+
 
 // Update booking by ID
 const updateBooking = async (req, res) => {
@@ -242,7 +263,7 @@ const createBooking = async (req, res) => {
       deliveryCharges,
       extraCharges,
       changeAmount,
-      step: 1,  // Pehla step set kar diya
+      step: 1,  
       status: "pending"
     });
 
@@ -272,7 +293,15 @@ const updateOrderStatus = async (req, res) => {
       order.step = 4;
       order.status = "delivered";
 
-
+      const customerdue = new CustomerDue({
+        customer:order.customer,
+        bono:order.bono,
+        totalAmount:order.totalAmount,
+        paymentType:order.paymentType,
+        products:order.products,
+        createdAt:order.createdAt,
+      });
+      await customerdue.save()
       for (const item of order.products) {
 
         const inventory = await Inventory.findOne({ "products.product": item.product });
@@ -342,6 +371,28 @@ if (existingOrder) {
 };
 
 
+// get customers dues
+const getBookingOrderByCustomerId = async (req, res) => {
+  try {
+    const { customer } = req.params
+    const bookingorders = await CustomerDue.find({customer,paymentType: "credit"}).populate({
+      path: "products.product",
+      select: "productname image brand category costprice", 
+    })
+    .populate({
+      path: "customer", 
+      select: "name email address", 
+    });
+    if(!bookingorders){
+      return res.json({msg:"not found"})
+    }
+      return res.json(bookingorders);
+  } catch (error) {
+    return res.json({ err: error.message });
+  }
+};
+
+
 
 
 
@@ -354,5 +405,6 @@ module.exports = {
   updateBooking,
   deleteBooking,
   updateOrderStatus,
-  createOrderDetail
+  createOrderDetail,
+  getBookingOrderByCustomerId
 }

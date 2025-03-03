@@ -250,5 +250,10 @@ import { TbUserCancel } from "react-icons/tb";
       text: 'purchase payments',
       path: "/purchase-payment"
     },
+    {
+      id: 2,
+      text: 'recieve payment',
+      path: "/recieve-payment"
+    },
 
   ]

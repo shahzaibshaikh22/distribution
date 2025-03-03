@@ -61,7 +61,7 @@ const LoadSummary = () => {
               onChange={(e) => setBono(e.target.value)}
               type="text"
               placeholder="Enter PO No"
-              name="pono"
+              name="bono"
               className='bg-transparent w-full border p-2 rounded-md'
             />
           </div>
