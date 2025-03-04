@@ -255,5 +255,15 @@ import { TbUserCancel } from "react-icons/tb";
       text: 'recieve payment',
       path: "/recieve-payment"
     },
+    {
+      id: 3,
+      text: 'journal payment',
+      path: "/journal-payment"
+    },
+    {
+      id: 4,
+      text: 'journal payment view',
+      path: "/journal-payment-view"
+    },
 
   ]

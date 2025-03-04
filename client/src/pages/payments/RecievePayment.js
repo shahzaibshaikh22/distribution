@@ -133,7 +133,7 @@ const RecievePayment = () => {
         </div>
         <div className="divider w-full h-[1px] bg-gray-300  mx-auto left-0 mb-4 mt-2" />
         <div className="w-full rounded-md  bg-white text-gray-800 overflow-x-auto">
-          <table className="w-full text-left ">
+          <table className="w-full text-left">
             <thead>
               <tr className="bg-gray-100">
                 <th className="py-3 text-xs px-4">Vendor Name</th>

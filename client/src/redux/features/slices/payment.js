@@ -7,7 +7,8 @@ const paymentSlice = createSlice({
     BookingOrdersOfCustomer:[],
     customerBookings:[],
     vendorPayments:[],
-    customerPayments:[]
+    customerPayments:[],
+    journalPayments:[]
   },
   reducers: {
     setPurOrOfVendor:(state,action)=>{
@@ -25,8 +26,11 @@ const paymentSlice = createSlice({
     setBookingOrdersOfCustomer:(state,action)=>{
       state.BookingOrdersOfCustomer = action.payload
     },
+    setJournalPayments:(state,action)=>{
+      state.journalPayments = action.payload
+    },
   },
 });
 
-export const {setBookingOrdersOfCustomer,setPurOrOfVendor,setVendorPayments,setCustomerBookings,setCustomerPayments } = paymentSlice.actions;
+export const {setJournalPayments,setBookingOrdersOfCustomer,setPurOrOfVendor,setVendorPayments,setCustomerBookings,setCustomerPayments } = paymentSlice.actions;
 export default paymentSlice.reducer

@@ -52,6 +52,8 @@ import AddSaleman from './pages/setup/AddSaleman';
 import SalemanView from './pages/setup/SalemanView';
 import CustomersView from './pages/setup/CustomersView';
 import RecievePayment from './pages/payments/RecievePayment';
+import JournalPayment from './pages/payments/JournalPayment';
+import JournalPaymentView from './pages/payments/JournalPaymentView';
 
 const App = () => {
   const { modes,sideBarCollapes } = useSelector((state) => state.mode)
@@ -140,6 +142,8 @@ const App = () => {
               {/* payments */}
               <Route path="/purchase-payment" element={<PurchasePayment />} />
               <Route path="/recieve-payment" element={<RecievePayment />} />
+              <Route path="/journal-payment" element={<JournalPayment />} />
+              <Route path="/journal-payment-view" element={<JournalPaymentView />} />
               {/* payments */}
             </Routes>
           </div>
