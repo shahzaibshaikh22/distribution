@@ -54,6 +54,10 @@ import CustomersView from './pages/setup/CustomersView';
 import RecievePayment from './pages/payments/RecievePayment';
 import JournalPayment from './pages/payments/JournalPayment';
 import JournalPaymentView from './pages/payments/JournalPaymentView';
+import AddPattyCategory from './pages/setup/AddPattyCategory';
+import PattyCategoryView from './pages/setup/PattyCategoryView';
+import PattyPayment from './pages/payments/PattyPayment';
+import PattyExpenceView from './pages/payments/PattyExpenceView';
 
 const App = () => {
   const { modes,sideBarCollapes } = useSelector((state) => state.mode)
@@ -118,6 +122,8 @@ const App = () => {
               <Route path="/saleman-view" element={<SalemanView />} />
               <Route path="/add-saleman" element={<AddSaleman />} />
               <Route path="/customers-view" element={<CustomersView />} />
+              <Route path="/add-patty-category" element={<AddPattyCategory />} />
+              <Route path="/patty-category-view" element={<PattyCategoryView />} />
               {/* setup */}
 
               {/* [purchase] */}
@@ -143,7 +149,9 @@ const App = () => {
               <Route path="/purchase-payment" element={<PurchasePayment />} />
               <Route path="/recieve-payment" element={<RecievePayment />} />
               <Route path="/journal-payment" element={<JournalPayment />} />
+              <Route path="/patty-payment" element={<PattyPayment />} />
               <Route path="/journal-payment-view" element={<JournalPaymentView />} />
+              <Route path="/patty-payment-view" element={<PattyExpenceView />} />
               {/* payments */}
             </Routes>
           </div>

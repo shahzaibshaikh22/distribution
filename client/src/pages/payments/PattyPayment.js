@@ -3,21 +3,22 @@ import TopBar from "../../components/TopBar";
 import SectionBar from "../../components/SectionBar";
 import { useDispatch, useSelector } from "react-redux";
 import InputField from "../../components/InputField";
-import {  useAddStaffMutation, useGetStaffCategoryQuery } from "../../redux/features/apiSlices/setup/staffCategory";
-import {setStaffCaty } from "../../redux/features/slices/setup"
+import {setPattyCategory, } from "../../redux/features/slices/setup"
 import { useCreateJournalPaymentMutation } from "../../redux/features/apiSlices/payment/journalpayment"
+import { useGetPattyCategoryQuery } from "../../redux/features/apiSlices/setup/pattyexpencecategory"
+import { useCreatePattyPaymentMutation } from "../../redux/features/apiSlices/payment/pattypayment";
 
 
 
-const JournalPayment = () => {
+const PattyPayment = () => {
   const { modes } = useSelector((state)=>state.mode);
-  const { staffCategories } = useSelector((state)=>state.setup);
+  const { pattyExpenceCategory } = useSelector((state)=>state.setup);
   const dispatch = useDispatch()
 
-  const {data:staffCatyData} = useGetStaffCategoryQuery();
+  const {data:pattyCatyData} = useGetPattyCategoryQuery();
 
   const [data, setData] = useState({
-    paymentType:"",
+    category:"",
     amount:"",
     account:"",
     description:"",
@@ -27,7 +28,7 @@ const JournalPayment = () => {
   }
 
 // product type submition
-const [createPayment, {isLoading}] = useCreateJournalPaymentMutation()
+const [createPayment, {isLoading}] = useCreatePattyPaymentMutation()
 
 const handleSubmit = async (e)=>{
     e.preventDefault();
@@ -40,7 +41,7 @@ const handleSubmit = async (e)=>{
 const handleReset = ()=>{
     setData(
         {
-            paymentType:"",
+            category:"",
             amount:"",
             account:"",
             description:"",
@@ -49,10 +50,10 @@ const handleReset = ()=>{
 }
 
 useEffect(()=>{
-    if(staffCatyData){
-        dispatch(setStaffCaty(staffCatyData.category))        
+    if(pattyCatyData){
+        dispatch(setPattyCategory(pattyCatyData))        
     }
-  },[dispatch,staffCatyData])
+  },[dispatch,pattyCatyData])
 
     
 
@@ -100,13 +101,15 @@ useEffect(()=>{
                                 </div>
                                 </div>
                                 <div className='flex flex-col w-full gap-2'>
-                                <label className="font-semibold"  htmlFor="paymentType">paymentType</label>
+                                <label className="font-semibold"  htmlFor="category">category</label>
                                 <div className="inputBorder w-full p-2 rounded-md  ">
-                                <select className="w-full" name="paymentType" onChange={handleChange} id="paymentType">
-                                    <option value="">select payment type</option>
-                                    <option value="hand in cash">select payment type</option>
-                                    <option value="credit">credit</option>
-                                    <option value="debit">debit</option>
+                                <select className="w-full" name="category" onChange={handleChange} id="category">
+                                    <option value="">select category</option>
+                                    {pattyExpenceCategory?.map((cate)=>{
+                                        return(
+                                            <option key={cate._id} value={cate.category}>{cate.category}</option>
+                                        )
+                                    })}
                                 </select>
                                 </div>
                                 </div>
@@ -125,4 +128,4 @@ useEffect(()=>{
     );
 };
 
-export default JournalPayment;
+export default PattyPayment;

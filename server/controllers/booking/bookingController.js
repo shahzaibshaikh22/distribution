@@ -150,10 +150,10 @@ const getAllBookings = async (req, res) => {
         path: "products.product",
         select: "productname image brand category costprice",
       })
-      // .populate({
-      //   path: "customer", 
-      //   select: "name", 
-      // });
+      .populate({
+        path: "customer", 
+        select: "name", 
+      });
 
     res.status(200).json(bookings);
   } catch (error) {

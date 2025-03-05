@@ -56,6 +56,7 @@ app.use("/api/v1/product", require("./routes/product/product.js"))
      app.use("/api/v1/town", require("./routes/setup/town.js"))
      app.use("/api/v1/zone", require("./routes/setup/zone.js"))
      app.use("/api/v1/saleman", require("./routes/setup/saleman.js"))
+     app.use("/api/v1/patty", require("./routes/setup/pattyexpence.js"))
      // setup
      
     //  puchase
@@ -70,6 +71,7 @@ app.use("/api/v1/order-booking", require("./routes/booking/booking.js"))
 app.use("/api/v1/payment", require("./routes/payments/paytovendorRoute.js"))
 app.use("/api/v1/payment-recieve", require("./routes/payments/recievepayment.js"))
 app.use("/api/v1/journal-payment", require("./routes/payments/journalpayment.js"))
+app.use("/api/v1/patty", require("./routes/payments/pattypayment.js"))
 // payments
 // routes
 

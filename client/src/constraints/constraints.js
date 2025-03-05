@@ -206,6 +206,16 @@ import { TbUserCancel } from "react-icons/tb";
       text: 'customers view',
       path: "/customers-view"
     },
+    {
+      id: 19,
+      text: 'add patty category',
+      path: "/add-patty-category"
+    },
+    {
+      id: 20,
+      text: 'patty category view',
+      path: "/patty-category-view"
+    },
 
   ]
  export const purchaseLinks = [
@@ -264,6 +274,16 @@ import { TbUserCancel } from "react-icons/tb";
       id: 4,
       text: 'journal payment view',
       path: "/journal-payment-view"
+    },
+    {
+      id: 5,
+      text: 'patty payment',
+      path: "/patty-payment"
+    },
+    {
+      id: 6,
+      text: 'patty payment view',
+      path: "/patty-payment-view"
     },
 
   ]

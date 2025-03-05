@@ -146,7 +146,7 @@ const LoadSummary = () => {
             <tbody>
               <tr className="border-b border-gray-200">
                 <td className="print:border border-gray-300 px-4 py-2">{filteredOrder.bono}</td>
-                <td className="print:border border-gray-300 px-4 py-2">{filteredOrder.customer}</td>
+                <td className="print:border border-gray-300 px-4 py-2">{filteredOrder.customer.name}</td>
                 <td className="print:border border-gray-300 px-4 py-2">{filteredOrder.status}</td>
                 <td className="print:border border-gray-300 px-4 py-2">{filteredOrder.totalQuantity}</td>
                 <td className="print:border border-gray-300 px-4 py-2">${filteredOrder.totalAmount}</td>

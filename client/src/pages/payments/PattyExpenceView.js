@@ -3,15 +3,16 @@ import TopBar from "../../components/TopBar";
 import SectionBar from "../../components/SectionBar";
 import { useDispatch, useSelector } from "react-redux";
 import { useDeleteCustomerCategoryMutation, useGetCustomersCategoryQuery, useUpdateCustomerCategoryMutation } from "../../redux/features/apiSlices/setup/customer";
-import { setJournalPayments } from "../../redux/features/slices/payment";
+import { setJournalPayments, setPattyPayments } from "../../redux/features/slices/payment";
 import { FaTrashAlt, FaPencilAlt } from "react-icons/fa";
 import InputField from "../../components/InputField";
 import { useGetJournalPaymentQuery } from "../../redux/features/apiSlices/payment/journalpayment";
+import { useGetPattyPaymentQuery } from "../../redux/features/apiSlices/payment/pattypayment";
 
 
 
-const HournalPaymentView = () => {
-    const { journalPayments } = useSelector((state) => state.payment);
+const PattyExpenceView = () => {
+    const { pattyPayments } = useSelector((state) => state.payment);
     const [updateCustomerCat] = useUpdateCustomerCategoryMutation()
     const componentRef = useRef();
 
@@ -23,7 +24,7 @@ const HournalPaymentView = () => {
     const dispatch = useDispatch()
 
     // product type submition
-    const { data: journalpaymentData, refetch } = useGetJournalPaymentQuery()
+    const { data: pattypaymentData, refetch } = useGetPattyPaymentQuery()
     const [dltCusCat] = useDeleteCustomerCategoryMutation()
 
 
@@ -37,11 +38,11 @@ const HournalPaymentView = () => {
     // }
 
     useEffect(() => {
-        if (journalpaymentData) {
-            dispatch(setJournalPayments(journalpaymentData))
+        if (pattypaymentData) {
+            dispatch(setPattyPayments(pattypaymentData))
 
         }
-    }, [dispatch, journalpaymentData, refetch])
+    }, [dispatch, pattypaymentData, refetch])
 
     const handleSelectedPayment = (payment)=>{
         setSelectedPayment(payment)
@@ -88,11 +89,11 @@ const HournalPaymentView = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {journalPayments?.map((payment) => {
+                            {pattyPayments?.map((payment) => {
                                 return (
                                     <tr key={payment._id} className="border-b border-gray-200  hover:bg-lightprimary">
                                         <td className="print:border border-gray-300 px-4 py-2">{payment.voucherno}</td>
-                                        <td className="print:border border-gray-300 px-4 py-2">{payment.paymentType}</td>
+                                        <td className="print:border border-gray-300 px-4 py-2">{payment.category}</td>
                                         <td className="print:border border-gray-300 px-4 py-2">{payment.amount}</td>
                                         <td className="print:border border-gray-300 px-4 py-2">{payment.voucherno}</td>
                                         <td className="print:border border-gray-300 px-4 py-2">{new Date(payment.createdAt).toLocaleString()}</td>
@@ -207,7 +208,7 @@ const HournalPaymentView = () => {
              <tbody>
                 <tr className="border-b p-1">
                     <td className="py-3 text-xs px-4">{selectedPayment.account}</td>
-                    <td className="py-3 text-xs px-4">{selectedPayment.paymentType}</td>
+                    <td className="py-3 text-xs px-4">{selectedPayment.category}</td>
                     <td className="py-3 text-xs px-4">{selectedPayment.amount}</td>
                     <td className="py-3 text-xs px-4">{selectedPayment.voucherno}</td>
                     <td className="py-3 text-xs px-4">{new Date(selectedPayment.createdAt).toLocaleString()}</td>
@@ -254,4 +255,4 @@ const HournalPaymentView = () => {
     );
 };
 
-export default HournalPaymentView;
+export default PattyExpenceView;

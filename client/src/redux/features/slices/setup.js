@@ -10,6 +10,7 @@ const setupSlice = createSlice({
     towns:[],
     zones:[],
     salemans:[],
+    pattyExpenceCategory:[],
 
   },
   reducers: {
@@ -34,8 +35,11 @@ const setupSlice = createSlice({
     setCustomers:(state,action)=>{
       state.customers = action.payload
     },
+    setPattyCategory:(state,action)=>{
+      state.pattyExpenceCategory = action.payload
+    },
   },
 });
 
-export const { setStaffCaty, setStaff,setCustomerCaty,setTowns,setZones,setSalemans,setCustomers } = setupSlice.actions;
+export const { setStaffCaty, setStaff,setCustomerCaty,setTowns,setZones,setSalemans,setCustomers,setPattyCategory } = setupSlice.actions;
 export default setupSlice.reducer
