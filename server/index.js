@@ -61,6 +61,7 @@ app.use("/api/v1/product", require("./routes/product/product.js"))
      
     //  puchase
      app.use("/api/v1/purchase", require("./routes/purchase/purchaseOrder.js"))
+     app.use("/api/v1/return", require("./routes/purchase/purchasereturn.js"))
     //  puchase
 
 // booking

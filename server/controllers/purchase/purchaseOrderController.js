@@ -1,7 +1,9 @@
 const PurchaseOrder = require("../../models/purchase/purchaseOrderModel")
 const AddPurchaseOrder = require("../../models/purchase/addpurchaseOrder")
+const PurchaseReturn = require("../../models/purchase/purchasereturn")
 const Inventory = require("../../models/inventory/inventory")
 const PurchaseDue = require("../../models/purchaseDue/purchaseValue")
+const mongoose = require("mongoose")
 
 const purchaseOrders = async (req,res)=>{
   try {
@@ -520,6 +522,96 @@ const getAllAddPurchaseOrdersTotal = async (req, res) => {
   }
 };
 
+const purchaseReturn = async (req, res) => {
+  try {
+      const { pono, products, vendor, warehouse, vehicleno, totalAmount } = req.body;
+
+      // Log incoming request for debugging
+      console.log("Received req.body:", req.body);
+
+      // Find the purchase order by `pono`
+      const order = await PurchaseOrder.findOne({ pono });
+      if (!order) {
+          return res.status(404).json({ msg: "Purchase Order not found" });
+      }
+
+      let updatedTotal = order.totalAmount || 0; // Use totalAmount instead of total
+
+      // Loop through each product in request body
+      products.forEach((returnedProduct) => {
+          // Use `product` from req.body (matches _id of order.products entry)
+          const returnedProductId = new mongoose.Types.ObjectId(returnedProduct.product);
+
+          // Find the product in the order using `_id` comparison
+          const productIndex = order.products.findIndex(
+              (p) => p._id.toString() === returnedProductId.toString()
+          );
+
+          if (productIndex !== -1) {
+              let existingProduct = order.products[productIndex];
+
+              // Ensure returned quantity is a valid number
+              const returnQty = Number(returnedProduct.quantity) || 0;
+
+              // Reduce the quantity in the purchase order
+              existingProduct.quantity = Math.max(0, existingProduct.quantity - returnQty);
+
+              // Ensure price is a valid number
+              const price = existingProduct.price || 0;
+
+              // Recalculate the product total
+              existingProduct.total = existingProduct.quantity * price;
+
+              // Update the order total
+              updatedTotal -= returnQty * price;
+
+              // Save updated product back to the array
+              order.products[productIndex] = existingProduct;
+          } else {
+              console.log(`Product with ID ${returnedProduct.product} not found in order`);
+          }
+      });
+
+      // Remove products with zero quantity
+      order.products = order.products.filter((p) => p.quantity > 0);
+
+      // Ensure updatedTotal is never negative
+      order.totalAmount = Math.max(0, updatedTotal); // Assign to totalAmount
+
+      // Mark products and totalAmount as modified to force update
+      order.markModified("products");
+      order.markModified("totalAmount");
+
+      // Save the updated purchase order
+      await order.save();
+
+      // Calculate return total safely for PurchaseReturn
+      const returnTotal = products.reduce((acc, item) => {
+          const costprice = item.price || 0;
+          return acc + (Number(item.quantity) || 0) * costprice;
+      }, 0);
+
+      // Save purchase return record separately
+      const newReturn = new PurchaseReturn({
+          pono,
+          products,
+          returnTotal,
+          vendor,
+          warehouse,
+          vehicleno,
+          totalAmount,
+      });
+
+      await newReturn.save();
+
+      return res.json({ msg: "Purchase return processed successfully", order, newReturn });
+  } catch (error) {
+      console.error("Error in purchaseReturn:", error);
+      return res.status(500).json({ msg: error.message });
+  }
+};
+
+
 
 module.exports = {
     purchaseOrders,
@@ -528,5 +620,6 @@ module.exports = {
     getInventoryItems,
     deleteInventoryItem,
     getPorderByVendor,
-    getAllAddPurchaseOrdersTotal
+    getAllAddPurchaseOrdersTotal,
+    purchaseReturn
 }
