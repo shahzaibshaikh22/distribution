@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import TopBar from "../../components/TopBar";
 import { useDispatch, useSelector } from "react-redux";
-import { useAddpurchaseOrderMutation, useGetPurchaseOrderQuery, usePurchaseReturnMutation } from "../../redux/features/apiSlices/purchase/purchaseOrderSlice";
+import { useGetPurchaseOrderQuery, usePurchaseReturnMutation } from "../../redux/features/apiSlices/purchase/purchaseOrderSlice";
 import { setPurchaseOrders } from "../../redux/features/slices/productSlice";
 import { FaChevronDown, FaTrashAlt } from "react-icons/fa";
 import html2canvas from "html2canvas";
@@ -26,7 +26,7 @@ const PurchseReturn = () => {
     const invoiceRef = useRef();
 
 
-    const { data: purchaseOrderData } = useGetPurchaseOrderQuery();
+    const { data: purchaseOrderData,refetch } = useGetPurchaseOrderQuery();
     const dispatch = useDispatch();
 
     const handleQuantityChange = (e, productId) => {
@@ -43,13 +43,13 @@ const PurchseReturn = () => {
         if (purchaseOrderData) {
             dispatch(setPurchaseOrders(purchaseOrderData));
         }
-    }, [purchaseOrderData, dispatch]);
+    }, [purchaseOrderData, dispatch,refetch]);
 
    
-    // Debugging 
 
-    const handleSearch = () => {
+    useEffect(()=>{
         const foundOrder = purchaseOrders.find((order) => order.pono === searchpo);
+        setSelectedProducts([])
 
         if (foundOrder) {
             setFilteredPurchaseOrder(foundOrder);
@@ -66,9 +66,7 @@ const PurchseReturn = () => {
             setTotalAmount("");
             setVehicleno("");
         }
-    };
-
-
+    },[searchpo])
 
 
 
@@ -90,20 +88,6 @@ const PurchseReturn = () => {
         });
     };
 
-
-    // const updateQuantity = (id, increment) => {
-    //     setSelectedProducts((prev) =>
-    //         prev.map((p) =>
-    //             p._id === id
-    //                 ? {
-    //                     ...p,
-    //                     quantity: Math.max(1, p.quantity + increment),
-    //                     total: p.price * Math.max(1, p.quantity + increment),
-    //                 }
-    //                 : p
-    //         )
-    //     );
-    // };
     const updateQuantity = (id, increment) => {
         setSelectedProducts((prev) =>
             prev.map((p) => {
@@ -154,7 +138,7 @@ const PurchseReturn = () => {
         pono: filteredPurchaseOrder?.pono,
         dcno,
         products: selectedProducts?.map((p) => ({
-            product: p._id.toString(), // Ensure correct ID reference
+            product: p.product._id.toString(), // Ensure correct ID reference
             price: p.price,
             quantity: quantities[p._id] ?? p.quantity,
             total: (quantities[p._id] ?? p.quantity) * p.price,
@@ -170,12 +154,13 @@ const PurchseReturn = () => {
     const [purchaseReturn, { isLoading }] = usePurchaseReturnMutation();
     const handleReturn = async () => {
         const res = await purchaseReturn(returnData);
-       console.log(res);
+        if(res){
+            alert(res.data.msg)
+        }
+        refetch()
        
     }
-    if(selectedProducts){
-        console.log(selectedProducts);
-    }
+   
 
     return (
         <div className="w-full px-4">
@@ -183,14 +168,16 @@ const PurchseReturn = () => {
                 <TopBar />
                 <div className={`w-full md:px-10 mainContainerForm mt-4 relative rounded-xl ${modes === "dark" ? 'bg-darksecondary text-white' : 'bg-white text-gray-800'} h-[4rem]`}>
                     <div className='md:px-0 px-10'>
-                        <h1 className='text-center md:text-md text-sm pt-6 font-semibold mb-5'>Add Purchase</h1>
+                        <h1 className='text-center md:text-md text-sm pt-6 font-semibold mb-5'>Purchase Return</h1>
                         <div className="divider w-full h-[1px] bg-gray-300 mx-auto left-0" />
                     </div>
                 </div>
-                <div className="w-full bg-white p-4">
-                    <div className="w-full flex flex-col gap-4 items-center justify-center">
-                        <h3 className="text-lg font-semibold text-gray-600">Search Purchase Order</h3>
-                        <div className="addPurchaseDiv max-w-xs">
+               <div className="w-full bg-white">
+               <div className="w-full max-w-4xl mx-auto flex gap-2 items-center p-4">
+                    <div className="w-full flex flex-col gap-2">
+               <label className="font-semibold" htmlFor="producttype">Purchase Order No</label>
+                        {/* <h3 className="text-lg font-semibold text-gray-600">Search Purchase Order</h3> */}
+                        <div className="w-full bg-[#ECECEC] py-2 rounded-md px-4">
                             <input
                                 value={searchpo}
                                 onChange={(e) => setSearchPo(e.target.value)}
@@ -200,15 +187,10 @@ const PurchseReturn = () => {
                                 className='bg-transparent w-full'
                             />
                         </div>
-                        <button className="bg-blue-500 text-white px-8 py-2 rounded-full" onClick={handleSearch}>Search</button>
+                        {/* <button className="bg-blue-500 text-white px-8 py-2 rounded-full" onClick={handleSearch}>Search</button> */}
                     </div>
-                </div>
-
-
-                {
-                    filteredPurchaseOrder && (
-                        <div className="w-full bg-white p-4">
-                            <h3 className="text-md mb-4 font-semibold">Return Products</h3>
+          
+                        <div className="w-full bg-white">
                             <form className='py-4 w-full max-w-3xl mx-auto'>
                                 <div className='flex  flex-col w-full gap-2'>
                                     <label className="font-semibold" htmlFor="producttype">Products</label>
@@ -233,13 +215,17 @@ const PurchseReturn = () => {
                                 </div>
                             </form>
                         </div>
-                    )
-                }
+               
+                </div>
+               </div>
+
+
+              
 
                 {
-                    show && (
-                        <>
-                            <div className="p-6 bg-white shadow rounded-lg">
+                    show && selectedProducts?.length > 0 &&   (
+                        <div className="flex w-full gap-4">
+                            <div className="w-full p-4 bg-white shadow rounded-lg mt-4">
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-left border-collapse">
                                         <thead>
@@ -254,7 +240,7 @@ const PurchseReturn = () => {
                                         </thead>
                                         <tbody>
                                             {selectedProducts.map((p) => (
-                                                <tr key={p._id} className="border-t">
+                                                <tr key={p._id} className="border-t hover:bg-lightsecondary">
                                                     <td className="p-2">
                                                         <img className="w-8 h-8 rounded-md" src={`http://localhost:5000/uploads/${p.product.image}`} alt="" />
                                                     </td>
@@ -274,19 +260,19 @@ const PurchseReturn = () => {
                                     </table>
                                 </div>
                             </div>
-                            <div className="bg-white p-6 roundedn-md mt-2">
-                                <h3 className="text-lg font-semibold">Return Summary</h3>
-                                <h3 className="mt-2 text-md font-bold">Total Amount: Rs.{totalAmount}</h3>
-                                <div className='flex md:flex-row flex-col  w-full my-4 '>
+                            <div className="w-full max-w-sm bg-white p-4 roundedn-md mt-4 rounded-md">
+                                {/* <h3 className="text-lg font-semibold">Return Summary</h3> */}
+                                <h3 className="my-2 text-md font-bold">Total Amount: Rs.{totalAmount}</h3>
+                                <div className='flex md:flex-row flex-col  w-full  '>
                                     <div />
                                     <button
                                         // onClick={handlePurchaseOrder}
                                         type="submit"
-                                        className='px-8 bg-blue-700 text-sm py-2 rounded-full text-white'>Add New</button>
-                                    <button type="button"  onClick={() => setShowInvoice(true)}  className='px-8 md:ml-2 bg-blue-700 text-sm py-2 rounded-full text-white'>View Invoice</button>
+                                        className='disButton'>Add New</button>
+                                    <button type="button"  onClick={() => setShowInvoice(true)}  className='disButton ml-2'>View Invoice</button>
                                 </div>
                             </div>
-                        </>
+                        </div>
                     )
                 }
                 {showInvoice && (
@@ -307,9 +293,9 @@ const PurchseReturn = () => {
                                 <tbody>
                                     {selectedProducts.map((p) => (
                                         <tr className="text-center mb-4 p-2 border-b border-[1px]" key={p._id}>
-                                            <td>{p.product.productname}</td>
-                                            <td>{p.quantity}</td>
-                                            <td>Rs. {p.total}</td>
+                                            <td className="text-sm p-2">{p.product.productname}</td>
+                                            <td className="text-sm p-2">{p.quantity}</td>
+                                            <td className="text-sm p-2">Rs. {p.total}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -322,25 +308,28 @@ const PurchseReturn = () => {
                     </div>
                 )}
 
-                <div className="w-full bg-white p-4">
-                    <div className="divider w-full h-[1px] bg-gray-300 mx-auto left-0" />
+              
 
+
+
+            </div>
+            <div className="w-full bg-white px-4 py-2 mt-4 rounded-md">
                     {filteredPurchaseOrder ? (
-                        <div className="w-full p-4 overflow-x-auto">
+                        <div className="w-full overflow-x-auto">
                             <h3 className="text-md mb-4 font-semibold">Purchase Order Details</h3>
                             <table className="w-full text-left border-collapse">
                                 <thead>
-                                    <tr className="bg-gray-200">
-                                        <th className=" text-sm p-2">PO No</th>
-                                        <th className=" text-sm p-2">Vendor</th>
-                                        <th className=" text-sm p-2">Warehouse</th>
-                                        <th className=" text-sm p-2">Products</th>
-                                        <th className=" text-sm p-2">Total Amount</th>
-                                        <th className=" text-sm p-2">Date</th>
+                                    <tr className="bg-gray-100">
+                                        <th className="py-3 text-xs px-4">PO No</th>
+                                        <th className="py-3 text-xs px-4">Vendor</th>
+                                        <th className="py-3 text-xs px-4">Warehouse</th>
+                                        <th className="py-3 text-xs px-4">Products</th>
+                                        <th className="py-3 text-xs px-4">Total Amount</th>
+                                        <th className="py-3 text-xs px-4">Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr className="bg-gray-100">
+                                    <tr className="hover:bg-lightsecondary  ">
                                         <td className=" text-sm p-2">{filteredPurchaseOrder.pono}</td>
                                         <td className=" text-sm p-2">{filteredPurchaseOrder.vendor}</td>
                                         <td className=" text-sm p-2">{filteredPurchaseOrder.warehouse}</td>
@@ -354,20 +343,20 @@ const PurchseReturn = () => {
                             <h3 className="text-md mb-4 font-semibold mt-2">Products</h3>
                             <table className="w-full text-left border-collapse">
                                 <thead>
-                                    <tr className="bg-gray-200">
-                                        <th className=" text-sm p-2">product</th>
-                                        <th className=" text-sm p-2">Product Name</th>
-                                        <th className=" text-sm p-2">Category</th>
-                                        <th className=" text-sm p-2">Brand</th>
-                                        <th className=" text-sm p-2">price</th>
-                                        <th className=" text-sm p-2">Order Qty</th>
+                                    <tr className="bg-gray-100">
+                                        <th className="py-3 text-xs px-4">product</th>
+                                        <th className="py-3 text-xs px-4">Product Name</th>
+                                        <th className="py-3 text-xs px-4">Category</th>
+                                        <th className="py-3 text-xs px-4">Brand</th>
+                                        <th className="py-3 text-xs px-4">price</th>
+                                        <th className="py-3 text-xs px-4">Order Qty</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
                                         filteredPurchaseOrder.products.map((product) => {
                                             return (
-                                                <tr key={product._id} className="bg-gray-100">
+                                                <tr key={product._id} className="hover:bg-lightsecondary">
                                                     <td className=" text-sm p-2">
                                                         <img className="w-8 h-8 rounded-md" src={`http://localhost:5000/uploads/${product.product.image}`} alt="" />
                                                     </td>
@@ -387,16 +376,12 @@ const PurchseReturn = () => {
                         <p className="text-gray-500 text-center">No Purchase Order Found</p>
                     )}
                     {filteredPurchaseOrder && (
-                        <div className="w-full flex items-end justify-end">
-                            <button className="bg-blue-500  mt-2 text-white inline px-4 py-2 rounded-full" onClick={handleReturn}>{isLoading ? "adding..." : "Add Order"}</button>
+                        <div className="w-full flex items-end justify-end px-4">
+                            <button className="disButton" onClick={handleReturn}>{isLoading ? "adding..." : "Add Order"}</button>
                         </div>
 
                     )}
                 </div>
-
-
-
-            </div>
         </div>
     );
 };

@@ -72,9 +72,9 @@ const WarehouseView = () => {
               </tr>
             </thead>
             <tbody>
-              {warehouses?.map((w) => (
+              {warehouses?.map((w,index) => (
                 <tr key={w._id} className="border-b border-gray-200 hover:bg-gray-100">
-                  <td className=" px-4 py-2">{w.code}</td>
+                  <td className=" px-4 py-2">{index +1 }</td>
                   <td className=" px-4 py-2">{w.warehouse}</td>
                   <td className=" px-4 py-2">{w.code}</td>
                   <td className=" flex items-center gap-2 px-4 py-2">

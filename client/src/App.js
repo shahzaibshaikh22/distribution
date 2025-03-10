@@ -59,6 +59,7 @@ import PattyCategoryView from './pages/setup/PattyCategoryView';
 import PattyPayment from './pages/payments/PattyPayment';
 import PattyExpenceView from './pages/payments/PattyExpenceView';
 import PurchaseReturn from './pages/purchase/PurchaseReturn';
+import PurchaseReturnView from './pages/purchase/PurchaseReturnView';
 
 const App = () => {
   const { modes,sideBarCollapes } = useSelector((state) => state.mode)
@@ -132,6 +133,7 @@ const App = () => {
               <Route path="/add-purchase" element={<AddPurchase />} />
               <Route path="/purchase-invoice" element={<PurchaseInvoice />} />
               <Route path="/purchase-return" element={<PurchaseReturn />} />
+              <Route path="/purchase-return-view" element={<PurchaseReturnView />} />
               {/* [purchase] */}
 
               {/* inventory */}

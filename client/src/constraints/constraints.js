@@ -238,6 +238,11 @@ import { TbUserCancel } from "react-icons/tb";
       id: 4,
       text: 'Purchase return',
       path: "/purchase-return"
+    },
+    {
+      id: 5,
+      text: 'Purchase return view',
+      path: "/purchase-return-view"
     }
   ]
  export const inventoryLinks = [

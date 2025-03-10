@@ -67,9 +67,9 @@ const PattyCategoryView = () => {
               </tr>
             </thead>
             <tbody>
-              {pattyExpenceCategory?.map((t) => (
+              {pattyExpenceCategory?.map((t,index) => (
                 <tr key={t._id} className="border-b border-gray-200 hover:bg-gray-100">
-                  <td className=" px-4 py-2">{t.code}</td>
+                  <td className=" px-4 py-2">{index + 1}</td>
                   <td className=" px-4 py-2">{t.category}</td>
                   <td className=" px-4 py-2">{t.code}</td>
                   <td className=" flex items-center gap-2 px-4 py-2">

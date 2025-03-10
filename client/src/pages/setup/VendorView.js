@@ -93,7 +93,7 @@ useEffect(()=>{
                 <table className="w-full text-sm ">
                     <thead className="text-left">
                         <tr className="bg-gray-100 print:bg-gray-100 text-xs">
-                            <th className="print:border border-gray-300 px-4 py-2">code</th>
+                            <th className="print:border border-gray-300 px-4 py-2">Serial No</th>
                             <th className="print:border border-gray-300 px-4 py-2">Name</th>
                             <th className="print:border border-gray-300 px-4 py-2">Address</th>
                             <th className="print:border border-gray-300 px-4 py-2">Phone</th>
@@ -109,10 +109,10 @@ useEffect(()=>{
                         </tr>
                     </thead>
                     <tbody>
-                        {vendors?.map((v)=>{
+                        {vendors?.map((v,index)=>{
                             return(
                                 <tr key={v._id} className="border-b border-gray-200 hover:bg-lightprimary">
-                                    <td className="print:border border-gray-300 px-4 py-2">{v.code}</td>
+                                    <td className="print:border border-gray-300 px-4 py-2">{index + 1}</td>
                                     <td className="print:border border-gray-300 px-4 py-2">{v.name}</td>
                                     <td className="print:border border-gray-300 px-4 py-2">{v.address}</td>
                                     <td className="print:border border-gray-300 px-4 py-2">{v.phone}</td>

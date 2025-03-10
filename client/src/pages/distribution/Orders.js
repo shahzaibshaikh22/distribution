@@ -159,7 +159,7 @@ const Orders = () => {
                                 </tr>
                             </thead>
                             <tr>
-                                <td className="text-center border text-sm py-2">{selectedOrder.customer}</td>
+                                <td className="text-center border text-sm py-2">{selectedOrder.customer.name}</td>
                                 <td className="text-center border text-sm py-2">{selectedOrder.totalQuantity}</td>
                                 <td className="text-center border text-sm py-2">{selectedOrder.totalAmount}</td>
                                 <td className="text-center border text-sm py-2">{selectedOrder.paymentType}</td>

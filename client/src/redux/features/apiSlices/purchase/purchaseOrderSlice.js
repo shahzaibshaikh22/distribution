@@ -63,11 +63,19 @@ export const ProductApiSlice = apiSlice.injectEndpoints({
             method:'POST',
             body:data
         }),
-        providesTags: ['purchasereturn']
-       })
-       
+        providesTags: ['purchasereturns']
+
+
+       }),
+       getPurchaseReturn:builder.query({
+        query:()=>({
+            url:`http://localhost:5000/api/v1/return/get-purchase-return`,
+            method:'GET',
+        }),
+        providesTags: ['purchasereturns']
+       }),
     }),
     
 })
 
-export const {usePurchaseReturnMutation, useGetAllTotalQuery, useLazyGetPurOrByVendorQuery,usePurchaseOrderMutation,useGetPurchaseOrderQuery, useAddpurchaseOrderMutation, useGetInventoryQuery, useDltInvItemMutation} = ProductApiSlice
+export const {usePurchaseReturnMutation, useGetAllTotalQuery, useLazyGetPurOrByVendorQuery,usePurchaseOrderMutation,useGetPurchaseOrderQuery, useAddpurchaseOrderMutation, useGetInventoryQuery, useDltInvItemMutation,useGetPurchaseReturnQuery} = ProductApiSlice
