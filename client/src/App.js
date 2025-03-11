@@ -60,6 +60,8 @@ import PattyPayment from './pages/payments/PattyPayment';
 import PattyExpenceView from './pages/payments/PattyExpenceView';
 import PurchaseReturn from './pages/purchase/PurchaseReturn';
 import PurchaseReturnView from './pages/purchase/PurchaseReturnView';
+import OrderReturn from './pages/distribution/OrderReturn';
+import OrderReturnView from './pages/distribution/OrderReturnView';
 
 const App = () => {
   const { modes,sideBarCollapes } = useSelector((state) => state.mode)
@@ -93,6 +95,8 @@ const App = () => {
               <Route path="/orderbooking" element={<OrderBooking />} />
               <Route path="/loadsummary" element={<LoadSummary />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/order-return" element={<OrderReturn />} />
+              <Route path="/order-return-view" element={<OrderReturnView />} />
               {/* distribution routes */}
 
               {/* Products Route */}

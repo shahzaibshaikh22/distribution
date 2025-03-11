@@ -77,6 +77,16 @@ import { TbUserCancel } from "react-icons/tb";
       text: 'orders',
       path: "/orders"
     },
+    {
+      id: 5,
+      text: 'orders return',
+      path: "/order-return"
+    },
+    {
+      id: 6,
+      text: 'order return view',
+      path: "/order-return-view"
+    },
   ]
  export const productLinks = [
     {

@@ -40,7 +40,6 @@ const purchaseOrderSchema = mongoose.Schema(
           quantity: {
             type: Number,
             required: true,
-            min: 1,
           },
           total: {
             type: Number,

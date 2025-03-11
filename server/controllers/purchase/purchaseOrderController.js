@@ -522,6 +522,7 @@ const getAllAddPurchaseOrdersTotal = async (req, res) => {
   }
 };
 
+// create purchase return
 const purchaseReturn = async (req, res) => {
   try {
       const { pono, products, vendor, warehouse, vehicleno, totalAmount } = req.body;
@@ -544,7 +545,7 @@ const purchaseReturn = async (req, res) => {
 
           // Find the product in the order using `_id` comparison
           const productIndex = order.products.findIndex(
-              (p) => p._id.toString() === returnedProductId.toString()
+              (p) => p.product._id.toString() === returnedProductId.toString()
           );
 
           if (productIndex !== -1) {
@@ -573,7 +574,7 @@ const purchaseReturn = async (req, res) => {
       });
 
       // Remove products with zero quantity
-      order.products = order.products.filter((p) => p.quantity > 0);
+      // order.products = order.products.filter((p) => p.quantity > 0);
 
       // Ensure updatedTotal is never negative
       order.totalAmount = Math.max(0, updatedTotal); // Assign to totalAmount
@@ -611,6 +612,50 @@ const purchaseReturn = async (req, res) => {
   }
 };
 
+// get purchase return
+
+const getPurchaseReturn = async (req, res) => {
+  try {
+    const purchaseReturn = await PurchaseReturn.find().populate({
+      path: "products.product",
+      select: "productname image brand category costprice",
+    })
+
+    console.log("Purchase Return Data:", purchaseReturn); // Debugging ke liye
+
+    if (purchaseReturn.length > 0) {
+      return res.json(purchaseReturn);
+    } else {
+      return res.json({ msg: "No purchase return found." });
+    }
+  } catch (error) {
+    console.error("Error fetching purchase returns:", error);
+    return res.json({ msg: error.message });
+  }
+};
+// delete purchasereturn
+const deletePurchaseReturn = async (req, res) => {
+  try {
+      const { id } = req.params;
+
+      // Check if the vendor exists
+      const purchasereturn = await PurchaseReturn.findById(id);
+      if (!purchasereturn) {
+          return res.status(404).json({ msg: "purchase return not found" });
+      }
+
+      // Delete the vendor
+      await PurchaseReturn.findByIdAndDelete(id);
+
+      res.status(200).json({ msg: "purchase return deleted successfully" });
+  } catch (error) {
+      res.status(500).json({ msg: "Internal Server Error" });
+  }
+}
+
+
+
+
 
 
 module.exports = {
@@ -621,5 +666,7 @@ module.exports = {
     deleteInventoryItem,
     getPorderByVendor,
     getAllAddPurchaseOrdersTotal,
-    purchaseReturn
+    purchaseReturn,
+    getPurchaseReturn,
+    deletePurchaseReturn
 }

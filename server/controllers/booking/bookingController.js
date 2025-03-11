@@ -2,6 +2,8 @@ const OrderBooking = require("../../models/booking/orderbooking")
 const Inventory = require("../../models/inventory/inventory")
 const OrderDetail = require("../../models/booking/OrderDetails");
 const CustomerDue = require("../../models/customerDues/customerdues")
+const OrderBookingReturn = require("../../models/booking/orderReturn")
+const mongoose = require("mongoose")
 
 // Create a new order booking
 // const createBooking = async (req, res) => {
@@ -392,6 +394,137 @@ const getBookingOrderByCustomerId = async (req, res) => {
   }
 };
 
+// create Order return
+const OrderReturn = async (req, res) => {
+  try {
+      const { bono, products, customer, totalAmount } = req.body;
+
+      // Log incoming request for debugging
+      console.log("Received req.body:", req.body);
+
+      // Find the purchase order by `pono`
+      const order = await OrderBooking.findOne({ bono });
+      if (!order) {
+          return res.status(404).json({ msg: "Booking Order not found" });
+      }
+
+      let updatedTotal = order.totalAmount || 0; // Use totalAmount instead of total
+
+      // Loop through each product in request body
+      products.forEach((returnedProduct) => {
+          // Use `product` from req.body (matches _id of order.products entry)
+          const returnedProductId = new mongoose.Types.ObjectId(returnedProduct.product);
+
+          // Find the product in the order using `_id` comparison
+          const productIndex = order.products.findIndex(
+              (p) => p.product._id.toString() === returnedProductId.toString()
+          );
+
+          if (productIndex !== -1) {
+              let existingProduct = order.products[productIndex];
+
+              // Ensure returned quantity is a valid number
+              const returnQty = Number(returnedProduct.quantity) || 0;
+
+              // Reduce the quantity in the purchase order
+              existingProduct.quantity = Math.max(0, existingProduct.quantity - returnQty);
+
+              // Ensure price is a valid number
+              const price = existingProduct.price || 0;
+
+              // Recalculate the product total
+              existingProduct.total = existingProduct.quantity * price;
+
+              // Update the order total
+              updatedTotal -= returnQty * price;
+
+              // Save updated product back to the array
+              order.products[productIndex] = existingProduct;
+          } else {
+              console.log(`Product with ID ${returnedProduct.product} not found in order`);
+          }
+      });
+
+      // Remove products with zero quantity
+      // order.products = order.products.filter((p) => p.quantity > 0);
+
+      // Ensure updatedTotal is never negative
+      order.totalAmount = Math.max(0, updatedTotal); // Assign to totalAmount
+
+      // Mark products and totalAmount as modified to force update
+      order.markModified("products");
+      order.markModified("totalAmount");
+
+      // Save the updated purchase order
+      await order.save();
+
+      // Calculate return total safely for PurchaseReturn
+      const returnTotal = products.reduce((acc, item) => {
+          const costprice = item.price || 0;
+          return acc + (Number(item.quantity) || 0) * costprice;
+      }, 0);
+
+      // Save purchase return record separately
+      const newReturn = new OrderBookingReturn({
+        bono, products, customer, totalAmount
+      });
+
+      await newReturn.save();
+
+      return res.json({ msg: "Order return processed successfully", order, newReturn });
+  } catch (error) {
+      console.error("Error in OrderReturn:", error);
+      return res.status(500).json({ msg: error.message });
+  }
+};
+
+
+const getOrderReturn = async (req, res) => {
+  try {
+    const orderReturn = await OrderBookingReturn.find().populate({
+      path: "products.product",
+      select: "productname image brand category costprice",
+    })
+    .populate({
+      path: "customer",
+      select: "name phone address email",
+    })
+
+    console.log("Order Return Data:", orderReturn); // Debugging ke liye
+
+    if (orderReturn.length > 0) {
+      return res.json(orderReturn);
+    } else {
+      return res.json({ msg: "No order return found." });
+    }
+  } catch (error) {
+    console.error("Error fetching order returns:", error);
+    return res.json({ msg: error.message });
+  }
+};
+
+// delete OrderReturn
+const deleteOrderReturn = async (req, res) => {
+  try {
+      const { id } = req.params;
+
+      // Check if the vendor exists
+      const orderreturn = await OrderBookingReturn.findById(id);
+      if (!orderreturn) {
+          return res.status(404).json({ msg: "order return not found" });
+      }
+
+      // Delete the vendor
+      await OrderBookingReturn.findByIdAndDelete(id);
+
+      res.status(200).json({ msg: "order return deleted successfully" });
+  } catch (error) {
+      res.status(500).json({ msg: "Internal Server Error" });
+  }
+}
+
+
+
 
 
 
@@ -406,5 +539,8 @@ module.exports = {
   deleteBooking,
   updateOrderStatus,
   createOrderDetail,
-  getBookingOrderByCustomerId
+  getBookingOrderByCustomerId,
+  OrderReturn,
+  getOrderReturn,
+  deleteOrderReturn
 }
